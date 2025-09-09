@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36408.4 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{9CC5D685-BE5D-4967-A4C8-C7AD04D456F5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{2AEF71A1-18E4-4F68-B02D-848FA96423B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelReservationApi.Domain", "Core\HotelReservationApi.Domain\HotelReservationApi.Domain.csproj", "{4C9FA532-9DE1-423F-ACAD-7D33FCB51FA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelReservationApi.Application", "Core\HotelReservationApi.Application\HotelReservationApi.Application.csproj", "{28370EB4-3CB4-43BA-BB38-2D67C7503639}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4C9FA532-9DE1-423F-ACAD-7D33FCB51FA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C9FA532-9DE1-423F-ACAD-7D33FCB51FA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C9FA532-9DE1-423F-ACAD-7D33FCB51FA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C9FA532-9DE1-423F-ACAD-7D33FCB51FA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28370EB4-3CB4-43BA-BB38-2D67C7503639}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28370EB4-3CB4-43BA-BB38-2D67C7503639}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28370EB4-3CB4-43BA-BB38-2D67C7503639}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28370EB4-3CB4-43BA-BB38-2D67C7503639}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4C9FA532-9DE1-423F-ACAD-7D33FCB51FA0} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{28370EB4-3CB4-43BA-BB38-2D67C7503639} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D823E552-A7A0-497F-99C3-D7AF00257F0A}
+	EndGlobalSection
+EndGlobal
