@@ -7,15 +7,10 @@ using System.Threading.Tasks;
 
 namespace HotelReservationApi.Domain.Entities
 {
-    public class Reviews : BaseEntity
+    public class AboutUs : BaseEntity
     {
         public string Title { get; set; }
-        public string Comment { get; set; }
-        public int Rating { get; set; }
-        public DateTime ReviewDate { get; set; }
-        public int HotelsId { get; set; }
-        public Hotels Hotels { get; set; }  
-
-
+        public string Description { get; set; }
+        public string? ImageUrl { get; set; }
     }
 }
