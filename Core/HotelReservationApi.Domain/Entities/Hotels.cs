@@ -13,7 +13,13 @@ namespace HotelReservationApi.Domain.Entities
         public ICollection<Rooms> Rooms { get; set; }
         public int HotelCategoryId { get; set; }    
         public HotelCategory HotelCategory { get; set; }
-
+        public ICollection<HotelImages>? HotelImages { get; set; }
+        public ICollection<HowFarSpecialPlace>? HowFarSpecialPlaces { get; set; }
+        public ICollection<Reviews>? Reviews { get; set; }
+        public int HotelInformationId { get; set; }
+        public HotelInformation HotelInformation { get; set; }
+        public int DistrictId { get; set; }
+        public District District { get; set; }
 
     }
 }
