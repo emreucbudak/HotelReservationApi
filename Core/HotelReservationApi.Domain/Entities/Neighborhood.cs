@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HotelReservationApi.Domain.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace HotelReservationApi.Domain.Entities
 {
-    public class City
+    public class Neighborhood : BaseEntity
     {
-        public int Id { get; set; }
         public string Name { get; set; }
-        public int PostalCode { get; set; }
-        public ICollection<District>? Districts { get; set; }
+        public int DistrictId { get; set; }
+        public District District { get; set; }
+
     }
 }
