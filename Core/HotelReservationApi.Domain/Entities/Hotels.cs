@@ -18,8 +18,8 @@ namespace HotelReservationApi.Domain.Entities
         public ICollection<Reviews>? Reviews { get; set; }
         public int HotelInformationId { get; set; }
         public HotelInformation HotelInformation { get; set; }
-        public int DistrictId { get; set; }
-        public District District { get; set; }
+
+        public ICollection<HotelsPoliticy>? HotelsPoliticies { get; set; }  
 
     }
 }
