@@ -8,7 +8,7 @@ namespace HotelReservationApi.Domain.Entities
 {
     public class HotelInformation
     {
-        public int Rating { get; set; }
+
         public string Address { get; set; }
         public string AboutHotel { get; set; }
         public TimeSpan CheckInTime { get; set; }
