@@ -12,6 +12,8 @@ namespace HotelReservationApi.Domain.Entities
         public int Id { get; set; }
         public string TypeName { get; set; }
         public int HowManyPeople { get; set; }
+        public int TypesFeaturesId { get; set; }
+        public TypesFeatures TypesFeatures { get; set; }
 
     }
 }
