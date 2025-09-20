@@ -10,6 +10,6 @@ namespace HotelReservationApi.Domain.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
-       
+        public decimal Distance { get; set; }
     }
 }

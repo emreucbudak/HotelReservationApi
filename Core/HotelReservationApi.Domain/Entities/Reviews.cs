@@ -11,7 +11,7 @@ namespace HotelReservationApi.Domain.Entities
     {
         public string Title { get; set; }
         public string Comment { get; set; }
-        public int Rating { get; set; }
+        public decimal Rating { get; set; }
         public DateTime ReviewDate { get; set; }
         public int HotelsId { get; set; }
         public Hotels Hotels { get; set; }  
