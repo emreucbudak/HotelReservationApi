@@ -20,6 +20,8 @@ namespace HotelReservationApi.Domain.Entities
         public HotelInformation HotelInformation { get; set; }
 
         public ICollection<HotelsPoliticy>? HotelsPoliticies { get; set; }  
+        public int HotelAdressId { get; set; }
+        public HotelAdress HotelAdress { get; set; }
 
     }
 }
