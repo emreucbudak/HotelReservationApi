@@ -16,7 +16,26 @@ namespace HotelReservationApi.Persistence.ApplicationDbContext
         protected ApplicationDbContext()
         {
         }
-
+        public DbSet<City> Cities { get; set; }
+        public DbSet<District> Districts { get; set; }
+        public DbSet<Neighborhood> Neighborhoods { get; set; }
+        public DbSet<Coupon> Coupons { get; set; }
+        public DbSet<HotelAdress> HotelAdresses { get; set; }
+        public DbSet<Hotels> Hotels { get; set; }
+        public DbSet<HotelCategory> HotelCategories { get; set; }
+        public DbSet<Appointments> Appointments { get; set; }
+        public DbSet<HotelImages> HotelImages { get; set; }
+        public DbSet<HowFarSpecialPlace> HowFarSpecialPlaces { get; set; }
+        public DbSet<Reviews> Reviews { get; set; }
+        public DbSet<HotelInformation> HotelInformations { get; set; }
+        public DbSet<HotelsPoliticy> HotelsPoliticies { get; set; }
+        public DbSet<Rooms> Rooms { get; set; }
+        public DbSet<RoomTypes> RoomTypes { get; set; }
+        public DbSet<TypesFeatures> TypesFeatures { get; set; }
+        public DbSet<HotelOffer> hotelOffers { get; set; }
+        public DbSet<HotelServices> HotelServices { get; set; }
+        public DbSet<Service> Services { get; set; }
+        public DbSet<SpecialPlaceCategory> SpecialPlaceCategories { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

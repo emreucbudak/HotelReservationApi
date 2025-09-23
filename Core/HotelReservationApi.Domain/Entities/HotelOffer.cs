@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace HotelReservationApi.Domain.Entities
 {
-    public class NewsCategory
+    public class HotelOffer
     {
-        public int Id { get; set; }
-        public string CategoryName { get; set; }
+         
     }
 }
