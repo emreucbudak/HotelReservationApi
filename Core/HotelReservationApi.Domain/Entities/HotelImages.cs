@@ -12,6 +12,6 @@ namespace HotelReservationApi.Domain.Entities
         public string ImageUrl { get; set; }
         public int HotelId { get; set; }
         public Hotels Hotel { get; set; }
-        public string ImageTitle { get; set; }
+        public string? ImageTitle { get; set; }
     }
 }

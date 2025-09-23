@@ -13,5 +13,6 @@ namespace HotelReservationApi.Domain.Entities
         public RoomTypes RoomTypes { get; set; }
         public int RoomNumber { get; set; }
         public bool IsAvailable { get; set; } = true;
+
     }
 }

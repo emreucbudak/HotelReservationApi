@@ -7,14 +7,12 @@ using System.Threading.Tasks;
 
 namespace HotelReservationApi.Domain.Entities
 {
-    public class News : BaseEntity
+    public class NewsPopUp : BaseEntity
     {
-
         public string Title { get; set; }
-        public string Content { get; set; }
+        public string Description { get; set; }
         public string ImageUrl { get; set; }
-        public DateTime PublishedAt { get; set; } = DateTime.UtcNow;
-        public int NewsCategoryId { get; set; }
-        public NewsCategory NewsCategory { get; set; }
+
+
     }
 }
