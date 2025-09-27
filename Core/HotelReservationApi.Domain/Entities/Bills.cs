@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace HotelReservationApi.Domain.Entities
 {
-    public class PriceList : BaseEntity
+    public class Bills : BaseEntity
     {
-        public int Price { get; set; }
-        public int DiscountListId { get; set; }
-        public DiscountList? DiscountList { get; set; }
+        public ICollection<Customer>? Customer { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Email { get; set; }
 
 
     }
