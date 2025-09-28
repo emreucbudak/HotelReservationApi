@@ -15,6 +15,8 @@ namespace HotelReservationApi.Domain.Entities
         public bool IsAvailable { get; set; } = true;
         public int PriceListId { get; set; }
         public PriceList PriceList { get; set; }
+        public int HotelsId { get; set; }
+        public Hotels Hotels { get; set; }
 
     }
 }

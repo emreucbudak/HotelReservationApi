@@ -23,7 +23,6 @@ namespace HotelReservationApi.Persistence.ApplicationDbContext
         public DbSet<HotelAdress> HotelAdresses { get; set; }
         public DbSet<Hotels> Hotels { get; set; }
         public DbSet<HotelCategory> HotelCategories { get; set; }
-        public DbSet<Appointments> Appointments { get; set; }
         public DbSet<HotelImages> HotelImages { get; set; }
         public DbSet<HowFarSpecialPlace> HowFarSpecialPlaces { get; set; }
         public DbSet<Reviews> Reviews { get; set; }
@@ -40,7 +39,11 @@ namespace HotelReservationApi.Persistence.ApplicationDbContext
         public DbSet<DiscountList> discountLists { get; set; }
         public DbSet<PriceList> priceList { get; set; }
         public DbSet<NewsPopUp> newsPopUps { get; set; }
-
+        public DbSet<Bills> bills { get; set; }
+        public DbSet<PaymentMethod> paymentMethods { get; set; }
+        public DbSet<Reservation> reservations { get; set; }
+        public DbSet<Gender>  genders { get; set; }
+        public DbSet<Customer> customers { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
