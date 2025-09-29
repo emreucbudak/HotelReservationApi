@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,7 @@ namespace HotelReservationApi.Domain.Entities
         public double Enlem { get; set; }
         public double Boylam { get; set; }
 
+        [NotMapped]
         public Point Location { get; set; }
     }
 }
