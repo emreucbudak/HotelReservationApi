@@ -5,17 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HotelReservationApi.Domain.Entities;
-namespace HotelReservationApi.Persistence.ApplicationDbContext
+namespace HotelReservationApi.Persistence.ApplicationContext
 {
     public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
 
-        protected ApplicationDbContext()
-        {
-        }
+
         public DbSet<City> Cities { get; set; }
         public DbSet<District> Districts { get; set; }
         public DbSet<Neighborhood> Neighborhoods { get; set; }
@@ -31,7 +29,7 @@ namespace HotelReservationApi.Persistence.ApplicationDbContext
         public DbSet<Rooms> Rooms { get; set; }
         public DbSet<RoomTypes> RoomTypes { get; set; }
         public DbSet<TypesFeatures> TypesFeatures { get; set; }
-        public DbSet<HotelOffer> hotelOffers { get; set; }
+
         public DbSet<HotelServices> HotelServices { get; set; }
         public DbSet<Service> Services { get; set; }
         public DbSet<SpecialPlaceCategory> SpecialPlaceCategories { get; set; }
@@ -44,9 +42,11 @@ namespace HotelReservationApi.Persistence.ApplicationDbContext
         public DbSet<Reservation> reservations { get; set; }
         public DbSet<Gender>  genders { get; set; }
         public DbSet<Customer> customers { get; set; }
+        public DbSet<FAQ> fAQs { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
 
             modelBuilder.Entity<HotelAdress>(entity =>
             {
@@ -73,8 +73,8 @@ namespace HotelReservationApi.Persistence.ApplicationDbContext
                       .OnDelete(DeleteBehavior.Restrict);
 
 
-                entity.Property(e => e.Location)
-                      .HasColumnType("geometry (point,4326)");
+
+
             });
         }
     }

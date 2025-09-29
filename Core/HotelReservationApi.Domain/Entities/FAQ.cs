@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 
 namespace HotelReservationApi.Domain.Entities
 {
-    public class HowFarSpecialPlace : BaseEntity
+    public class FAQ : BaseEntity
     {
-
-        public string PlaceName { get; set; }
-        public int SpecialPlaceCategoryId { get; set; }
-        public SpecialPlaceCategory SpecialPlaceCategory { get; set; }
+        public string Question { get; set; }
+        public string Answer { get; set; }
     }
 }
