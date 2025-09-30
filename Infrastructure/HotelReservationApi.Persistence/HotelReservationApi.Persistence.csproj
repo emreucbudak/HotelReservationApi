@@ -17,11 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Core\HotelReservationApi.Application\HotelReservationApi.Application.csproj" />
     <ProjectReference Include="..\..\Core\HotelReservationApi.Domain\HotelReservationApi.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
 </Project>
