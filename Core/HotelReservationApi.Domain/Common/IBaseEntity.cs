@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HotelReservationApi.Domain.Common
 {
-    public class IBaseEntity
+    public interface IBaseEntity
     {
     }
 }
