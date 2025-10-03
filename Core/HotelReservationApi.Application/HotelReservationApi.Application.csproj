@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="15.0.1" />
+    <PackageReference Include="MediatR" Version="13.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
   </ItemGroup>
 
@@ -15,25 +17,45 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\CQRS\AdsBanner\" />
-    <Folder Include="Features\CQRS\Bills\" />
-    <Folder Include="Features\CQRS\Coupon\" />
-    <Folder Include="Features\CQRS\FAQ\" />
-    <Folder Include="Features\CQRS\DiscountList\" />
-    <Folder Include="Features\CQRS\Hotels\" />
-    <Folder Include="Features\CQRS\HotelsPoliticy\" />
-    <Folder Include="Features\CQRS\Customer\" />
-    <Folder Include="Features\CQRS\HotelsService\" />
-    <Folder Include="Features\CQRS\HowFarSpecialPlace\" />
-    <Folder Include="Features\CQRS\Neighborhood\" />
-    <Folder Include="Features\CQRS\RoomTypes\" />
-    <Folder Include="Features\CQRS\Rooms\" />
-    <Folder Include="Features\CQRS\Reviews\" />
-    <Folder Include="Features\CQRS\Reservation\" />
-    <Folder Include="Features\CQRS\PriceList\" />
-    <Folder Include="Features\CQRS\Service\" />
-    <Folder Include="Features\CQRS\TypesFeatures\" />
-    <Folder Include="Features\CQRS\NewsPopUp\" />
+    <Folder Include="Features\CQRS\AdsBanner\Command\" />
+    <Folder Include="Features\CQRS\AdsBanner\Handler\" />
+    <Folder Include="Features\CQRS\Bills\Command\" />
+    <Folder Include="Features\CQRS\Bills\Handler\" />
+    <Folder Include="Features\CQRS\Coupon\Handler\" />
+    <Folder Include="Features\CQRS\Customer\Command\" />
+    <Folder Include="Features\CQRS\Customer\Handler\" />
+    <Folder Include="Features\CQRS\DiscountList\Command\" />
+    <Folder Include="Features\CQRS\DiscountList\Handler\" />
+    <Folder Include="Features\CQRS\FAQ\Command\" />
+    <Folder Include="Features\CQRS\FAQ\Handler\" />
+    <Folder Include="Features\CQRS\HotelInformation\Command\" />
+    <Folder Include="Features\CQRS\HotelInformation\Handler\" />
+    <Folder Include="Features\CQRS\HotelsPoliticy\Command\" />
+    <Folder Include="Features\CQRS\HotelsPoliticy\Handler\" />
+    <Folder Include="Features\CQRS\HotelsService\Command\" />
+    <Folder Include="Features\CQRS\HotelsService\Handler\" />
+    <Folder Include="Features\CQRS\Hotels\Command\" />
+    <Folder Include="Features\CQRS\Hotels\Handler\" />
+    <Folder Include="Features\CQRS\HowFarSpecialPlace\Command\" />
+    <Folder Include="Features\CQRS\HowFarSpecialPlace\Handler\" />
+    <Folder Include="Features\CQRS\Neighborhood\Command\" />
+    <Folder Include="Features\CQRS\Neighborhood\Handler\" />
+    <Folder Include="Features\CQRS\NewsPopUp\Command\" />
+    <Folder Include="Features\CQRS\NewsPopUp\Handler\" />
+    <Folder Include="Features\CQRS\PriceList\Command\" />
+    <Folder Include="Features\CQRS\PriceList\Handler\" />
+    <Folder Include="Features\CQRS\Reservation\Command\" />
+    <Folder Include="Features\CQRS\Reservation\Handler\" />
+    <Folder Include="Features\CQRS\Reviews\Command\" />
+    <Folder Include="Features\CQRS\Reviews\Handler\" />
+    <Folder Include="Features\CQRS\Rooms\Command\" />
+    <Folder Include="Features\CQRS\Rooms\Handler\" />
+    <Folder Include="Features\CQRS\RoomTypes\Command\" />
+    <Folder Include="Features\CQRS\RoomTypes\Handler\" />
+    <Folder Include="Features\CQRS\Service\Command\" />
+    <Folder Include="Features\CQRS\Service\Handler\" />
+    <Folder Include="Features\CQRS\TypesFeatures\Command\" />
+    <Folder Include="Features\CQRS\TypesFeatures\Handler\" />
   </ItemGroup>
 
 </Project>
