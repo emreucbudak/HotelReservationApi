@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace HotelReservationApi.Domain.Entities
 {
-    public class SpecialPlaceCategory
+    public class SpecialPlaceCategory 
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public decimal Distance { get; set; }
+
     }
 }

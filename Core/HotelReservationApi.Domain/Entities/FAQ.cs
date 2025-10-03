@@ -11,5 +11,7 @@ namespace HotelReservationApi.Domain.Entities
     {
         public string Question { get; set; }
         public string Answer { get; set; }
+        public int HotelID  { get; set; }
+        public Hotels Hotel { get; set; }   
     }
 }

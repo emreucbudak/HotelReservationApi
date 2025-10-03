@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HotelReservationApi.Domain.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HotelReservationApi.Domain.Entities
 {
-    public class HotelAdress
+    public class HotelAdress : BaseEntity
     {
         public int Id { get; set; }
         public int HotelsId { get; set; }
