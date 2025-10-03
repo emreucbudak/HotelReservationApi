@@ -1,3 +1,4 @@
+using HotelReservationApi.Application.AutoMapper;
 using HotelReservationApi.Persistence.ApplicationContext;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),
         o => o.UseNetTopologySuite())
 );
+builder.Services.AddAutoMapper(cfg => { },typeof(Profiles).Assembly);
 
 
 
