@@ -13,5 +13,6 @@ namespace HotelReservationApi.Domain.Entities
         public string PlaceName { get; set; }
         public int SpecialPlaceCategoryId { get; set; }
         public SpecialPlaceCategory SpecialPlaceCategory { get; set; }
+        public decimal Distance     { get; set; }
     }
 }

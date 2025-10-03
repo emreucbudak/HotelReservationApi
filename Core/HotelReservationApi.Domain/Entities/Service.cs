@@ -12,5 +12,7 @@ namespace HotelReservationApi.Domain.Entities
 
         public string ServiceName { get; set; }
         public bool IsNeedAFee { get; set; }
+        public int HotelsId { get; set; }
+        public Hotels Hotels { get; set; }
     }
 }

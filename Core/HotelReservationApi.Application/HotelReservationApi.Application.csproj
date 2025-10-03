@@ -7,17 +7,33 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Features\**" />
-    <EmbeddedResource Remove="Features\**" />
-    <None Remove="Features\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\HotelReservationApi.Domain\HotelReservationApi.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\CQRS\AdsBanner\" />
+    <Folder Include="Features\CQRS\Bills\" />
+    <Folder Include="Features\CQRS\Coupon\" />
+    <Folder Include="Features\CQRS\FAQ\" />
+    <Folder Include="Features\CQRS\DiscountList\" />
+    <Folder Include="Features\CQRS\Hotels\" />
+    <Folder Include="Features\CQRS\HotelsPoliticy\" />
+    <Folder Include="Features\CQRS\Customer\" />
+    <Folder Include="Features\CQRS\HotelsService\" />
+    <Folder Include="Features\CQRS\HowFarSpecialPlace\" />
+    <Folder Include="Features\CQRS\Neighborhood\" />
+    <Folder Include="Features\CQRS\RoomTypes\" />
+    <Folder Include="Features\CQRS\Rooms\" />
+    <Folder Include="Features\CQRS\Reviews\" />
+    <Folder Include="Features\CQRS\Reservation\" />
+    <Folder Include="Features\CQRS\PriceList\" />
+    <Folder Include="Features\CQRS\Service\" />
+    <Folder Include="Features\CQRS\TypesFeatures\" />
+    <Folder Include="Features\CQRS\NewsPopUp\" />
   </ItemGroup>
 
 </Project>
