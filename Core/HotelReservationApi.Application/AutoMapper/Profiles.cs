@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HotelReservationApi.Application.Features.CQRS.AdsBanner.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Coupon.Command.Create;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace HotelReservationApi.Application.AutoMapper
         public Profiles()
         {
             CreateMap<CreateCouponCommandRequest, Domain.Entities.Coupon>().ReverseMap();
+            CreateMap<CreateAdsBannerCommandRequest, Domain.Entities.AdsBanner>().ReverseMap();
         }
     }
 }
