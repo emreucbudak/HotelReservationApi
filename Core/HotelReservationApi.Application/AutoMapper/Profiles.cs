@@ -16,6 +16,7 @@ namespace HotelReservationApi.Application.AutoMapper
             CreateMap<CreateCouponCommandRequest, Domain.Entities.Coupon>().ReverseMap();
             CreateMap<CreateAdsBannerCommandRequest, Domain.Entities.AdsBanner>().ReverseMap();
             CreateMap<Domain.Entities.AdsBanner, Features.CQRS.AdsBanner.Queries.GetAll.GetAllAdsBannerQueriesResponse>().ReverseMap();
+            CreateMap<Domain.Entities.Coupon, Features.CQRS.Coupon.Queries.GetAll.GetAllCouponQueriesResponse>().ReverseMap();
         }
     }
 }
