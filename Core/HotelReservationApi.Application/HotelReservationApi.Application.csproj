@@ -38,8 +38,9 @@
     <Folder Include="Features\CQRS\PriceList\Handler\" />
     <Folder Include="Features\CQRS\Reservation\Command\" />
     <Folder Include="Features\CQRS\Reservation\Handler\" />
-    <Folder Include="Features\CQRS\Reviews\Command\" />
-    <Folder Include="Features\CQRS\Reviews\Handler\" />
+    <Folder Include="Features\CQRS\Reviews\Command\Delete\" />
+    <Folder Include="Features\CQRS\Reviews\Command\Update\" />
+    <Folder Include="Features\CQRS\Reviews\Queries\" />
     <Folder Include="Features\CQRS\Rooms\Command\" />
     <Folder Include="Features\CQRS\Rooms\Handler\" />
     <Folder Include="Features\CQRS\RoomTypes\Command\" />
