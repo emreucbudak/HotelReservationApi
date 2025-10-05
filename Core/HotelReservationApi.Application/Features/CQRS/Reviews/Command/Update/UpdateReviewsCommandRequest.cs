@@ -5,15 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HotelReservationApi.Application.Features.CQRS.Reviews.Command.Create
+namespace HotelReservationApi.Application.Features.CQRS.Reviews.Command.Update
 {
-    public class CreateReviewsCommandRequest : IRequest
+    public class UpdateReviewsCommandRequest : IRequest
     {
+        public int Id { get; set; }
         public string Title { get; set; }
         public string Comment { get; set; }
         public decimal Rating { get; set; }
-        public DateOnly ReviewDate { get; set; }
-        public int HotelsId { get; set; }
-        public bool IsUpdated { get; set; } 
+        
     }
 }
