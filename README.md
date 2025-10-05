@@ -38,5 +38,5 @@ Bu proje, kullanıcıların otel araması, rezervasyon yapması ve yönetim pane
 
 ## ✨ Geliştirici
 👨‍💻 **Emre Üçbudak**  
-📧 [LinkedIn Profilim]([https://www.linkedin.com/in/emreucbudak](https://www.linkedin.com/in/emre-%C3%BC%C3%A7budak-1b5587304/))  
+📧 [LinkedIn Profilim](https://www.linkedin.com/in/emre-%C3%BC%C3%A7budak-1b5587304/)  
 💬 Yazılım Mühendisliği öğrencisi 
