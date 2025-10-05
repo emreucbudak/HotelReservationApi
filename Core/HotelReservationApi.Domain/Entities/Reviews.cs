@@ -13,6 +13,8 @@ namespace HotelReservationApi.Domain.Entities
         public string Comment { get; set; }
         public decimal Rating { get; set; }
         public DateOnly ReviewDate { get; set; }
+        public bool IsUpdated { get; set; } = false;
+        public DateOnly? UpdatedDate { get; set; }
         public int HotelsId { get; set; }
         public Hotels Hotels { get; set; }  
 
