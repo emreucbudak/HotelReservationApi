@@ -44,8 +44,7 @@
     <Folder Include="Features\CQRS\Rooms\Handler\" />
     <Folder Include="Features\CQRS\RoomTypes\Command\" />
     <Folder Include="Features\CQRS\RoomTypes\Handler\" />
-    <Folder Include="Features\CQRS\Service\Command\" />
-    <Folder Include="Features\CQRS\Service\Handler\" />
+    <Folder Include="Features\CQRS\Service\Queries\" />
     <Folder Include="Features\CQRS\TypesFeatures\Command\" />
     <Folder Include="Features\CQRS\TypesFeatures\Handler\" />
   </ItemGroup>
