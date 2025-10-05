@@ -2,6 +2,7 @@
 using HotelReservationApi.Application.Features.CQRS.AdsBanner.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Coupon.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.NewsPopUp.Command.Create;
+using HotelReservationApi.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace HotelReservationApi.Application.AutoMapper
             CreateMap<Domain.Entities.AdsBanner, Features.CQRS.AdsBanner.Queries.GetAll.GetAllAdsBannerQueriesResponse>().ReverseMap();
             CreateMap<Domain.Entities.Coupon, Features.CQRS.Coupon.Queries.GetAll.GetAllCouponQueriesResponse>().ReverseMap();
             CreateMap<CreateNewsPopUpCommandRequest, Domain.Entities.NewsPopUp>().ReverseMap();
+            CreateMap<NewsPopUp, Features.CQRS.NewsPopUp.Queries.GetAll.GetAllNewsPopUpQueriesResponse>().ReverseMap();
         }
     }
 }
