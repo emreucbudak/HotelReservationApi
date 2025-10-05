@@ -14,6 +14,8 @@ namespace HotelReservationApi.Domain.Entities
         public string Email { get; set; }
         public int PaymetMethodId { get; set; } 
         public PaymentMethod PaymetMethod { get; set; }
+        public int PaymentTimingId { get; set; }
+        public PaymentTiming PaymentTiming { get; set; }
         public int ReservationId { get; set; }
         public Reservation Reservation { get; set; }
         public int Price { get; set; }
