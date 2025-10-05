@@ -37,7 +37,6 @@
     <Folder Include="Features\CQRS\HowFarSpecialPlace\Handler\" />
     <Folder Include="Features\CQRS\Neighborhood\Command\" />
     <Folder Include="Features\CQRS\Neighborhood\Handler\" />
-    <Folder Include="Features\CQRS\NewsPopUp\Handler\" />
     <Folder Include="Features\CQRS\PriceList\Command\" />
     <Folder Include="Features\CQRS\PriceList\Handler\" />
     <Folder Include="Features\CQRS\Reservation\Command\" />
