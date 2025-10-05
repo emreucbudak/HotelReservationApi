@@ -23,6 +23,7 @@ namespace HotelReservationApi.Application.AutoMapper
             CreateMap<CreateNewsPopUpCommandRequest, Domain.Entities.NewsPopUp>().ReverseMap();
             CreateMap<NewsPopUp, Features.CQRS.NewsPopUp.Queries.GetAll.GetAllNewsPopUpQueriesResponse>().ReverseMap();
             CreateMap<CreateFAQCommandRequest, Domain.Entities.FAQ>().ReverseMap();
+            CreateMap<FAQ, Features.CQRS.FAQ.Queries.GetAll.GetAllFAQQueriesResponse>().ReverseMap();
         }
     }
 }
