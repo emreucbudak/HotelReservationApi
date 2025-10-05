@@ -19,8 +19,7 @@
   <ItemGroup>
     <Folder Include="Features\CQRS\Bills\Command\" />
     <Folder Include="Features\CQRS\Bills\Handler\" />
-    <Folder Include="Features\CQRS\Customer\Command\" />
-    <Folder Include="Features\CQRS\Customer\Handler\" />
+    <Folder Include="Features\CQRS\Customer\Queries\" />
     <Folder Include="Features\CQRS\DiscountList\Command\" />
     <Folder Include="Features\CQRS\DiscountList\Handler\" />
     <Folder Include="Features\CQRS\HotelInformation\Command\" />
