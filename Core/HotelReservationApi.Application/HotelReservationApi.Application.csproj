@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\CQRS\AdsBanner\Handler\" />
     <Folder Include="Features\CQRS\Bills\Command\" />
     <Folder Include="Features\CQRS\Bills\Handler\" />
     <Folder Include="Features\CQRS\Coupon\Handler\" />
