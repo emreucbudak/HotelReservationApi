@@ -32,7 +32,9 @@ namespace HotelReservationApi.Application.AutoMapper
             CreateMap<CreateReviewsCommandRequest, Domain.Entities.Reviews>().ReverseMap();
             CreateMap<Reviews, Features.CQRS.Reviews.Queries.GetByHotelId.GetReviewsByHotelIdQueriesResponse>().ReverseMap();
             CreateMap<HotelCategory, Features.CQRS.HotelCategory.Queries.GetAll.GetAllHotelCategoryQueriesResponse>().ReverseMap();
-            CreateMap<Rooms,Features.CQRS.Rooms.Command.Create.CreateRoomsCommandRequest>().ReverseMap();   
+            CreateMap<Rooms,Features.CQRS.Rooms.Command.Create.CreateRoomsCommandRequest>().ReverseMap();
+            CreateMap<Domain.Entities.HotelsPoliticy, Features.CQRS.HotelsPoliticy.Command.Create.CreateHotelsPoliticyCommandRequest>().ReverseMap();
+
         }
     }
 }
