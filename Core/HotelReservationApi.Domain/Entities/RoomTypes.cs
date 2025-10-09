@@ -9,7 +9,7 @@ namespace HotelReservationApi.Domain.Entities
 {
     public class RoomTypes  : BaseEntity
     {
-        public int Id { get; set; }
+
         public string TypeName { get; set; }
         public int HowManyPeople { get; set; }
         public ICollection<TypesFeatures> TypesFeatures { get; set; }

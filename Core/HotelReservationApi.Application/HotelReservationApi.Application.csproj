@@ -22,7 +22,6 @@
     <Folder Include="Features\CQRS\Customer\Queries\" />
     <Folder Include="Features\CQRS\DiscountList\Command\" />
     <Folder Include="Features\CQRS\DiscountList\Handler\" />
-    <Folder Include="Features\CQRS\HotelCategory\Queries\" />
     <Folder Include="Features\CQRS\HotelInformation\Command\" />
     <Folder Include="Features\CQRS\HotelInformation\Handler\" />
     <Folder Include="Features\CQRS\HotelsPoliticy\Command\" />
