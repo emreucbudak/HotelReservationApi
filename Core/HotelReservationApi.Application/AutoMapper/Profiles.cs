@@ -3,6 +3,7 @@ using HotelReservationApi.Application.Features.CQRS.AdsBanner.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Coupon.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Customer.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.FAQ.Command.Create;
+using HotelReservationApi.Application.Features.CQRS.HowFarSpecialPlace.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.NewsPopUp.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Reviews.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Service.Command.Create;
@@ -35,6 +36,7 @@ namespace HotelReservationApi.Application.AutoMapper
             CreateMap<Rooms,Features.CQRS.Rooms.Command.Create.CreateRoomsCommandRequest>().ReverseMap();
             CreateMap<Domain.Entities.HotelsPoliticy, Features.CQRS.HotelsPoliticy.Command.Create.CreateHotelsPoliticyCommandRequest>().ReverseMap();
             CreateMap<Domain.Entities.HotelsPoliticy, Features.CQRS.HotelsPoliticy.Queries.GetAll.GetAllHotelsPoliticyQueriesResponse>().ReverseMap();
+            CreateMap<HowFarSpecialPlace,CreateHowFarSpecialPlaceCommandRequest>().ReverseMap();
 
         }
     }
