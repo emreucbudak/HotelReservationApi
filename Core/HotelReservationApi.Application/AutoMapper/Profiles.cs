@@ -2,6 +2,7 @@
 using HotelReservationApi.Application.Features.CQRS.AdsBanner.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Bills.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Bills.Queries.GetAll;
+using HotelReservationApi.Application.Features.CQRS.Bills.Queries.GetAllByHotelId;
 using HotelReservationApi.Application.Features.CQRS.Coupon.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Customer.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.FAQ.Command.Create;
@@ -42,6 +43,7 @@ namespace HotelReservationApi.Application.AutoMapper
             CreateMap<HowFarSpecialPlace, Features.CQRS.HowFarSpecialPlace.Queries.GetAllByHotelId.GetAllHowFarSpecialPlaceQueriesResponse>().ForMember(destinationMember: x=> x.SpecialPlaceCategoryName, memberOptions: opt => opt.MapFrom(x=> x.SpecialPlaceCategory)).ReverseMap().ForMember(destinationMember: x=> x.SpecialPlaceCategory , memberOptions:opt=> opt.Ignore());
             CreateMap<CreateBillsCommandRequest, Bills>().ReverseMap();
             CreateMap<Bills,GetAllBillsQueriesResponse>().ForMember(destinationMember:x => x.MethodName,memberOptions:y=> y.MapFrom(x=> x.PaymetMethod)).ForMember(destinationMember: x => x.TimingName, memberOptions: y => y.MapFrom(x => x.PaymentTiming)).ForMember(destinationMember:x=> x.HotelName, memberOptions: opt=> opt.MapFrom(x=> x.Hotels)).ReverseMap();
+            CreateMap<Bills, GetAllBillsByHotelIdQueriesResponse>().ForMember(destinationMember: x => x.MethodName, memberOptions: y => y.MapFrom(x => x.PaymetMethod)).ForMember(destinationMember: x => x.TimingName, memberOptions: y => y.MapFrom(x => x.PaymentTiming)).ForMember(destinationMember: x => x.HotelName, memberOptions: opt => opt.MapFrom(x => x.Hotels)).ReverseMap();
 
         }
     }

@@ -16,5 +16,6 @@ namespace HotelReservationApi.Application.Features.CQRS.Bills.Queries.GetAllByHo
         public Reservation Reservation { get; set; }
         public string MethodName { get; set; }
         public string TimingName { get; set; }
+        public string HotelName { get; set; }
     }
 }
