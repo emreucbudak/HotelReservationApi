@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\CQRS\Bills\Command\" />
     <Folder Include="Features\CQRS\Bills\Queries\" />
     <Folder Include="Features\CQRS\Customer\Queries\" />
     <Folder Include="Features\CQRS\DiscountList\Command\" />
@@ -38,7 +37,7 @@
     <Folder Include="Features\CQRS\RoomTypes\Command\" />
     <Folder Include="Features\CQRS\RoomTypes\Handler\" />
     <Folder Include="Features\CQRS\TypesFeatures\Command\" />
-    <Folder Include="Features\CQRS\TypesFeatures\Handler\" />
+    <Folder Include="Features\CQRS\TypesFeatures\Queries\" />
   </ItemGroup>
 
 </Project>
