@@ -28,7 +28,6 @@
     <Folder Include="Features\CQRS\HotelsService\Handler\" />
     <Folder Include="Features\CQRS\Hotels\Command\" />
     <Folder Include="Features\CQRS\Hotels\Handler\" />
-    <Folder Include="Features\CQRS\HowFarSpecialPlace\Queries\" />
     <Folder Include="Features\CQRS\Neighborhood\Command\" />
     <Folder Include="Features\CQRS\Neighborhood\Handler\" />
     <Folder Include="Features\CQRS\PriceList\Command\" />
