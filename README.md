@@ -5,7 +5,7 @@ Bu proje, kullanıcıların otel araması, rezervasyon yapması ve yönetim pane
 ## 🚀 Kullanılan Teknolojiler
 
 ### 🧩 Backend
-- ASP.NET Core (.NET 8)
+- ASP.NET Core (.NET 9)
 - Entity Framework Core
 - PostgreSQL (PostGIS ile coğrafi veriler)
 - Redis (Cache yönetimi)
