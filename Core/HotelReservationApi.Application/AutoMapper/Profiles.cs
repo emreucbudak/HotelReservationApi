@@ -41,7 +41,7 @@ namespace HotelReservationApi.Application.AutoMapper
             CreateMap<HowFarSpecialPlace,CreateHowFarSpecialPlaceCommandRequest>().ReverseMap();
             CreateMap<HowFarSpecialPlace, Features.CQRS.HowFarSpecialPlace.Queries.GetAllByHotelId.GetAllHowFarSpecialPlaceQueriesResponse>().ForMember(destinationMember: x=> x.SpecialPlaceCategoryName, memberOptions: opt => opt.MapFrom(x=> x.SpecialPlaceCategory)).ReverseMap().ForMember(destinationMember: x=> x.SpecialPlaceCategory , memberOptions:opt=> opt.Ignore());
             CreateMap<CreateBillsCommandRequest, Bills>().ReverseMap();
-            CreateMap<Bills,GetAllBillsQueriesResponse>().ForMember(destinationMember:x => x.MethodName,memberOptions:y=> y.MapFrom(x=> x.PaymetMethod)).ForMember(destinationMember: x => x.TimingName, memberOptions: y => y.MapFrom(x => x.PaymentTiming)).ReverseMap();
+            CreateMap<Bills,GetAllBillsQueriesResponse>().ForMember(destinationMember:x => x.MethodName,memberOptions:y=> y.MapFrom(x=> x.PaymetMethod)).ForMember(destinationMember: x => x.TimingName, memberOptions: y => y.MapFrom(x => x.PaymentTiming)).ForMember(destinationMember:x=> x.HotelName, memberOptions: opt=> opt.MapFrom(x=> x.Hotels)).ReverseMap();
 
         }
     }

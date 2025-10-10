@@ -13,8 +13,7 @@ namespace HotelReservationApi.Domain.Entities
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }
         public ICollection<Customer>? Customer { get; set; }
-        public int HotelsId { get; set; }
-        public Hotels Hotels { get; set; }
+
 
 
     }
