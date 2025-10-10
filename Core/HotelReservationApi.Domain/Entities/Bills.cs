@@ -19,6 +19,7 @@ namespace HotelReservationApi.Domain.Entities
         public int ReservationId { get; set; }
         public Reservation Reservation { get; set; }
         public int Price { get; set; }
+        public DateOnly BillDate {  get; set; }
 
     }
 }
