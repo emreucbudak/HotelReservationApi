@@ -37,6 +37,7 @@ namespace HotelReservationApi.Application.AutoMapper
             CreateMap<Domain.Entities.HotelsPoliticy, Features.CQRS.HotelsPoliticy.Command.Create.CreateHotelsPoliticyCommandRequest>().ReverseMap();
             CreateMap<Domain.Entities.HotelsPoliticy, Features.CQRS.HotelsPoliticy.Queries.GetAll.GetAllHotelsPoliticyQueriesResponse>().ReverseMap();
             CreateMap<HowFarSpecialPlace,CreateHowFarSpecialPlaceCommandRequest>().ReverseMap();
+            CreateMap<HowFarSpecialPlace, Features.CQRS.HowFarSpecialPlace.Queries.GetAllByHotelId.GetAllHowFarSpecialPlaceQueriesResponse>().ForMember(destinationMember: x=> x.SpecialPlaceCategoryName, memberOptions: opt => opt.MapFrom(x=> x.SpecialPlaceCategory)).ReverseMap().ForMember(destinationMember: x=> x.SpecialPlaceCategory , memberOptions:opt=> opt.Ignore());
 
         }
     }
