@@ -20,13 +20,12 @@
     <Folder Include="Features\CQRS\Hotels\Command\" />
     <Folder Include="Features\CQRS\Hotels\Handler\" />
     <Folder Include="Features\CQRS\PriceList\Command\" />
-    <Folder Include="Features\CQRS\PriceList\Handler\" />
+    <Folder Include="Features\CQRS\PriceList\Queries\" />
     <Folder Include="Features\CQRS\Reservation\Command\" />
-    <Folder Include="Features\CQRS\Reservation\Handler\" />
+    <Folder Include="Features\CQRS\Reservation\Queries\" />
     <Folder Include="Features\CQRS\Rooms\Queries\" />
     <Folder Include="Features\CQRS\RoomTypes\Command\" />
     <Folder Include="Features\CQRS\RoomTypes\Handler\" />
-    <Folder Include="Features\CQRS\TypesFeatures\Command\" />
     <Folder Include="Features\CQRS\TypesFeatures\Queries\" />
   </ItemGroup>
 
