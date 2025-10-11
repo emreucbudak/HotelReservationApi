@@ -47,6 +47,7 @@ namespace HotelReservationApi.Application.AutoMapper
             CreateMap<Bills, GetAllBillsByHotelIdQueriesResponse>().ForMember(destinationMember: x => x.MethodName, memberOptions: y => y.MapFrom(x => x.PaymetMethod)).ForMember(destinationMember: x => x.TimingName, memberOptions: y => y.MapFrom(x => x.PaymentTiming)).ForMember(destinationMember: x => x.HotelName, memberOptions: opt => opt.MapFrom(x => x.Hotels)).ReverseMap();
             CreateMap<HotelInformation, Features.CQRS.HotelInformation.Command.Create.CreateHotelInformationCommandRequest>().ReverseMap();
             CreateMap<HotelInformation,GetHotelInformationByIdQueriesResponse>().ReverseMap();
+            CreateMap<HotelServices,Features.CQRS.HotelsService.Queries.GetAll.GetAllHotelsServiceQueriesResponse>().ForMember(destinationMember: x=> x.ServiceName,memberOptions:opt => opt.MapFrom(x=>x.Service)).ForMember(destinationMember:x=> x.IsNeedAFee,memberOptions:opt=> opt.MapFrom(y => y.Service)).ReverseMap();
 
         }
     }

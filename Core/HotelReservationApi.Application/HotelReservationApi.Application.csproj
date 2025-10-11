@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\CQRS\HotelsService\Queries\" />
     <Folder Include="Features\CQRS\Hotels\Command\" />
     <Folder Include="Features\CQRS\Hotels\Handler\" />
     <Folder Include="Features\CQRS\Neighborhood\Command\" />
