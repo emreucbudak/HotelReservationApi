@@ -8,6 +8,7 @@ using HotelReservationApi.Application.Features.CQRS.Customer.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.FAQ.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.HotelInformation.Queries.GetByHotelId;
 using HotelReservationApi.Application.Features.CQRS.HowFarSpecialPlace.Command.Create;
+using HotelReservationApi.Application.Features.CQRS.Neighborhood.Queries.GetAll;
 using HotelReservationApi.Application.Features.CQRS.NewsPopUp.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Reviews.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Service.Command.Create;
@@ -48,7 +49,7 @@ namespace HotelReservationApi.Application.AutoMapper
             CreateMap<HotelInformation, Features.CQRS.HotelInformation.Command.Create.CreateHotelInformationCommandRequest>().ReverseMap();
             CreateMap<HotelInformation,GetHotelInformationByIdQueriesResponse>().ReverseMap();
             CreateMap<HotelServices,Features.CQRS.HotelsService.Queries.GetAll.GetAllHotelsServiceQueriesResponse>().ForMember(destinationMember: x=> x.ServiceName,memberOptions:opt => opt.MapFrom(x=>x.Service)).ForMember(destinationMember:x=> x.IsNeedAFee,memberOptions:opt=> opt.MapFrom(y => y.Service)).ReverseMap();
-
+            CreateMap<Neighborhood,GetAllNeighborhoodQueriesResponse>().ReverseMap();
         }
     }
 }
