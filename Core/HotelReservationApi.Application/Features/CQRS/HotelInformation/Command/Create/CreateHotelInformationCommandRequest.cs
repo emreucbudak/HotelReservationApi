@@ -12,5 +12,6 @@ namespace HotelReservationApi.Application.Features.CQRS.HotelInformation.Command
         public string AboutHotel { get; set; }
         public TimeSpan CheckInTime { get; set; }
         public TimeSpan CheckOutTime { get; set; }
+        public int HotelsId { get; set; }
     }
 }

@@ -14,5 +14,7 @@ namespace HotelReservationApi.Domain.Entities
         public string AboutHotel { get; set; }
         public TimeSpan CheckInTime { get; set; }
         public TimeSpan CheckOutTime { get; set; }
+        public  int HotelsId { get; set; }  
+        public Hotels Hotels { get; set; }
     }
 }

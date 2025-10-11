@@ -16,8 +16,6 @@ namespace HotelReservationApi.Domain.Entities
         public ICollection<HotelImages>? HotelImages { get; set; }
         public ICollection<HowFarSpecialPlace>? HowFarSpecialPlaces { get; set; }
         public ICollection<Reviews>? Reviews { get; set; }
-        public int HotelInformationId { get; set; }
-        public HotelInformation HotelInformation { get; set; }
 
         public ICollection<HotelsPoliticy>? HotelsPoliticies { get; set; }  
         public int HotelAdressId { get; set; }
