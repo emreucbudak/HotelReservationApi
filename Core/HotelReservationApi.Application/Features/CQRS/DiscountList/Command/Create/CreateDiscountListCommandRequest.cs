@@ -11,7 +11,6 @@ namespace HotelReservationApi.Application.Features.CQRS.DiscountList.Command.Cre
     {
         public bool IsDiscountActive { get; set; }
         public int DiscountPercentage { get; set; }
-        public int DiscountPrice { get; set; }
         public bool IsDiscountForReservationDate { get; set; }
         public DateTime? DiscountStartTime { get; set; }
         public DateTime? DiscountEndTime { get; set; }
