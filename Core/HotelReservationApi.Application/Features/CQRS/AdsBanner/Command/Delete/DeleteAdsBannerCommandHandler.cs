@@ -1,4 +1,5 @@
-﻿using HotelReservationApi.Application.UnitOfWork;
+﻿using HotelReservationApi.Application.Features.CQRS.AdsBanner.Exceptions;
+using HotelReservationApi.Application.UnitOfWork;
 using HotelReservationApi.Domain.Entities;
 using MediatR;
 using System;
@@ -21,6 +22,10 @@ namespace HotelReservationApi.Application.Features.CQRS.AdsBanner.Command.Delete
         public async Task Handle(DeleteAdsBannerCommandRequest request, CancellationToken cancellationToken)
         {
             var ads = await _unit.readRepository<HotelReservationApi.Domain.Entities.AdsBanner>().GetByExpression(predicate: x=> x.Id == request.Id,enableTracking:false);
+            if(ads is null)
+            {
+                throw new AdsBannerNotFoundExceptions(request.Id);
+            }
             ads.IsDeleted = true;
             await _unit.writeRepository<HotelReservationApi.Domain.Entities.AdsBanner>().UpdateAsync(ads);
             await _unit.SaveAsync();
