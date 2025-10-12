@@ -1,4 +1,5 @@
-﻿using HotelReservationApi.Application.UnitOfWork;
+﻿using HotelReservationApi.Application.Features.CQRS.Coupon.Exceptions;
+using HotelReservationApi.Application.UnitOfWork;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,10 @@ namespace HotelReservationApi.Application.Features.CQRS.Coupon.Command.Delete
         public async Task Handle(DeleteCouponCommandRequest request, CancellationToken cancellationToken)
         {
             var coupon =  await _unitOfWork.readRepository<Domain.Entities.Coupon>().GetByExpression(predicate: x=> x.Id == request.Id, enableTracking:true);
+            if(coupon is null)
+            {
+                throw new CouponNotFoundExceptions(request.Id);
+            }
             coupon.IsDeleted = true;
             await _unitOfWork.writeRepository<Domain.Entities.Coupon>().UpdateAsync(coupon);
             await _unitOfWork.SaveAsync();
