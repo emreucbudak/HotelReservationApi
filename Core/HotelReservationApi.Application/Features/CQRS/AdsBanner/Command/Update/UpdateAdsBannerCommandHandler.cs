@@ -1,4 +1,5 @@
-﻿using HotelReservationApi.Application.UnitOfWork;
+﻿using HotelReservationApi.Application.Features.CQRS.AdsBanner.Exceptions;
+using HotelReservationApi.Application.UnitOfWork;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,10 @@ namespace HotelReservationApi.Application.Features.CQRS.AdsBanner.Command.Update
         public async Task Handle(UpdateAdsBannerCommandRequest request, CancellationToken cancellationToken)
         {
             var ads = await _unit.readRepository<Domain.Entities.AdsBanner>().GetByExpression(predicate: x => x.Id == request.Id, enableTracking: true);
+            if (ads is null)
+            {
+                throw new AdsBannerNotFoundExceptions(request.Id);
+            }
             ads.Title = request.Title;
             ads.Description = request.Description;
             ads.ImageUrl = request.ImageUrl;
