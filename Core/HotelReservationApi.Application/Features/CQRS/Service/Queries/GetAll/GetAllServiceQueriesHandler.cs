@@ -22,7 +22,7 @@ namespace HotelReservationApi.Application.Features.CQRS.Service.Queries.GetAll
 
         public async Task<List<GetAllServiceQueriesResponse>> Handle(GetAllServiceQueriesRequest request, CancellationToken cancellationToken)
         {
-           var service = await  unitOfWork.readRepository<Domain.Entities.Service>().GetAllAsync(predicate: x => x.HotelsId == request.Id, enableTracking: false);
+           var service = await  unitOfWork.readRepository<Domain.Entities.Service>().GetAllAsync( enableTracking: false);
             var services = mp.Map<List<GetAllServiceQueriesResponse>>(service);
             return services;
         }

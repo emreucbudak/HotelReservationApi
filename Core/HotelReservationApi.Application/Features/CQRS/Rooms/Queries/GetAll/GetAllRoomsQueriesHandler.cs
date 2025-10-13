@@ -1,4 +1,6 @@
-﻿using HotelReservationApi.Application.UnitOfWork;
+﻿using HotelReservationApi.Application.Features.CQRS.Rooms.Exceptions;
+using HotelReservationApi.Application.UnitOfWork;
+using HotelReservationApi.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -21,6 +23,10 @@ namespace HotelReservationApi.Application.Features.CQRS.Rooms.Queries.GetAll
         public async Task<List<GetAllRoomsQueriesResponse>> Handle(GetAllRoomsQueriesRequest request, CancellationToken cancellationToken)
         {
             var rooms = await _unitOfWork.readRepository<HotelReservationApi.Domain.Entities.Rooms>().GetAllWithPaging(enableTracking: false, predicate: x => x.HotelsId == request.HotelId, page:request.Page,size:request.Size,includable:x=> x.Include(y=> y.RoomTypes).ThenInclude(x=> x.TypesFeatures).Include(x=> x.PriceList).ThenInclude(z=> z.DiscountList));
+            if (rooms is null)
+            {
+                throw new RoomsGetByIdNotFoundExceptions(request.HotelId);
+            }
             return rooms.Select(x => new GetAllRoomsQueriesResponse
             {
                 RoomNumber = x.RoomNumber,
