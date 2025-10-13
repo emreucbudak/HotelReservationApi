@@ -1,4 +1,5 @@
-﻿using HotelReservationApi.Application.UnitOfWork;
+﻿using HotelReservationApi.Application.Features.CQRS.DiscountList.Exceptions;
+using HotelReservationApi.Application.UnitOfWork;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,10 @@ namespace HotelReservationApi.Application.Features.CQRS.DiscountList.Command.Del
         public async Task Handle(DeleteDiscountListCommandRequest request, CancellationToken cancellationToken)
         {
             var discountList = await unitOfWork.readRepository<Domain.Entities.DiscountList>().GetByExpression(enableTracking:false,predicate:x=> x.Id == request.DiscountListId);
+            if (discountList is null)
+            {
+                throw new DiscountListNotFoundExceptions(request.DiscountListId);
+            }
             await unitOfWork.writeRepository<Domain.Entities.DiscountList>().DeleteAsync(discountList);
             await unitOfWork.SaveAsync();
         }
