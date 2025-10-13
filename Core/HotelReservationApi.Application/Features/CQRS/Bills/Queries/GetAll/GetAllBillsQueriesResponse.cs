@@ -13,7 +13,7 @@ namespace HotelReservationApi.Application.Features.CQRS.Bills.Queries.GetAll
         public string Email { get; set; }
         public int Price { get; set; }
         public int ReservationId { get; set; }
-        public Reservation Reservation { get; set; }
+        public Domain.Entities.Reservation Reservation { get; set; }
         public string MethodName { get; set; }
         public string TimingName { get; set; }
         public string HotelName { get; set; }   

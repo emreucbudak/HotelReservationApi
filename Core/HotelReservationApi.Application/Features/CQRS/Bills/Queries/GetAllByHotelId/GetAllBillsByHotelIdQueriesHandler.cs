@@ -23,7 +23,7 @@ namespace HotelReservationApi.Application.Features.CQRS.Bills.Queries.GetAllByHo
 
         public async Task<List<GetAllBillsByHotelIdQueriesResponse>> Handle(GetAllBillsByHotelIdQueriesRequest request, CancellationToken cancellationToken)
         {
-            var bills = await unitOfWork.readRepository<HotelReservationApi.Domain.Entities.Bills>().GetAllWithPaging(enableTracking: false, predicate: x => x.HotelsId == request.HotelId, page: request.PageCount, size: request.PageSize);
+            var bills = await unitOfWork.readRepository<HotelReservationApi.Domain.Entities.Bills>().GetAllWithPaging(enableTracking: false, predicate: x => x.Reservation.HotelsId == request.HotelId, page: request.PageCount, size: request.PageSize);
             if (bills is null || bills.Count == 0)
             {
                 throw new BillsNotFoundExceptions(request.HotelId);
