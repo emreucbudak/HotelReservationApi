@@ -9,7 +9,7 @@ namespace HotelReservationApi.Application.Features.CQRS.HotelsPoliticy.Exception
 {
     public class HotelsPoliticyByIdNotFoundExceptions : NotFoundExceptions
     {
-        public HotelsPoliticyByIdNotFoundExceptions(int id) : base($"{id}'e sahip hotelin politikaları bulunamadı")
+        public HotelsPoliticyByIdNotFoundExceptions(int id) : base($"{id}'e sahip otelin politikaları bulunamadı")
         {
         }
     }
