@@ -1,4 +1,5 @@
-﻿using HotelReservationApi.Application.UnitOfWork;
+﻿using HotelReservationApi.Application.Features.CQRS.Reviews.Exceptions;
+using HotelReservationApi.Application.UnitOfWork;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,10 @@ namespace HotelReservationApi.Application.Features.CQRS.Reviews.Command.Update
         public async Task Handle(UpdateReviewsCommandRequest request, CancellationToken cancellationToken)
         {
             var review = await unitOfWork.readRepository<Domain.Entities.Reviews>().GetByExpression(predicate:x=> x.Id == request.Id,enableTracking:true);
+            if (review is null)
+            {
+                throw new ReviewsNotFoundExceptions(request.Id);
+            }
             review.Comment = request.Comment;
             review.Rating = request.Rating;
             review.Title = request.Title;
