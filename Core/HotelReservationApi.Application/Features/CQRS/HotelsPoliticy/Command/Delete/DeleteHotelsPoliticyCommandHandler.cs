@@ -1,4 +1,5 @@
-﻿using HotelReservationApi.Application.UnitOfWork;
+﻿using HotelReservationApi.Application.Features.CQRS.HotelsPoliticy.Exceptions;
+using HotelReservationApi.Application.UnitOfWork;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,10 @@ namespace HotelReservationApi.Application.Features.CQRS.HotelsPoliticy.Command.D
         public async Task Handle(DeleteHotelsPoliticyCommandRequest request, CancellationToken cancellationToken)
         {
             var hotelsPoliticy = await  unitOfWork.readRepository<HotelReservationApi.Domain.Entities.HotelsPoliticy>().GetByExpression(predicate: x => x.Id == request.Id, enableTracking: false);
+            if (hotelsPoliticy is null)
+            {
+                throw new HotelsPoliticyNotFoundExceptions(request.Id);
+            }
             await unitOfWork.writeRepository<HotelReservationApi.Domain.Entities.HotelsPoliticy>().DeleteAsync(hotelsPoliticy);
             await unitOfWork.SaveAsync();
         }
