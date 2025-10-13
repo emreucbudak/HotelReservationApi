@@ -23,7 +23,6 @@
     <Folder Include="Features\CQRS\PriceList\Queries\" />
     <Folder Include="Features\CQRS\Reservation\Command\" />
     <Folder Include="Features\CQRS\Reservation\Queries\" />
-    <Folder Include="Features\CQRS\TypesFeatures\Queries\" />
   </ItemGroup>
 
 </Project>
