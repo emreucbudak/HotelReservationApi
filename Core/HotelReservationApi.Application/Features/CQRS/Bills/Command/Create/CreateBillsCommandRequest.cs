@@ -14,7 +14,7 @@ namespace HotelReservationApi.Application.Features.CQRS.Bills.Command.Create
         public int PaymetMethodId { get; set; }
         public int PaymentTimingId { get; set; }
         public int ReservationId { get; set; }
-        public int Price { get; set; }
-        public DateOnly BillDate { get; set; }
+
+
     }
 }
