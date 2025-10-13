@@ -1,4 +1,5 @@
-﻿using HotelReservationApi.Application.UnitOfWork;
+﻿using HotelReservationApi.Application.Features.CQRS.RoomTypes.Exceptions;
+using HotelReservationApi.Application.UnitOfWork;
 using HotelReservationApi.Domain.Entities;
 using MediatR;
 using System;
@@ -23,11 +24,14 @@ namespace HotelReservationApi.Application.Features.CQRS.RoomTypes.Command.Create
            List<HotelReservationApi.Domain.Entities.TypesFeatures> typesFeatures = new();
             foreach (var featureId in request.TypesFeaturesIds)
             {
-                var feature = await _unitOfWork.readRepository<HotelReservationApi.Domain.Entities.TypesFeatures>().GetByExpression(predicate:x=> x.Id == featureId,enableTracking:false);
-                if (feature != null)
+                var feature = await _unitOfWork.readRepository<HotelReservationApi.Domain.Entities.TypesFeatures>().GetByExpression(predicate:x=> x.Id == featureId,enableTracking:false);                
+                if (feature is null)
                 {
-                    typesFeatures.Add(feature);
+                    throw new TypesFeaturesNotFoundExceptions(featureId);
                 }
+                typesFeatures.Add(feature);
+                
+                
             }
             Domain.Entities.RoomTypes roomTypes = new Domain.Entities.RoomTypes
             {
