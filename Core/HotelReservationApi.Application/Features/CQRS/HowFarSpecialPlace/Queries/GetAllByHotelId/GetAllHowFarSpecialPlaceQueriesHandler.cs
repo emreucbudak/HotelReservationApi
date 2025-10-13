@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HotelReservationApi.Application.Features.CQRS.HowFarSpecialPlace.Exceptions;
 using HotelReservationApi.Application.UnitOfWork;
 using MediatR;
 using System;
@@ -23,6 +24,10 @@ namespace HotelReservationApi.Application.Features.CQRS.HowFarSpecialPlace.Queri
         public async Task<List<GetAllHowFarSpecialPlaceQueriesResponse>> Handle(GetAllHowFarSpecialPlaceQueriesRequest request, CancellationToken cancellationToken)
         {
            var getAllHowFarSpecialPlace = await unitOfWork.readRepository<HotelReservationApi.Domain.Entities.HowFarSpecialPlace>().GetAllAsync(enableTracking: false,predicate:x=> x.HotelsId == request.HotelId);
+            if(getAllHowFarSpecialPlace is null)
+            {
+                throw new HowFarSpecialGetByIdNotFoundExceptions(request.HotelId);
+            }
             return mapper.Map<List<GetAllHowFarSpecialPlaceQueriesResponse>>(getAllHowFarSpecialPlace);
         }
     }

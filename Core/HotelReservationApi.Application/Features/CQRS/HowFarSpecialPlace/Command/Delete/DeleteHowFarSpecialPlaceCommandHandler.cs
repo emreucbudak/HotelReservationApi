@@ -1,4 +1,5 @@
-﻿using HotelReservationApi.Application.UnitOfWork;
+﻿using HotelReservationApi.Application.Features.CQRS.HowFarSpecialPlace.Exceptions;
+using HotelReservationApi.Application.UnitOfWork;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,10 @@ namespace HotelReservationApi.Application.Features.CQRS.HowFarSpecialPlace.Comma
         public async Task Handle(DeleteHowFarSpecialPlaceCommandRequest request, CancellationToken cancellationToken)
         {
             var howFarSpecialPlace = await  unitOfWork.readRepository<HotelReservationApi.Domain.Entities.HowFarSpecialPlace>().GetByExpression(predicate: x => x.Id == request.Id, enableTracking: false);
+            if(howFarSpecialPlace is null)
+            {
+                throw new HowFarSpecialNotFoundExceptions(request.Id);
+            }
             await unitOfWork.writeRepository<HotelReservationApi.Domain.Entities.HowFarSpecialPlace>().DeleteAsync(howFarSpecialPlace);
             await unitOfWork.SaveAsync();
         }
