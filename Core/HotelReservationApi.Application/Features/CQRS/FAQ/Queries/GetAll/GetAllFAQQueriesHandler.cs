@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HotelReservationApi.Application.Features.CQRS.FAQ.Exceptions;
 using HotelReservationApi.Application.UnitOfWork;
 using MediatR;
 using System;
@@ -23,6 +24,10 @@ namespace HotelReservationApi.Application.Features.CQRS.FAQ.Queries.GetAll
         public async  Task<List<GetAllFAQQueriesResponse>> Handle(GetAllFAQQueriesRequest request, CancellationToken cancellationToken)
         {
             var faq = await unitOfWork.readRepository<Domain.Entities.FAQ>().GetAllAsync(predicate: x => x.HotelID == request.HotelID, enableTracking: false);
+            if (faq is null)
+            {
+                throw new FAQByHotelIdNotFoundExceptions(request.HotelID);
+            }
             var faqs = mp.Map<List<GetAllFAQQueriesResponse>>(faq);
             return faqs;
         }

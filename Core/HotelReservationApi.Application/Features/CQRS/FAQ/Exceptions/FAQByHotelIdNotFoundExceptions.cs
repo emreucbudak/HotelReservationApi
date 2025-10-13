@@ -9,7 +9,7 @@ namespace HotelReservationApi.Application.Features.CQRS.FAQ.Exceptions
 {
     public class FAQByHotelIdNotFoundExceptions : NotFoundExceptions
     {
-        public FAQByHotelIdNotFoundExceptions(int id) : base($"{id}'e otelinize ait SSS bulunamadı")
+        public FAQByHotelIdNotFoundExceptions(int id) : base($"{id}'e sahip otelinize ait SSS bulunamadı")
         {
         }
     }
