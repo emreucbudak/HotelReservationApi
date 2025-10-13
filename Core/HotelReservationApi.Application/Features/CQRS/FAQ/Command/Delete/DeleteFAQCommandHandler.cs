@@ -1,4 +1,5 @@
-﻿using HotelReservationApi.Application.UnitOfWork;
+﻿using HotelReservationApi.Application.Features.CQRS.FAQ.Exceptions;
+using HotelReservationApi.Application.UnitOfWork;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,10 @@ namespace HotelReservationApi.Application.Features.CQRS.FAQ.Command.Delete
         public async Task Handle(DeleteFAQCommandRequest request, CancellationToken cancellationToken)
         {
             var faq = await _unitOfWork.readRepository<Domain.Entities.FAQ>().GetByExpression(predicate: x => x.Id == request.Id, enableTracking: false);
+            if (faq is null)
+            {
+                throw new FAQNotFoundExceptions(request.Id);
+            }
             await _unitOfWork.writeRepository<Domain.Entities.FAQ>().DeleteAsync(faq);
             await _unitOfWork.SaveAsync();
         }

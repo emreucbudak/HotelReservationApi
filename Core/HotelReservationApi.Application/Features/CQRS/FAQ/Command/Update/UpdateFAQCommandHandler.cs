@@ -1,4 +1,5 @@
-﻿using HotelReservationApi.Application.UnitOfWork;
+﻿using HotelReservationApi.Application.Features.CQRS.FAQ.Exceptions;
+using HotelReservationApi.Application.UnitOfWork;
 using MediatR;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System;
@@ -21,6 +22,10 @@ namespace HotelReservationApi.Application.Features.CQRS.FAQ.Command.Update
         public async Task Handle(UpdateFAQCommandRequest request, CancellationToken cancellationToken)
         {
             var faq = await _unitOfWork.readRepository<Domain.Entities.FAQ>().GetByExpression(predicate: x => x.Id == request.Id, enableTracking: true);
+            if (faq is null)
+            {
+                throw new FAQNotFoundExceptions(request.Id);
+            }
             faq.Question = request.Question;
             faq.Answer = request.Answer;
             await _unitOfWork.writeRepository<Domain.Entities.FAQ>().UpdateAsync(faq);
