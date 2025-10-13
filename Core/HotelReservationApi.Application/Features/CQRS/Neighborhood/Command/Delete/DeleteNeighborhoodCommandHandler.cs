@@ -1,4 +1,5 @@
-﻿using HotelReservationApi.Application.UnitOfWork;
+﻿using HotelReservationApi.Application.Features.CQRS.Neighborhood.Exceptions;
+using HotelReservationApi.Application.UnitOfWork;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,10 @@ namespace HotelReservationApi.Application.Features.CQRS.Neighborhood.Command.Del
         public async Task Handle(DeleteNeighborhoodCommandRequest request, CancellationToken cancellationToken)
         {
             var neighborhood = await unitOfWork.readRepository<Domain.Entities.Neighborhood>().GetByExpression(enableTracking: false, predicate: x => x.Id == request.Id);
+            if (neighborhood is null)
+            {
+                throw new NeighborhoodNotFoundExceptions(request.Id);
+            }
             await unitOfWork.writeRepository<Domain.Entities.Neighborhood>().DeleteAsync(neighborhood);
             await unitOfWork.SaveAsync();
         }

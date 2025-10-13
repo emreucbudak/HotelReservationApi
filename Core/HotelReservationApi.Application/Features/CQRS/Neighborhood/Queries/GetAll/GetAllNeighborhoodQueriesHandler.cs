@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HotelReservationApi.Application.Features.CQRS.Neighborhood.Exceptions;
 using HotelReservationApi.Application.UnitOfWork;
 using MediatR;
 using System;
@@ -23,6 +24,10 @@ namespace HotelReservationApi.Application.Features.CQRS.Neighborhood.Queries.Get
         public async Task<List<GetAllNeighborhoodQueriesResponse>> Handle(GetAllNeighborhoodQueriesRequest request, CancellationToken cancellationToken)
         {
             var neighborhoods = await _unitOfWork.readRepository<Domain.Entities.Neighborhood>().GetAllAsync(x => x.DistrictId == request.DistrictId);
+            if (neighborhoods is null)
+            {
+                throw new NeighborhoodByDistrictIdNotFoundExceptions(request.DistrictId);
+            }
             return _mapper.Map<List<GetAllNeighborhoodQueriesResponse>>(neighborhoods);
         }
     }
