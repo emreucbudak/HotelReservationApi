@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HotelReservationApi.Application.Features.CQRS.Reviews.Exceptions;
 using HotelReservationApi.Application.UnitOfWork;
 using MediatR;
 using System;
@@ -23,6 +24,10 @@ namespace HotelReservationApi.Application.Features.CQRS.Reviews.Queries.GetByHot
         public async Task<List<GetReviewsByHotelIdQueriesResponse>> Handle(GetReviewsByHotelIdQueriesRequest request, CancellationToken cancellationToken)
         {
             var reviews = await unitOfWork.readRepository<Domain.Entities.Reviews>().GetAllAsync(predicate: x => x.HotelsId == request.HotelsId, enableTracking: false);
+            if (reviews is null)
+            {
+                throw new ReviewsByHotelIdNotFoundExceptions(request.HotelsId);
+            }
             var reviewList = mp.Map<List<GetReviewsByHotelIdQueriesResponse>>(reviews);
             return reviewList;
         }
