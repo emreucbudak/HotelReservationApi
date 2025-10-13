@@ -23,7 +23,7 @@ namespace HotelReservationApi.Application.Features.CQRS.RoomTypes.Command.Create
            List<HotelReservationApi.Domain.Entities.TypesFeatures> typesFeatures = new();
             foreach (var featureId in request.TypesFeaturesIds)
             {
-                var feature = await _unitOfWork.readRepository<HotelReservationApi.Domain.Entities.TypesFeatures>().GetByExpression(predicate:x=> x.Id == featureId);
+                var feature = await _unitOfWork.readRepository<HotelReservationApi.Domain.Entities.TypesFeatures>().GetByExpression(predicate:x=> x.Id == featureId,enableTracking:false);
                 if (feature != null)
                 {
                     typesFeatures.Add(feature);
@@ -36,7 +36,7 @@ namespace HotelReservationApi.Application.Features.CQRS.RoomTypes.Command.Create
                 TypesFeatures = typesFeatures
             };
             await _unitOfWork.writeRepository<Domain.Entities.RoomTypes>().AddAsync(roomTypes);
-            await _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
 
         }
     }
