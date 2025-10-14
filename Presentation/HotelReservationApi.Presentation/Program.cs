@@ -12,11 +12,16 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using System;
 
 
 var builder = WebApplication.CreateBuilder(args);
-
+var logger = new LoggerConfiguration()
+    .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
+    .WriteTo.Console()
+    .CreateLogger();
+builder.Host.UseSerilog(logger);
 // Add services to the container.
 
 builder.Services.AddControllers();
