@@ -1,4 +1,5 @@
-﻿using HotelReservationApi.Application.UnitOfWork;
+﻿using HotelReservationApi.Application.Features.CQRS.NewsPopUp.Exceptions;
+using HotelReservationApi.Application.UnitOfWork;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
@@ -21,6 +22,10 @@ namespace HotelReservationApi.Application.Features.CQRS.NewsPopUp.Command.Delete
         public async Task Handle(DeleteNewsPopUpCommandRequest request, CancellationToken cancellationToken)
         {
             var news = await unitOfWork.readRepository<Domain.Entities.NewsPopUp>().GetByExpression(predicate: x=> x.Id == request.Id,enableTracking:false);
+            if (news is null)
+            {
+                throw new NewsPopUpNotFoundExceptions(request.Id);
+            }
             await  unitOfWork.writeRepository<Domain.Entities.NewsPopUp>().DeleteAsync(news);
             await unitOfWork.SaveAsync();
 

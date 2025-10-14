@@ -1,4 +1,5 @@
-﻿using HotelReservationApi.Application.UnitOfWork;
+﻿using HotelReservationApi.Application.Features.CQRS.NewsPopUp.Exceptions;
+using HotelReservationApi.Application.UnitOfWork;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,10 @@ namespace HotelReservationApi.Application.Features.CQRS.NewsPopUp.Command.Update
         public async Task Handle(UpdateNewsPopUpCommandRequest request, CancellationToken cancellationToken)
         {
             var news = await _unitOfWork.readRepository<Domain.Entities.NewsPopUp>().GetByExpression(predicate: x => x.Id == request.Id, enableTracking: true);
+            if (news is null)
+            {
+                throw new NewsPopUpNotFoundExceptions(request.Id);
+            }
             news.Description = request.Description;
             news.ImageUrl = request.ImageUrl;
             news.Title = request.Title;
