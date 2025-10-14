@@ -13,6 +13,7 @@ Bu proje, kullanıcıların otel araması, rezervasyon yapması ve yönetim pane
 - Serilog (Loglama)
 - AutoMapper
 - MediatR
+- FluentValidation
 
 ### 💻 Frontend
 - React.js
