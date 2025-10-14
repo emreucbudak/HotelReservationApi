@@ -39,7 +39,9 @@ builder.Services.AddScoped(typeof(IReadRepository<>), typeof(ReadRepository<>));
 builder.Services.AddScoped(typeof(IWriteRepository<>), typeof(WriteRepository<>));
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 builder.Services.AddValidatorsFromAssemblyContaining<AdsBannerValidator>();
+builder.Services.AddExceptionHandler<ValidationExceptionsHandler>();
 builder.Services.AddExceptionHandler<NotFoundExceptionsHandler>();
+
 
 
 
