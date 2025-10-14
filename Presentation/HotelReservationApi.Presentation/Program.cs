@@ -31,6 +31,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         o => o.UseNetTopologySuite())
 );
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggerBehavior<,>));
 builder.Services.AddAutoMapper(cfg => { },typeof(Profiles).Assembly);
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IReadRepository<>), typeof(ReadRepository<>));
