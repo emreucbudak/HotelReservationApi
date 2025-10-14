@@ -8,6 +8,7 @@ using HotelReservationApi.Domain.Entities;
 using HotelReservationApi.Persistence.ApplicationContext;
 using HotelReservationApi.Persistence.Repositories;
 using HotelReservationApi.Persistence.UnitOf;
+using HotelReservationApi.Presentation.ExceptionHandler;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpLogging;
@@ -38,6 +39,7 @@ builder.Services.AddScoped(typeof(IReadRepository<>), typeof(ReadRepository<>));
 builder.Services.AddScoped(typeof(IWriteRepository<>), typeof(WriteRepository<>));
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 builder.Services.AddValidatorsFromAssemblyContaining<AdsBannerValidator>();
+builder.Services.AddExceptionHandler<NotFoundExceptionsHandler>();
 
 
 
