@@ -1,16 +1,18 @@
+using FluentValidation;
 using HotelReservationApi.Application.AutoMapper;
+using HotelReservationApi.Application.Behaviors;
 using HotelReservationApi.Application.Repositories;
 using HotelReservationApi.Application.UnitOfWork;
+using HotelReservationApi.Application.Validate;
 using HotelReservationApi.Domain.Entities;
 using HotelReservationApi.Persistence.ApplicationContext;
 using HotelReservationApi.Persistence.Repositories;
 using HotelReservationApi.Persistence.UnitOf;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 using System;
-using FluentValidation;
-using HotelReservationApi.Application.Validate;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +25,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),
         o => o.UseNetTopologySuite())
 );
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 builder.Services.AddAutoMapper(cfg => { },typeof(Profiles).Assembly);
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IReadRepository<>), typeof(ReadRepository<>));
