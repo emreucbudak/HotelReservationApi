@@ -13,6 +13,6 @@ namespace HotelReservationApi.Application.Features.CQRS.HowFarSpecialPlace.Excep
         {
         }
     }
-    {
+    
     }
-}
+
