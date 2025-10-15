@@ -10,11 +10,13 @@ using HotelReservationApi.Persistence.Repositories;
 using HotelReservationApi.Persistence.UnitOf;
 using HotelReservationApi.Presentation.ExceptionHandler;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,6 +42,29 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Progr
 builder.Services.AddValidatorsFromAssemblyContaining<AdsBannerValidator>();
 builder.Services.AddExceptionHandler<ValidationExceptionsHandler>();
 builder.Services.AddExceptionHandler<NotFoundExceptionsHandler>();
+builder.Services.AddProblemDetails();
+builder.Services.AddAuthentication(opt =>
+{
+    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(ops =>
+{
+    ops.Audience = builder.Configuration["Jwt:Audience"];
+    ops.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"])),
+        ClockSkew = TimeSpan.Zero,
+
+
+
+    };
+});
 
 
 
@@ -53,7 +78,7 @@ if(app.Environment.IsDevelopment())
     app.UseSwagger();
 }
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
