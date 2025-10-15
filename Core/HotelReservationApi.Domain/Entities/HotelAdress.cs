@@ -25,7 +25,6 @@ namespace HotelReservationApi.Domain.Entities
         public double Enlem { get; set; }
         public double Boylam { get; set; }
 
-        [NotMapped]
-        public Point Location { get; set; }
+
     }
 }
