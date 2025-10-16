@@ -47,6 +47,18 @@ namespace HotelReservationApi.Persistence.ApplicationContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.HotelManager)
+                .WithOne(h=> h.User)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Reception)
+                .WithOne(h=> h.User)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Member)
+                .WithOne(h=> h.User)
+                .OnDelete(DeleteBehavior.Cascade);
 
 
             modelBuilder.Entity<HotelAdress>(entity =>
