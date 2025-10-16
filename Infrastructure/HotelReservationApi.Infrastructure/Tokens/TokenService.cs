@@ -66,11 +66,11 @@ namespace HotelReservationApi.Infrastructure.Tokens
         {
             TokenValidationParameters validationParameters = new TokenValidationParameters()
             {
-                ValidateIssuer = false,
+                ValidateIssuer = true,
 
-                ValidateAudience = false,
+                ValidateAudience = true,
 
-                ValidateLifetime = false,
+                ValidateLifetime = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenService.SecretKey)),
                 ValidateIssuerSigningKey = true
             };
