@@ -9,5 +9,8 @@ namespace HotelReservationApi.Domain.Entities
 {
     public class User : IdentityUser<Guid>
     {
+        public string Name { get; set; }
+        public string? RefreshToken { get; set; }
+        public DateTime? RefreshTokenExpirationTime { get; set; }
     }
 }
