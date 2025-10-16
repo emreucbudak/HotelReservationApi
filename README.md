@@ -7,7 +7,7 @@ Bu proje, kullanıcıların otel araması, rezervasyon yapması ve yönetim pane
 ### 🧩 Backend
 - ASP.NET Core (.NET 9)
 - Entity Framework Core
-- PostgreSQL (PostGIS ile coğrafi veriler)
+- PostgreSQL 
 - Redis (Cache yönetimi)
 - RabbitMQ (Mesaj kuyruğu)
 - Serilog (Loglama)
