@@ -14,6 +14,7 @@ Bu proje, kullanıcıların otel araması, rezervasyon yapması ve yönetim pane
 - AutoMapper
 - MediatR
 - FluentValidation
+- Firebase (SMS Doğrulaması)
 
 ### 💻 Frontend
 - React.js
@@ -37,7 +38,6 @@ Bu proje, kullanıcıların otel araması, rezervasyon yapması ve yönetim pane
 - Admin paneli ile otel ve rezervasyon yönetimi
 - Redis ile performans artırımı
 - RabbitMQ ile asenkron işlem yönetimi (örneğin, rezervasyon onayı bildirimi)
-- PostGIS ile otel lokasyon ve harita tabanlı sorgulamalar
 
 ## ✨ Geliştirici
 👨‍💻 **Emre Üçbudak**  
