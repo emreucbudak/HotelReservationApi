@@ -5,9 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HotelReservationApi.Domain.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 namespace HotelReservationApi.Persistence.ApplicationContext
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<User,Role,Guid>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
