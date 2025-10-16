@@ -21,7 +21,6 @@
   <ItemGroup>
     <Folder Include="Features\CQRS\Hotels\Command\" />
     <Folder Include="Features\CQRS\Hotels\Handler\" />
-    <Folder Include="Features\CQRS\Auth\" />
     <Folder Include="Features\CQRS\PriceList\Queries\" />
   </ItemGroup>
 
