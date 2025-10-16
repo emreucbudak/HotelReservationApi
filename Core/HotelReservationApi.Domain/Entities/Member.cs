@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HotelReservationApi.Domain.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,11 @@ using System.Threading.Tasks;
 
 namespace HotelReservationApi.Domain.Entities
 {
-    internal class Member
+    public class Member : BaseEntity
     {
+        public int UserId { get; set; }
+        public User User { get; set; }
+        public string ReferansCode { get; set; }
+        public int CoinCount { get; set; }
     }
 }
