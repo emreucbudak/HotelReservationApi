@@ -11,7 +11,7 @@ namespace HotelReservationApi.Domain.Entities
     { 
         public int HotelsId { get; set; }
         public Hotels Hotels { get; set; }
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
         public User User { get; set; }
     }
 }
