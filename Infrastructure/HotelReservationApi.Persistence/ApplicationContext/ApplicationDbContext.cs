@@ -49,17 +49,21 @@ namespace HotelReservationApi.Persistence.ApplicationContext
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<User>()
                 .HasOne(u => u.HotelManager)
-                .WithOne(h=> h.User)
-                .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Reception)
-                .WithOne(h=> h.User)
-                .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Member)
-                .WithOne(h=> h.User)
+                .WithOne(h => h.User)
+                .HasForeignKey<HotelManager>(h => h.UserId) 
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Reception)
+                .WithOne(r => r.User)
+                .HasForeignKey<Reception>(r => r.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Member)
+                .WithOne(m => m.User)
+                .HasForeignKey<Member>(m => m.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<HotelAdress>(entity =>
             {
