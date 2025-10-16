@@ -77,6 +77,17 @@ builder.Services.AddIdentity<User, Role>(opt =>
     opt.Password.RequiredLength = 8;
 
 }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+builder.Services.AddCors(opt =>
+{
+    opt.AddDefaultPolicy(policy =>
+    {
+        policy
+            .WithOrigins("https://localhost:7085")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials(); 
+    });
+});
 
 var app = builder.Build();
 
@@ -87,6 +98,7 @@ if(app.Environment.IsDevelopment())
     app.UseSwagger();
 }
 app.UseHttpsRedirection();
+app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
