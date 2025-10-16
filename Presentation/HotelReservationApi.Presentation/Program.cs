@@ -13,6 +13,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System;
@@ -65,7 +66,17 @@ builder.Services.AddAuthentication(opt =>
 
     };
 });
+builder.Services.AddIdentity<User, Role>(opt =>
+{
+    opt.Password.RequireDigit = true;
+    opt.Password.RequireLowercase = true;
+    opt.Password.RequireUppercase = true;
+    opt.Password.RequireNonAlphanumeric = false;
+    opt.SignIn.RequireConfirmedEmail = false;
+    opt.User.RequireUniqueEmail = true;
+    opt.Password.RequiredLength = 8;
 
+}).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
 var app = builder.Build();
 
