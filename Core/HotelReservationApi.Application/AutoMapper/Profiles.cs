@@ -6,6 +6,8 @@ using HotelReservationApi.Application.Features.CQRS.Bills.Queries.GetAllByHotelI
 using HotelReservationApi.Application.Features.CQRS.Coupon.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Customer.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.FAQ.Command.Create;
+using HotelReservationApi.Application.Features.CQRS.HotelImages.Command.Create;
+using HotelReservationApi.Application.Features.CQRS.HotelImages.Queries.GetAllByHotelId;
 using HotelReservationApi.Application.Features.CQRS.HotelInformation.Queries.GetByHotelId;
 using HotelReservationApi.Application.Features.CQRS.HowFarSpecialPlace.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Neighborhood.Queries.GetAll;
@@ -52,6 +54,8 @@ namespace HotelReservationApi.Application.AutoMapper
             CreateMap<HotelServices,Features.CQRS.HotelsService.Queries.GetAll.GetAllHotelsServiceQueriesResponse>().ForMember(destinationMember: x=> x.ServiceName,memberOptions:opt => opt.MapFrom(x=>x.Service)).ForMember(destinationMember:x=> x.IsNeedAFee,memberOptions:opt=> opt.MapFrom(y => y.Service)).ReverseMap();
             CreateMap<Neighborhood,GetAllNeighborhoodQueriesResponse>().ReverseMap();
             CreateMap<GetAllReservationByHotelIdQueriesResponse, Domain.Entities.Reservation>().ReverseMap();
+            CreateMap<CreateHotelImagesCommandRequest,HotelImages>().ReverseMap();
+            CreateMap<GetAllHotelImagesByIdQueriesResponse, HotelImages>().ReverseMap();
         }
     }
 }
