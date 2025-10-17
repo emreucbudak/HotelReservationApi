@@ -9,6 +9,11 @@ namespace HotelReservationApi.Application.Features.CQRS.NewsPopUp.Command.Delete
 {
     public class DeleteNewsPopUpCommandRequest : IRequest
     {
+        public DeleteNewsPopUpCommandRequest(int id)
+        {
+            Id = id;
+        }
+
         public int Id { get; set; }
     }
 }
