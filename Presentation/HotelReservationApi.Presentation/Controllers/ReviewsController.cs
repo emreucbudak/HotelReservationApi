@@ -7,6 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HotelReservationApi.Domain.Entities;
 using HotelReservationApi.Persistence.ApplicationContext;
+using MediatR;
+using HotelReservationApi.Application.Features.CQRS.Reviews.Queries.GetAll;
+using HotelReservationApi.Application.Features.CQRS.Reviews.Queries.GetByHotelId;
+using HotelReservationApi.Application.Features.CQRS.Reviews.Command.Create;
+using HotelReservationApi.Application.Features.CQRS.Reviews.Command.Delete;
+using HotelReservationApi.Application.Features.CQRS.Reviews.Command.Update;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -14,9 +20,9 @@ namespace HotelReservationApi.Presentation.Controllers
     [ApiController]
     public class ReviewsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IMediator _context;
 
-        public ReviewsController(ApplicationDbContext context)
+        public ReviewsController(IMediator context)
         {
             _context = context;
         }
@@ -25,50 +31,23 @@ namespace HotelReservationApi.Presentation.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Reviews>>> GetReviews()
         {
-            return await _context.Reviews.ToListAsync();
+            return Ok(await _context.Send(new GetAllReviewsQueriesRequest()));
         }
 
         // GET: api/Reviews/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Reviews>> GetReviews(int id)
         {
-            var reviews = await _context.Reviews.FindAsync(id);
-
-            if (reviews == null)
-            {
-                return NotFound();
-            }
-
-            return reviews;
+            return Ok(new GetReviewsByHotelIdQueriesRequest(id));
         }
 
         // PUT: api/Reviews/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutReviews(int id, Reviews reviews)
+        [HttpPut]
+        public async Task<IActionResult> PutReviews([FromBody]UpdateReviewsCommandRequest req)
         {
-            if (id != reviews.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(reviews).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ReviewsExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _context.Send(req);
+            
 
             return NoContent();
         }
@@ -76,33 +55,21 @@ namespace HotelReservationApi.Presentation.Controllers
         // POST: api/Reviews
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Reviews>> PostReviews(Reviews reviews)
+        public async Task<ActionResult<Reviews>> PostReviews(CreateReviewsCommandRequest reviews)
         {
-            _context.Reviews.Add(reviews);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetReviews", new { id = reviews.Id }, reviews);
+            await _context.Send(reviews);
+            return NoContent();
         }
 
         // DELETE: api/Reviews/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReviews(int id)
         {
-            var reviews = await _context.Reviews.FindAsync(id);
-            if (reviews == null)
-            {
-                return NotFound();
-            }
-
-            _context.Reviews.Remove(reviews);
-            await _context.SaveChangesAsync();
+            await _context.Send(new DeleteReviewsCommandRequest(id));
 
             return NoContent();
         }
 
-        private bool ReviewsExists(int id)
-        {
-            return _context.Reviews.Any(e => e.Id == id);
-        }
+
     }
 }
