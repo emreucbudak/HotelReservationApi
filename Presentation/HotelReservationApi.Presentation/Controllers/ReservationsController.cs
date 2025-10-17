@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HotelReservationApi.Domain.Entities;
 using HotelReservationApi.Persistence.ApplicationContext;
+using MediatR;
+using HotelReservationApi.Application.Features.CQRS.Reservation.Queries.GetAllByHotelId;
+using HotelReservationApi.Application.Features.CQRS.Reservation.Command.Create;
+using HotelReservationApi.Application.Features.CQRS.Reservation.Command.Delete;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -14,95 +18,42 @@ namespace HotelReservationApi.Presentation.Controllers
     [ApiController]
     public class ReservationsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IMediator _context;
 
-        public ReservationsController(ApplicationDbContext context)
+        public ReservationsController(IMediator context)
         {
             _context = context;
         }
 
-        // GET: api/Reservations
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Reservation>>> Getreservations()
-        {
-            return await _context.reservations.ToListAsync();
-        }
 
         // GET: api/Reservations/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Reservation>> GetReservation(int id)
+        public async Task<ActionResult<List<Reservation>>> GetReservation(int id)
         {
-            var reservation = await _context.reservations.FindAsync(id);
-
-            if (reservation == null)
-            {
-                return NotFound();
-            }
-
-            return reservation;
+            return Ok(await _context.Send(new GetAllReservationByHotelIdQueriesRequest(id)));
         }
 
-        // PUT: api/Reservations/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutReservation(int id, Reservation reservation)
-        {
-            if (id != reservation.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(reservation).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ReservationExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
+   
 
         // POST: api/Reservations
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Reservation>> PostReservation(Reservation reservation)
+        public async Task<ActionResult<Reservation>> PostReservation(CreateReservationCommandRequest reservation)
         {
-            _context.reservations.Add(reservation);
-            await _context.SaveChangesAsync();
+            await _context.Send(reservation);
 
-            return CreatedAtAction("GetReservation", new { id = reservation.Id }, reservation);
+            return NoContent();
         }
 
         // DELETE: api/Reservations/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReservation(int id)
         {
-            var reservation = await _context.reservations.FindAsync(id);
-            if (reservation == null)
-            {
-                return NotFound();
-            }
-
-            _context.reservations.Remove(reservation);
-            await _context.SaveChangesAsync();
+            await _context.Send(new DeleteReservationCommandRequest(id));
 
             return NoContent();
         }
 
-        private bool ReservationExists(int id)
-        {
-            return _context.reservations.Any(e => e.Id == id);
-        }
+    
     }
 }
