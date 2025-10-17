@@ -30,7 +30,7 @@ namespace HotelReservationApi.Presentation.Controllers
 
         // GET: api/Rooms/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Rooms>> GetRooms(int id, [FromBody] int? pageCount, int? pageSize)
+        public async Task<ActionResult<List<Rooms>>> GetRooms(int id, [FromBody] int? pageCount, int? pageSize)
         {
             return Ok(await _context.Send(new GetAllRoomsQueriesRequest(id,pageCount,pageSize)));
         }

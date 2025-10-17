@@ -9,6 +9,11 @@ namespace HotelReservationApi.Application.Features.CQRS.HotelsService.Queries.Ge
 {
     public class GetAllHotelsServiceQueriesRequest : IRequest<List<GetAllHotelsServiceQueriesResponse>>
     {
+        public GetAllHotelsServiceQueriesRequest(int hotelsId)
+        {
+            HotelsId = hotelsId;
+        }
+
         public int HotelsId { get; set; }
     }
 }
