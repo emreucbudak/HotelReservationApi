@@ -9,6 +9,6 @@ namespace HotelReservationApi.Application.Features.CQRS.Service.Queries.GetAll
 {
     public class GetAllServiceQueriesRequest : IRequest<List<GetAllServiceQueriesResponse>>
     {
-        public int Id    { get; set; }
+
     }
 }

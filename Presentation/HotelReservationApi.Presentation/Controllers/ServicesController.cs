@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HotelReservationApi.Domain.Entities;
 using HotelReservationApi.Persistence.ApplicationContext;
+using MediatR;
+using HotelReservationApi.Application.Features.CQRS.Service.Queries.GetAll;
+using HotelReservationApi.Application.Features.CQRS.Service.Command.Create;
+using HotelReservationApi.Application.Features.CQRS.Service.Command.Delete;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -14,9 +18,9 @@ namespace HotelReservationApi.Presentation.Controllers
     [ApiController]
     public class ServicesController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IMediator _context;
 
-        public ServicesController(ApplicationDbContext context)
+        public ServicesController(IMediator context)
         {
             _context = context;
         }
@@ -25,84 +29,27 @@ namespace HotelReservationApi.Presentation.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Service>>> GetServices()
         {
-            return await _context.Services.ToListAsync();
-        }
-
-        // GET: api/Services/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Service>> GetService(int id)
-        {
-            var service = await _context.Services.FindAsync(id);
-
-            if (service == null)
-            {
-                return NotFound();
-            }
-
-            return service;
-        }
-
-        // PUT: api/Services/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutService(int id, Service service)
-        {
-            if (id != service.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(service).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ServiceExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok(await _context.Send(new GetAllServiceQueriesRequest()));
         }
 
         // POST: api/Services
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Service>> PostService(Service service)
+        public async Task<ActionResult<Service>> PostService(CreateServiceCommandRequest service)
         {
-            _context.Services.Add(service);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetService", new { id = service.Id }, service);
+            await _context.Send(service);
+            return Ok();
         }
 
         // DELETE: api/Services/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteService(int id)
         {
-            var service = await _context.Services.FindAsync(id);
-            if (service == null)
-            {
-                return NotFound();
-            }
-
-            _context.Services.Remove(service);
-            await _context.SaveChangesAsync();
+            await _context.Send(new DeleteServiceCommandRequest(id));
 
             return NoContent();
         }
 
-        private bool ServiceExists(int id)
-        {
-            return _context.Services.Any(e => e.Id == id);
-        }
+
     }
 }
