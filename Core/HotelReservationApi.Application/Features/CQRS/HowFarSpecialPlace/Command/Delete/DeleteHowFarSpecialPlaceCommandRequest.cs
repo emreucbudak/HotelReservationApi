@@ -9,6 +9,11 @@ namespace HotelReservationApi.Application.Features.CQRS.HowFarSpecialPlace.Comma
 {
     public class DeleteHowFarSpecialPlaceCommandRequest : IRequest
     {
+        public DeleteHowFarSpecialPlaceCommandRequest(int id)
+        {
+            Id = id;
+        }
+
         public int Id   { get; set; }
     }
 }

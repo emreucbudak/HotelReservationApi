@@ -9,6 +9,13 @@ namespace HotelReservationApi.Application.Features.CQRS.HowFarSpecialPlace.Queri
 {
     public class GetAllHowFarSpecialPlaceQueriesRequest : IRequest <List<GetAllHowFarSpecialPlaceQueriesResponse>>
     {
+        private int id;
+
+        public GetAllHowFarSpecialPlaceQueriesRequest(int id)
+        {
+            this.id = id;
+        }
+
         public int HotelId { get; set; }
         }
 }
