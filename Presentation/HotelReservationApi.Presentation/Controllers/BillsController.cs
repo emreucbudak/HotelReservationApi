@@ -7,6 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HotelReservationApi.Domain.Entities;
 using HotelReservationApi.Persistence.ApplicationContext;
+using MediatR;
+using HotelReservationApi.Application.Features.CQRS.Bills.Queries.GetAll;
+using HotelReservationApi.Application.Features.CQRS.Bills.Queries.GetAllByHotelId;
+using HotelReservationApi.Application.Features.CQRS.Bills.Command.Create;
+using HotelReservationApi.Application.Features.CQRS.Bills.Command.Delete;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -14,9 +19,9 @@ namespace HotelReservationApi.Presentation.Controllers
     [ApiController]
     public class BillsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IMediator _context;
 
-        public BillsController(ApplicationDbContext context)
+        public BillsController(IMediator context)
         {
             _context = context;
         }
@@ -25,84 +30,38 @@ namespace HotelReservationApi.Presentation.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Bills>>> Getbills()
         {
-            return await _context.bills.ToListAsync();
+            return Ok(await _context.Send(new GetAllBillsQueriesRequest()));
         }
 
         // GET: api/Bills/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Bills>> GetBills(int id)
+        public async Task<ActionResult<List<Bills>>> GetBills(
+    int id,
+    [FromQuery] int? pageCount,
+    [FromQuery] int ?pageSize)
         {
-            var bills = await _context.bills.FindAsync(id);
+            GetAllBillsByHotelIdQueriesRequest request = new(id,pageCount,pageSize);
+            return Ok(await _context.Send(request));
 
-            if (bills == null)
-            {
-                return NotFound();
-            }
-
-            return bills;
-        }
-
-        // PUT: api/Bills/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutBills(int id, Bills bills)
-        {
-            if (id != bills.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(bills).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BillsExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
         }
 
         // POST: api/Bills
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Bills>> PostBills(Bills bills)
+        public async Task<ActionResult<Bills>> PostBills(CreateBillsCommandRequest bills)
         {
-            _context.bills.Add(bills);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetBills", new { id = bills.Id }, bills);
+            await _context.Send(bills);
+            return NoContent();
         }
 
         // DELETE: api/Bills/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBills(int id)
         {
-            var bills = await _context.bills.FindAsync(id);
-            if (bills == null)
-            {
-                return NotFound();
-            }
-
-            _context.bills.Remove(bills);
-            await _context.SaveChangesAsync();
+           DeleteBillsCommandRequest req = new(id);
+            await _context.Send(req);
 
             return NoContent();
-        }
-
-        private bool BillsExists(int id)
-        {
-            return _context.bills.Any(e => e.Id == id);
         }
     }
 }
