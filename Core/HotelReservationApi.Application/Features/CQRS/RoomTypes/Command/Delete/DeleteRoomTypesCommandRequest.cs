@@ -9,6 +9,11 @@ namespace HotelReservationApi.Application.Features.CQRS.RoomTypes.Command.Delete
 {
     public class DeleteRoomTypesCommandRequest : IRequest
     {
+        public DeleteRoomTypesCommandRequest(int id)
+        {
+            Id = id;
+        }
+
         public int Id { get; set; }
     }
 }
