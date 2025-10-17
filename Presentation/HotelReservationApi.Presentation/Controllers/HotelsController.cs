@@ -7,6 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HotelReservationApi.Domain.Entities;
 using HotelReservationApi.Persistence.ApplicationContext;
+using MediatR;
+using HotelReservationApi.Application.Features.CQRS.Hotels.Queries.GetAll;
+using HotelReservationApi.Application.Features.CQRS.Hotels.Queries.GetById;
+using HotelReservationApi.Application.Features.CQRS.Hotels.Command.Update;
+using HotelReservationApi.Application.Features.CQRS.Hotels.Command.Create;
+using HotelReservationApi.Application.Features.CQRS.Hotels.Command.Delete;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -14,61 +20,33 @@ namespace HotelReservationApi.Presentation.Controllers
     [ApiController]
     public class HotelsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IMediator _context;
 
-        public HotelsController(ApplicationDbContext context)
+        public HotelsController(IMediator context)
         {
             _context = context;
         }
 
         // GET: api/Hotels
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Hotels>>> GetHotels()
+        public async Task<ActionResult<IEnumerable<Hotels>>> GetHotels([FromBody]int? pageSize, int? pageNumber)
         {
-            return await _context.Hotels.ToListAsync();
+            return Ok(await _context.Send(new GetAllHotelsQueriesRequest(pageNumber,pageSize)));
         }
 
         // GET: api/Hotels/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Hotels>> GetHotels(int id)
         {
-            var hotels = await _context.Hotels.FindAsync(id);
-
-            if (hotels == null)
-            {
-                return NotFound();
-            }
-
-            return hotels;
+            return Ok(await _context.Send(new GetHotelByIdQueriesRequest(id)));
         }
 
-        // PUT: api/Hotels/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutHotels(int id, Hotels hotels)
+
+        [HttpPut]
+        public async Task<IActionResult> PutHotels(UpdateHotelsCommandRequest req)
         {
-            if (id != hotels.Id)
-            {
-                return BadRequest();
-            }
+            await _context.Send(req);
 
-            _context.Entry(hotels).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!HotelsExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
 
             return NoContent();
         }
@@ -76,33 +54,22 @@ namespace HotelReservationApi.Presentation.Controllers
         // POST: api/Hotels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Hotels>> PostHotels(Hotels hotels)
+        public async Task<ActionResult<Hotels>> PostHotels(CreateHotelsCommandRequest hotels)
         {
-            _context.Hotels.Add(hotels);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetHotels", new { id = hotels.Id }, hotels);
+            await _context.Send(hotels);
+            return NoContent();
         }
 
         // DELETE: api/Hotels/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHotels(int id)
         {
-            var hotels = await _context.Hotels.FindAsync(id);
-            if (hotels == null)
-            {
-                return NotFound();
-            }
+            await _context.Send(new DeleteHotelsCommandRequest(id));
 
-            _context.Hotels.Remove(hotels);
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool HotelsExists(int id)
-        {
-            return _context.Hotels.Any(e => e.Id == id);
-        }
+
     }
 }
