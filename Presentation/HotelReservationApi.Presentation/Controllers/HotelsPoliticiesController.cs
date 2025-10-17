@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HotelReservationApi.Domain.Entities;
 using HotelReservationApi.Persistence.ApplicationContext;
+using MediatR;
+using HotelReservationApi.Application.Features.CQRS.HotelsPoliticy.Queries.GetAll;
+using HotelReservationApi.Application.Features.CQRS.HotelsPoliticy.Command.Create;
+using HotelReservationApi.Application.Features.CQRS.HotelsPoliticy.Command.Delete;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -14,95 +18,33 @@ namespace HotelReservationApi.Presentation.Controllers
     [ApiController]
     public class HotelsPoliticiesController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IMediator _context;
 
-        public HotelsPoliticiesController(ApplicationDbContext context)
+        public HotelsPoliticiesController(IMediator context)
         {
             _context = context;
         }
-
-        // GET: api/HotelsPoliticies
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<HotelsPoliticy>>> GetHotelsPoliticies()
-        {
-            return await _context.HotelsPoliticies.ToListAsync();
-        }
-
-        // GET: api/HotelsPoliticies/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<HotelsPoliticy>> GetHotelsPoliticy(int id)
+        public async Task<ActionResult<HotelsPoliticy>> GetHotelsPoliticy(int HotelId)
         {
-            var hotelsPoliticy = await _context.HotelsPoliticies.FindAsync(id);
-
-            if (hotelsPoliticy == null)
-            {
-                return NotFound();
-            }
-
-            return hotelsPoliticy;
+            return Ok(await _context.Send(new GetAllHotelsPoliticyQueriesRequest(HotelId)));
         }
-
-        // PUT: api/HotelsPoliticies/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutHotelsPoliticy(int id, HotelsPoliticy hotelsPoliticy)
-        {
-            if (id != hotelsPoliticy.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(hotelsPoliticy).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!HotelsPoliticyExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/HotelsPoliticies
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<HotelsPoliticy>> PostHotelsPoliticy(HotelsPoliticy hotelsPoliticy)
+        public async Task<ActionResult<HotelsPoliticy>> PostHotelsPoliticy(CreateHotelsPoliticyCommandRequest hotelsPoliticy)
         {
-            _context.HotelsPoliticies.Add(hotelsPoliticy);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetHotelsPoliticy", new { id = hotelsPoliticy.Id }, hotelsPoliticy);
+            await _context.Send(hotelsPoliticy);
+            return NoContent();
         }
 
         // DELETE: api/HotelsPoliticies/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHotelsPoliticy(int id)
         {
-            var hotelsPoliticy = await _context.HotelsPoliticies.FindAsync(id);
-            if (hotelsPoliticy == null)
-            {
-                return NotFound();
-            }
-
-            _context.HotelsPoliticies.Remove(hotelsPoliticy);
-            await _context.SaveChangesAsync();
+            await _context.Send(new DeleteHotelsPoliticyCommandRequest(id));
 
             return NoContent();
         }
 
-        private bool HotelsPoliticyExists(int id)
-        {
-            return _context.HotelsPoliticies.Any(e => e.Id == id);
-        }
+
     }
 }

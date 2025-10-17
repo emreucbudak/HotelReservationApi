@@ -9,6 +9,11 @@ namespace HotelReservationApi.Application.Features.CQRS.HotelsPoliticy.Command.D
 {
     public class DeleteHotelsPoliticyCommandRequest : IRequest
     {
+        public DeleteHotelsPoliticyCommandRequest(int id)
+        {
+            Id = id;
+        }
+
         public int Id { get; set; }
     }
     

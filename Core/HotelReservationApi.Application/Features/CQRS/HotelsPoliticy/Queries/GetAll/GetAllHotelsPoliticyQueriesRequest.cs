@@ -9,6 +9,11 @@ namespace HotelReservationApi.Application.Features.CQRS.HotelsPoliticy.Queries.G
 {
     public class GetAllHotelsPoliticyQueriesRequest : IRequest<List<GetAllHotelsPoliticyQueriesResponse>>
     {
+        public GetAllHotelsPoliticyQueriesRequest(int hotelId)
+        {
+            HotelId = hotelId;
+        }
+
         public int HotelId { get; set; }    
     }
 }
