@@ -7,6 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HotelReservationApi.Domain.Entities;
 using HotelReservationApi.Persistence.ApplicationContext;
+using MediatR;
+using HotelReservationApi.Application.Features.CQRS.NewsPopUp.Queries.GetAll;
+using HotelReservationApi.Application.Features.CQRS.NewsPopUp.Command.Update;
+using HotelReservationApi.Application.Features.CQRS.NewsPopUp.Command.Create;
+using HotelReservationApi.Application.Features.CQRS.NewsPopUp.Command.Delete;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -14,9 +19,9 @@ namespace HotelReservationApi.Presentation.Controllers
     [ApiController]
     public class NewsPopUpsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IMediator _context;
 
-        public NewsPopUpsController(ApplicationDbContext context)
+        public NewsPopUpsController(IMediator context)
         {
             _context = context;
         }
@@ -25,50 +30,18 @@ namespace HotelReservationApi.Presentation.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<NewsPopUp>>> GetnewsPopUps()
         {
-            return await _context.newsPopUps.ToListAsync();
+            return Ok(await _context.Send(new GetAllNewsPopUpQueriesRequest()));
         }
 
-        // GET: api/NewsPopUps/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<NewsPopUp>> GetNewsPopUp(int id)
-        {
-            var newsPopUp = await _context.newsPopUps.FindAsync(id);
 
-            if (newsPopUp == null)
-            {
-                return NotFound();
-            }
-
-            return newsPopUp;
-        }
 
         // PUT: api/NewsPopUps/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutNewsPopUp(int id, NewsPopUp newsPopUp)
+        [HttpPut]
+        public async Task<IActionResult> PutNewsPopUp([FromBody] UpdateNewsPopUpCommandRequest req)
         {
-            if (id != newsPopUp.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(newsPopUp).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!NewsPopUpExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _context.Send(req);
+            
 
             return NoContent();
         }
@@ -76,33 +49,21 @@ namespace HotelReservationApi.Presentation.Controllers
         // POST: api/NewsPopUps
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<NewsPopUp>> PostNewsPopUp(NewsPopUp newsPopUp)
+        public async Task<ActionResult<NewsPopUp>> PostNewsPopUp(CreateNewsPopUpCommandRequest newsPopUp)
         {
-            _context.newsPopUps.Add(newsPopUp);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetNewsPopUp", new { id = newsPopUp.Id }, newsPopUp);
+            await _context.Send(newsPopUp);
+            return NoContent();
         }
 
         // DELETE: api/NewsPopUps/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteNewsPopUp(int id)
         {
-            var newsPopUp = await _context.newsPopUps.FindAsync(id);
-            if (newsPopUp == null)
-            {
-                return NotFound();
-            }
-
-            _context.newsPopUps.Remove(newsPopUp);
-            await _context.SaveChangesAsync();
+            await _context.Send(new DeleteNewsPopUpCommandRequest(id));
 
             return NoContent();
         }
 
-        private bool NewsPopUpExists(int id)
-        {
-            return _context.newsPopUps.Any(e => e.Id == id);
-        }
+
     }
 }
