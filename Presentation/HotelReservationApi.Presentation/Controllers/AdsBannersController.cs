@@ -7,6 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HotelReservationApi.Domain.Entities;
 using HotelReservationApi.Persistence.ApplicationContext;
+using MediatR;
+using HotelReservationApi.Application.Features.CQRS.AdsBanner.Queries.GetAll;
+using HotelReservationApi.Application.Features.CQRS.AdsBanner.Command.Update;
+using HotelReservationApi.Application.Features.CQRS.AdsBanner.Command.Create;
+using HotelReservationApi.Application.Features.CQRS.AdsBanner.Command.Delete;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -14,9 +19,9 @@ namespace HotelReservationApi.Presentation.Controllers
     [ApiController]
     public class AdsBannersController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IMediator _context;
 
-        public AdsBannersController(ApplicationDbContext context)
+        public AdsBannersController(IMediator context)
         {
             _context = context;
         }
@@ -25,50 +30,19 @@ namespace HotelReservationApi.Presentation.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AdsBanner>>> GetAdsBanner()
         {
-            return await _context.AdsBanner.ToListAsync();
+            var result = await _context.Send(new GetAllAdsBannerQueriesRequest());
+            return Ok(result);
         }
 
-        // GET: api/AdsBanners/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<AdsBanner>> GetAdsBanner(int id)
-        {
-            var adsBanner = await _context.AdsBanner.FindAsync(id);
 
-            if (adsBanner == null)
-            {
-                return NotFound();
-            }
-
-            return adsBanner;
-        }
 
         // PUT: api/AdsBanners/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAdsBanner(int id, AdsBanner adsBanner)
+        public async Task<IActionResult> PutAdsBanner(UpdateAdsBannerCommandRequest req)
         {
-            if (id != adsBanner.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(adsBanner).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AdsBannerExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+             await _context.Send(req);
+            
 
             return NoContent();
         }
@@ -76,33 +50,24 @@ namespace HotelReservationApi.Presentation.Controllers
         // POST: api/AdsBanners
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<AdsBanner>> PostAdsBanner(AdsBanner adsBanner)
+        public async Task<ActionResult<AdsBanner>> PostAdsBanner(CreateAdsBannerCommandRequest adsBanner)
         {
-            _context.AdsBanner.Add(adsBanner);
-            await _context.SaveChangesAsync();
+            await _context.Send(adsBanner);
 
-            return CreatedAtAction("GetAdsBanner", new { id = adsBanner.Id }, adsBanner);
+            return NoContent();
         }
 
         // DELETE: api/AdsBanners/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAdsBanner(int id)
         {
-            var adsBanner = await _context.AdsBanner.FindAsync(id);
-            if (adsBanner == null)
-            {
-                return NotFound();
-            }
-
-            _context.AdsBanner.Remove(adsBanner);
-            await _context.SaveChangesAsync();
+            DeleteAdsBannerCommandRequest req = new DeleteAdsBannerCommandRequest();
+            req.Id = id;
+            await _context.Send(req);
+            
 
             return NoContent();
         }
 
-        private bool AdsBannerExists(int id)
-        {
-            return _context.AdsBanner.Any(e => e.Id == id);
-        }
     }
 }
