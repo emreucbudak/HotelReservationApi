@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using HotelReservationApi.Application.Features.CQRS.HotelInformation.Command.Create;
+using HotelReservationApi.Application.Features.CQRS.HotelInformation.Command.Delete;
+using HotelReservationApi.Application.Features.CQRS.HotelInformation.Queries.GetByHotelId;
+using HotelReservationApi.Domain.Entities;
+using HotelReservationApi.Persistence.ApplicationContext;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using HotelReservationApi.Domain.Entities;
-using HotelReservationApi.Persistence.ApplicationContext;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -14,95 +18,36 @@ namespace HotelReservationApi.Presentation.Controllers
     [ApiController]
     public class HotelInformationsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IMediator _context;
 
-        public HotelInformationsController(ApplicationDbContext context)
+        public HotelInformationsController(IMediator context)
         {
             _context = context;
         }
 
-        // GET: api/HotelInformations
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<HotelInformation>>> GetHotelInformations()
-        {
-            return await _context.HotelInformations.ToListAsync();
-        }
 
         // GET: api/HotelInformations/5
         [HttpGet("{id}")]
         public async Task<ActionResult<HotelInformation>> GetHotelInformation(int id)
         {
-            var hotelInformation = await _context.HotelInformations.FindAsync(id);
-
-            if (hotelInformation == null)
-            {
-                return NotFound();
-            }
-
-            return hotelInformation;
+            return Ok(await _context.Send(new GetHotelInformationByIdQueriesRequest(id)));
         }
-
-        // PUT: api/HotelInformations/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutHotelInformation(int id, HotelInformation hotelInformation)
-        {
-            if (id != hotelInformation.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(hotelInformation).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!HotelInformationExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/HotelInformations
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<HotelInformation>> PostHotelInformation(HotelInformation hotelInformation)
+        public async Task<ActionResult<HotelInformation>> PostHotelInformation(CreateHotelInformationCommandRequest hotelInformation)
         {
-            _context.HotelInformations.Add(hotelInformation);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetHotelInformation", new { id = hotelInformation.Id }, hotelInformation);
+            await _context.Send(hotelInformation);
+            return NoContent();
         }
 
         // DELETE: api/HotelInformations/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHotelInformation(int id)
         {
-            var hotelInformation = await _context.HotelInformations.FindAsync(id);
-            if (hotelInformation == null)
-            {
-                return NotFound();
-            }
-
-            _context.HotelInformations.Remove(hotelInformation);
-            await _context.SaveChangesAsync();
+            await _context.Send(new DeleteHotelInformationCommandRequest(id));
 
             return NoContent();
         }
 
-        private bool HotelInformationExists(int id)
-        {
-            return _context.HotelInformations.Any(e => e.Id == id);
-        }
+
     }
 }
