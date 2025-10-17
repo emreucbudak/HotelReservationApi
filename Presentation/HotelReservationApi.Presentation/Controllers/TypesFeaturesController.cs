@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HotelReservationApi.Domain.Entities;
 using HotelReservationApi.Persistence.ApplicationContext;
+using MediatR;
+using HotelReservationApi.Application.Features.CQRS.TypesFeatures.Command.Create;
+using HotelReservationApi.Application.Features.CQRS.TypesFeatures.Command.Delete;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -14,95 +17,34 @@ namespace HotelReservationApi.Presentation.Controllers
     [ApiController]
     public class TypesFeaturesController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IMediator _context;
 
-        public TypesFeaturesController(ApplicationDbContext context)
+        public TypesFeaturesController(IMediator context)
         {
             _context = context;
         }
 
-        // GET: api/TypesFeatures
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<TypesFeatures>>> GetTypesFeatures()
-        {
-            return await _context.TypesFeatures.ToListAsync();
-        }
 
-        // GET: api/TypesFeatures/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TypesFeatures>> GetTypesFeatures(int id)
-        {
-            var typesFeatures = await _context.TypesFeatures.FindAsync(id);
 
-            if (typesFeatures == null)
-            {
-                return NotFound();
-            }
-
-            return typesFeatures;
-        }
-
-        // PUT: api/TypesFeatures/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTypesFeatures(int id, TypesFeatures typesFeatures)
-        {
-            if (id != typesFeatures.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(typesFeatures).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TypesFeaturesExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
 
         // POST: api/TypesFeatures
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<TypesFeatures>> PostTypesFeatures(TypesFeatures typesFeatures)
+        public async Task<ActionResult<TypesFeatures>> PostTypesFeatures(CreateTypesFeaturesCommandRequest typesFeatures)
         {
-            _context.TypesFeatures.Add(typesFeatures);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetTypesFeatures", new { id = typesFeatures.Id }, typesFeatures);
+            await _context.Send(typesFeatures);
+            return Ok();
         }
 
         // DELETE: api/TypesFeatures/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTypesFeatures(int id)
         {
-            var typesFeatures = await _context.TypesFeatures.FindAsync(id);
-            if (typesFeatures == null)
-            {
-                return NotFound();
-            }
-
-            _context.TypesFeatures.Remove(typesFeatures);
-            await _context.SaveChangesAsync();
+            await _context.Send(new DeleteTypesFeaturesCommandRequest(id));
 
             return NoContent();
         }
 
-        private bool TypesFeaturesExists(int id)
-        {
-            return _context.TypesFeatures.Any(e => e.Id == id);
-        }
+
     }
 }

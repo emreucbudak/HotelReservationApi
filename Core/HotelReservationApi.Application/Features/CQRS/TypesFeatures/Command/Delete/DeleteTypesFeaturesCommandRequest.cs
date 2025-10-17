@@ -10,5 +10,10 @@ namespace HotelReservationApi.Application.Features.CQRS.TypesFeatures.Command.De
     public class DeleteTypesFeaturesCommandRequest : IRequest
     {
         public int Id { get; set; }
+
+        public DeleteTypesFeaturesCommandRequest(int ıd)
+        {
+            Id = ıd;
+        }
     }
 }
