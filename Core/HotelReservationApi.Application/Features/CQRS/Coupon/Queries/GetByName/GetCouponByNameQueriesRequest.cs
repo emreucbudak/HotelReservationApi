@@ -11,5 +11,9 @@ namespace HotelReservationApi.Application.Features.CQRS.Coupon.Queries.GetByName
     {
         public string CouponCode { get; set; }
 
+        public GetCouponByNameQueriesRequest(string couponCode)
+        {
+            CouponCode = couponCode;
+        }
     }
 }

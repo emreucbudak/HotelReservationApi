@@ -10,5 +10,10 @@ namespace HotelReservationApi.Application.Features.CQRS.Coupon.Command.Delete
     public class DeleteCouponCommandRequest : IRequest
     {
         public int Id { get; set; }
+
+        public DeleteCouponCommandRequest(int ıd)
+        {
+            Id = ıd;
+        }
     }
 }
