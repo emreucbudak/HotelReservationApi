@@ -53,13 +53,15 @@ namespace HotelReservationApi.Persistence.Repositories
 
         }
 
-        public async Task<T> GetByExpression(bool enableTracking = true, Expression<Func<T, bool>>? predicate = null)
+        public async Task<T> GetByExpression(bool enableTracking = true, Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includable = null)
         {
             IQueryable<T> query = _dbSet;
             if (!enableTracking)
                 query = query.AsNoTracking();
             if (predicate != null)
                 query = query.Where(predicate);
+            if(includable != null)
+                query = includable(query);
             return await  query.FirstOrDefaultAsync();
 
         }
