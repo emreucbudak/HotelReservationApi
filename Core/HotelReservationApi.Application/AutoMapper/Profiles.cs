@@ -9,6 +9,7 @@ using HotelReservationApi.Application.Features.CQRS.FAQ.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.HotelImages.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.HotelImages.Queries.GetAllByHotelId;
 using HotelReservationApi.Application.Features.CQRS.HotelInformation.Queries.GetByHotelId;
+using HotelReservationApi.Application.Features.CQRS.Hotels.Queries.GetAll;
 using HotelReservationApi.Application.Features.CQRS.HowFarSpecialPlace.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Neighborhood.Queries.GetAll;
 using HotelReservationApi.Application.Features.CQRS.NewsPopUp.Command.Create;
@@ -56,6 +57,7 @@ namespace HotelReservationApi.Application.AutoMapper
             CreateMap<GetAllReservationByHotelIdQueriesResponse, Domain.Entities.Reservation>().ReverseMap();
             CreateMap<CreateHotelImagesCommandRequest,HotelImages>().ReverseMap();
             CreateMap<GetAllHotelImagesByIdQueriesResponse, HotelImages>().ReverseMap();
+            CreateMap<Hotels,GetAllHotelsQueriesResponse>().ForMember(destinationMember: x=> x.HotelCategoryName,memberOptions: opt => opt.MapFrom(x=> x.HotelCategory)).ReverseMap();
         }
     }
 }

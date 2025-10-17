@@ -25,7 +25,7 @@ namespace HotelReservationApi.Application.Repositories
             Func<IQueryable<T>,IIncludableQueryable<T,object>>? includable = null,
             bool enableTracking = true
             );
-        Task<T> GetByExpression(bool enableTracking = true, Expression<Func<T, bool>>? predicate = null);
+        Task<T> GetByExpression(bool enableTracking = true, Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includable = null);
     }
     
     }
