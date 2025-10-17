@@ -10,5 +10,10 @@ namespace HotelReservationApi.Application.Features.CQRS.HotelImages.Queries.GetA
     public class GetAllHotelImagesByIdQueriesRequest : IRequest<List<GetAllHotelImagesByIdQueriesResponse>>
     {
         public int HotelId { get; set; }
+
+        public GetAllHotelImagesByIdQueriesRequest(int hotelId)
+        {
+            HotelId = hotelId;
+        }
     }
 }
