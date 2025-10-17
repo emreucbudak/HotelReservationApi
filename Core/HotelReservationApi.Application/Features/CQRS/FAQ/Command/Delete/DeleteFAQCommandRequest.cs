@@ -10,5 +10,10 @@ namespace HotelReservationApi.Application.Features.CQRS.FAQ.Command.Delete
     public class DeleteFAQCommandRequest : IRequest
     {
         public int Id   { get; set; }
+
+        public DeleteFAQCommandRequest(int ıd)
+        {
+            Id = ıd;
+        }
     }
 }

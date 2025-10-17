@@ -9,6 +9,11 @@ namespace HotelReservationApi.Application.Features.CQRS.FAQ.Queries.GetAll
 {
     public class GetAllFAQQueriesRequest : IRequest<List<GetAllFAQQueriesResponse>>
     {
-        public int HotelID { get; set; } 
+        public int HotelID { get; set; }
+
+        public GetAllFAQQueriesRequest(int hotelID)
+        {
+            HotelID = hotelID;
         }
+    }
 }

@@ -7,6 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HotelReservationApi.Domain.Entities;
 using HotelReservationApi.Persistence.ApplicationContext;
+using MediatR;
+using HotelReservationApi.Application.Features.CQRS.FAQ.Queries.GetAll;
+using HotelReservationApi.Application.Features.CQRS.FAQ.Command.Update;
+using HotelReservationApi.Application.Features.CQRS.FAQ.Command.Create;
+using HotelReservationApi.Application.Features.CQRS.FAQ.Command.Delete;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -14,61 +19,23 @@ namespace HotelReservationApi.Presentation.Controllers
     [ApiController]
     public class FAQsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IMediator _context;
 
-        public FAQsController(ApplicationDbContext context)
+        public FAQsController(IMediator context)
         {
             _context = context;
         }
 
         // GET: api/FAQs
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<FAQ>>> GetfAQs()
-        {
-            return await _context.fAQs.ToListAsync();
-        }
-
-        // GET: api/FAQs/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<FAQ>> GetFAQ(int id)
+        public async Task<ActionResult<IEnumerable<FAQ>>> GetfAQs(int id)
         {
-            var fAQ = await _context.fAQs.FindAsync(id);
-
-            if (fAQ == null)
-            {
-                return NotFound();
-            }
-
-            return fAQ;
+            return Ok(await _context.Send(new GetAllFAQQueriesRequest(id)));
         }
-
-        // PUT: api/FAQs/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutFAQ(int id, FAQ fAQ)
+        [HttpPut]
+        public async Task<IActionResult> PutFAQ([FromBody]UpdateFAQCommandRequest req)
         {
-            if (id != fAQ.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(fAQ).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!FAQExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _context.Send(req);
 
             return NoContent();
         }
@@ -76,33 +43,21 @@ namespace HotelReservationApi.Presentation.Controllers
         // POST: api/FAQs
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<FAQ>> PostFAQ(FAQ fAQ)
+        public async Task<ActionResult<FAQ>> PostFAQ(CreateFAQCommandRequest fAQ)
         {
-            _context.fAQs.Add(fAQ);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetFAQ", new { id = fAQ.Id }, fAQ);
+            await _context.Send(fAQ);
+            return NoContent();
         }
 
         // DELETE: api/FAQs/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFAQ(int id)
         {
-            var fAQ = await _context.fAQs.FindAsync(id);
-            if (fAQ == null)
-            {
-                return NotFound();
-            }
-
-            _context.fAQs.Remove(fAQ);
-            await _context.SaveChangesAsync();
+            await _context.Send(new DeleteFAQCommandRequest(id));
 
             return NoContent();
         }
 
-        private bool FAQExists(int id)
-        {
-            return _context.fAQs.Any(e => e.Id == id);
-        }
+
     }
 }
