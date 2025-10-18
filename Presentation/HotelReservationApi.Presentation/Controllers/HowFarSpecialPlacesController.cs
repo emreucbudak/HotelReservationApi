@@ -4,6 +4,7 @@ using HotelReservationApi.Application.Features.CQRS.HowFarSpecialPlace.Queries.G
 using HotelReservationApi.Domain.Entities;
 using HotelReservationApi.Persistence.ApplicationContext;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,22 +25,19 @@ namespace HotelReservationApi.Presentation.Controllers
         {
             _context = context;
         }
-
-
-        // GET: api/HowFarSpecialPlaces/5
         [HttpGet("{id}")]
         public async Task<ActionResult<HowFarSpecialPlace>> GetHowFarSpecialPlace(int id)
         {
             return Ok(new GetAllHowFarSpecialPlaceQueriesRequest(id));
         }
+        [Authorize(Roles ="Reception,HotelMember")]
         [HttpPost]
         public async Task<ActionResult<HowFarSpecialPlace>> PostHowFarSpecialPlace(CreateHowFarSpecialPlaceCommandRequest howFarSpecialPlace)
         {
             await _context.Send(howFarSpecialPlace);
             return Ok();
         }
-
-        // DELETE: api/HowFarSpecialPlaces/5
+        [Authorize(Roles = "Reception,HotelMember")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHowFarSpecialPlace(int id)
         {
