@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using HotelReservationApi.Domain.Entities;
 using HotelReservationApi.Persistence.ApplicationContext;
 using MediatR;
+using HotelReservationApi.Application.Features.CQRS.HotelAdress.Queries.GetById;
+using HotelReservationApi.Application.Features.CQRS.HotelAdress.Command.Create;
+using HotelReservationApi.Application.Features.CQRS.HotelAdress.Command.Delete;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -22,88 +25,27 @@ namespace HotelReservationApi.Presentation.Controllers
             _context = context;
         }
 
-        // GET: api/HotelAdresses
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<HotelAdress>>> GetHotelAdresses()
-        {
-            return await _context.HotelAdresses.ToListAsync();
-        }
-
-        // GET: api/HotelAdresses/5
+    
         [HttpGet("{id}")]
         public async Task<ActionResult<HotelAdress>> GetHotelAdress(int id)
         {
-            var hotelAdress = await _context.HotelAdresses.FindAsync(id);
+            return Ok(await _context.Send(new GetHotelAdressByIdQueriesRequest(id)));
 
-            if (hotelAdress == null)
-            {
-                return NotFound();
-            }
-
-            return hotelAdress;
         }
-
-        // PUT: api/HotelAdresses/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutHotelAdress(int id, HotelAdress hotelAdress)
-        {
-            if (id != hotelAdress.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(hotelAdress).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!HotelAdressExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
         // POST: api/HotelAdresses
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<HotelAdress>> PostHotelAdress(HotelAdress hotelAdress)
+        public async Task<ActionResult<HotelAdress>> PostHotelAdress(CreateHotelAdressCommandRequest hotelAdress)
         {
-            _context.HotelAdresses.Add(hotelAdress);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetHotelAdress", new { id = hotelAdress.Id }, hotelAdress);
+            await _context.Send(hotelAdress);
+            return NoContent();
         }
-
-        // DELETE: api/HotelAdresses/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHotelAdress(int id)
         {
-            var hotelAdress = await _context.HotelAdresses.FindAsync(id);
-            if (hotelAdress == null)
-            {
-                return NotFound();
-            }
-
-            _context.HotelAdresses.Remove(hotelAdress);
-            await _context.SaveChangesAsync();
+            await _context.Send(new DeleteHotelAdressCommandRequest(id));
 
             return NoContent();
-        }
-
-        private bool HotelAdressExists(int id)
-        {
-            return _context.HotelAdresses.Any(e => e.Id == id);
         }
     }
 }
