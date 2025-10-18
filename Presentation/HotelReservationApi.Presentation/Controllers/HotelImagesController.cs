@@ -11,6 +11,7 @@ using MediatR;
 using HotelReservationApi.Application.Features.CQRS.HotelImages.Queries.GetAllByHotelId;
 using HotelReservationApi.Application.Features.CQRS.HotelImages.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.HotelImages.Command.Delete;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -34,18 +35,14 @@ namespace HotelReservationApi.Presentation.Controllers
             await _context.Send(new GetAllHotelImagesByIdQueriesRequest(id));
             return NoContent();
         }
-
-
-        // POST: api/HotelImages
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles ="HotelManager")]
         [HttpPost]
         public async Task<ActionResult<HotelImages>> PostHotelImages(CreateHotelImagesCommandRequest hotelImages)
         {
             await _context.Send(hotelImages);
             return NoContent();
         }
-
-        // DELETE: api/HotelImages/5
+        [Authorize(Roles = "HotelManager")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHotelImages(int id)
         {
