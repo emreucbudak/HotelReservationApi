@@ -4,6 +4,7 @@ using HotelReservationApi.Application.Features.CQRS.HotelCategory.Queries.GetAll
 using HotelReservationApi.Domain.Entities;
 using HotelReservationApi.Persistence.ApplicationContext;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -31,16 +32,14 @@ namespace HotelReservationApi.Presentation.Controllers
         {
             return Ok(await _context.Send(new GetAllHotelCategoryQueriesRequest()));
         }
-        // POST: api/HotelCategories
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles ="HotelManager,Reception")]
         [HttpPost]
         public async Task<ActionResult<HotelCategory>> PostHotelCategory(CreateHotelCategoryCommandRequest hotelCategory)
         {
             await _context.Send(hotelCategory);
             return NoContent();
         }
-
-        // DELETE: api/HotelCategories/5
+        [Authorize(Roles = "HotelManager,Reception")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHotelCategory(int id)
         {
