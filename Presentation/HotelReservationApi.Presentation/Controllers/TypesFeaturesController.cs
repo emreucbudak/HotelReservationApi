@@ -10,9 +10,11 @@ using HotelReservationApi.Persistence.ApplicationContext;
 using MediatR;
 using HotelReservationApi.Application.Features.CQRS.TypesFeatures.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.TypesFeatures.Command.Delete;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
+    [Authorize(Roles ="HotelManager,Reception")]
     [Route("api/[controller]")]
     [ApiController]
     public class TypesFeaturesController : ControllerBase
