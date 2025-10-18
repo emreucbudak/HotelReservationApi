@@ -12,6 +12,7 @@ using HotelReservationApi.Application.Features.CQRS.AdsBanner.Queries.GetAll;
 using HotelReservationApi.Application.Features.CQRS.AdsBanner.Command.Update;
 using HotelReservationApi.Application.Features.CQRS.AdsBanner.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.AdsBanner.Command.Delete;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -25,19 +26,13 @@ namespace HotelReservationApi.Presentation.Controllers
         {
             _context = context;
         }
-
-        // GET: api/AdsBanners
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AdsBanner>>> GetAdsBanner()
         {
             var result = await _context.Send(new GetAllAdsBannerQueriesRequest());
             return Ok(result);
         }
-
-
-
-        // PUT: api/AdsBanners/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles ="Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAdsBanner(UpdateAdsBannerCommandRequest req)
         {
@@ -46,9 +41,7 @@ namespace HotelReservationApi.Presentation.Controllers
 
             return NoContent();
         }
-
-        // POST: api/AdsBanners
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<AdsBanner>> PostAdsBanner(CreateAdsBannerCommandRequest adsBanner)
         {
@@ -56,8 +49,7 @@ namespace HotelReservationApi.Presentation.Controllers
 
             return NoContent();
         }
-
-        // DELETE: api/AdsBanners/5
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAdsBanner(int id)
         {
