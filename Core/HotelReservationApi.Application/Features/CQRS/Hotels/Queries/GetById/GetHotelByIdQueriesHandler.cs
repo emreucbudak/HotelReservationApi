@@ -1,4 +1,5 @@
-﻿using HotelReservationApi.Application.UnitOfWork;
+﻿using HotelReservationApi.Application.Features.CQRS.Hotels.Exceptions;
+using HotelReservationApi.Application.UnitOfWork;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -21,6 +22,10 @@ namespace HotelReservationApi.Application.Features.CQRS.Hotels.Queries.GetById
         public async Task<GetHotelByIdQueriesResponse> Handle(GetHotelByIdQueriesRequest request, CancellationToken cancellationToken)
         {
             var hotel = await unitOfWork.readRepository<Domain.Entities.Hotels>().GetByExpression(enableTracking:false,predicate:x=> x.Id == request.HotelsId,includable:x=> x.Include(y=> y.HotelAdress).ThenInclude(z=> z.City).Include(y => y.HotelAdress).ThenInclude(z=> z.Neighborhood ).Include(y => y.HotelAdress).ThenInclude(z=>z.District).Include(x=> x.HotelCategory));
+            if (hotel is null)
+            {
+                throw new HotelsNotFoundExceptions(request.HotelsId);
+            }
             return new GetHotelByIdQueriesResponse()
             {
                 HotelName = hotel.HotelName,
