@@ -3,6 +3,7 @@ using HotelReservationApi.Application.Features.CQRS.RoomTypes.Command.Delete;
 using HotelReservationApi.Domain.Entities;
 using HotelReservationApi.Persistence.ApplicationContext;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
+    [Authorize(Roles ="HotelManager")]
     [Route("api/[controller]")]
     [ApiController]
     public class RoomTypesController : ControllerBase
