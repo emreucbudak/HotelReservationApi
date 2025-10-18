@@ -12,6 +12,7 @@ using HotelReservationApi.Application.Features.CQRS.Reservation.Queries.GetAllBy
 using HotelReservationApi.Application.Features.CQRS.Reservation.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Reservation.Command.Delete;
 using Microsoft.AspNetCore.Authorization;
+using HotelReservationApi.Application.Features.CQRS.Reservation.Queries.GetAllByMemberId;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -24,6 +25,12 @@ namespace HotelReservationApi.Presentation.Controllers
         public ReservationsController(IMediator context)
         {
             _context = context;
+        }
+        [Authorize(Roles ="Member")]
+        [HttpGet("reservation/{memberId}")]
+        public async Task<ActionResult<List<Reservation>>> GetReservationByMemberId(int memberId)
+        {
+            return Ok(await _context.Send(new GetAllReservationByMemberIdQueriesRequest(memberId)));
         }
         [Authorize(Roles ="HotelManager,Reception")]
         [HttpGet("{id}")]
@@ -39,7 +46,7 @@ namespace HotelReservationApi.Presentation.Controllers
 
             return NoContent();
         }
-
+        [Authorize(Roles ="Member,HotelManager,Reception")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReservation(int id)
         {
