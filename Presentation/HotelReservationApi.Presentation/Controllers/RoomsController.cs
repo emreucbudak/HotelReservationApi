@@ -12,9 +12,11 @@ using HotelReservationApi.Application.Features.CQRS.Rooms.Queries.GetAll;
 using HotelReservationApi.Application.Features.CQRS.Rooms.Command.Update;
 using HotelReservationApi.Application.Features.CQRS.Rooms.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Rooms.Command.Delete;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
+    [Authorize(Roles ="HotelManager,Reception")]
     [Route("api/[controller]")]
     [ApiController]
     public class RoomsController : ControllerBase
