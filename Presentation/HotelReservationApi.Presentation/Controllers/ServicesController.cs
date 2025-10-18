@@ -11,6 +11,7 @@ using MediatR;
 using HotelReservationApi.Application.Features.CQRS.Service.Queries.GetAll;
 using HotelReservationApi.Application.Features.CQRS.Service.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Service.Command.Delete;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -24,24 +25,19 @@ namespace HotelReservationApi.Presentation.Controllers
         {
             _context = context;
         }
-
-        // GET: api/Services
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Service>>> GetServices()
         {
             return Ok(await _context.Send(new GetAllServiceQueriesRequest()));
         }
-
-        // POST: api/Services
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles ="HotelManager")]
         [HttpPost]
         public async Task<ActionResult<Service>> PostService(CreateServiceCommandRequest service)
         {
             await _context.Send(service);
             return Ok();
         }
-
-        // DELETE: api/Services/5
+        [Authorize(Roles = "HotelManager")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteService(int id)
         {
