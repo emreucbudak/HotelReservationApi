@@ -19,5 +19,10 @@ namespace HotelReservationApi.Application.Features.CQRS.Reservation.Queries.GetA
             PageNumber = pageNumber ?? 1;
             PageSize = pageSize ?? 10;
         }
+
+        public GetAllReservationByMemberIdQueriesRequest(int memberId)
+        {
+            MemberId = memberId;
+        }
     }
 }
