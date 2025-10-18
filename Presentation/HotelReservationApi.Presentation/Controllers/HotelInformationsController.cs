@@ -4,6 +4,7 @@ using HotelReservationApi.Application.Features.CQRS.HotelInformation.Queries.Get
 using HotelReservationApi.Domain.Entities;
 using HotelReservationApi.Persistence.ApplicationContext;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,22 +25,19 @@ namespace HotelReservationApi.Presentation.Controllers
         {
             _context = context;
         }
-
-
-        // GET: api/HotelInformations/5
         [HttpGet("{id}")]
         public async Task<ActionResult<HotelInformation>> GetHotelInformation(int id)
         {
             return Ok(await _context.Send(new GetHotelInformationByIdQueriesRequest(id)));
         }
+        [Authorize(Roles ="HotelManager")]
         [HttpPost]
         public async Task<ActionResult<HotelInformation>> PostHotelInformation(CreateHotelInformationCommandRequest hotelInformation)
         {
             await _context.Send(hotelInformation);
             return NoContent();
         }
-
-        // DELETE: api/HotelInformations/5
+        [Authorize(Roles = "HotelManager")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHotelInformation(int id)
         {
