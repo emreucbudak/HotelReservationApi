@@ -11,6 +11,7 @@ using MediatR;
 using HotelReservationApi.Application.Features.CQRS.HotelsPoliticy.Queries.GetAll;
 using HotelReservationApi.Application.Features.CQRS.HotelsPoliticy.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.HotelsPoliticy.Command.Delete;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -29,14 +30,14 @@ namespace HotelReservationApi.Presentation.Controllers
         {
             return Ok(await _context.Send(new GetAllHotelsPoliticyQueriesRequest(HotelId)));
         }
+        [Authorize(Roles ="HotelManager,Reception")]
         [HttpPost]
         public async Task<ActionResult<HotelsPoliticy>> PostHotelsPoliticy(CreateHotelsPoliticyCommandRequest hotelsPoliticy)
         {
             await _context.Send(hotelsPoliticy);
             return NoContent();
         }
-
-        // DELETE: api/HotelsPoliticies/5
+        [Authorize(Roles = "HotelManager,Reception")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHotelsPoliticy(int id)
         {
