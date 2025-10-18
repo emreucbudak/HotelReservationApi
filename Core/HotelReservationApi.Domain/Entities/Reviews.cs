@@ -9,6 +9,21 @@ namespace HotelReservationApi.Domain.Entities
 {
     public class Reviews : BaseEntity
     {
+        public Reviews()
+        {
+        }
+
+        public Reviews(string title, string comment, decimal rating, DateOnly reviewDate, bool ısUpdated, DateOnly? updatedDate, int hotelsId)
+        {
+            Title = title;
+            Comment = comment;
+            Rating = rating;
+            ReviewDate = reviewDate;
+            IsUpdated = ısUpdated;
+            UpdatedDate = updatedDate;
+            HotelsId = hotelsId;
+        }
+
         public string Title { get; set; }
         public string Comment { get; set; }
         public decimal Rating { get; set; }

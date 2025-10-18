@@ -9,6 +9,19 @@ namespace HotelReservationApi.Domain.Entities
 {
     public class Bills : BaseEntity
     {
+        public Bills()
+        {
+        }
+
+        public Bills(string phoneNumber, string email, int paymetMethodId, int paymentTimingId, int reservationId, int hotelsId)
+        {
+            PhoneNumber = phoneNumber;
+            Email = email;
+            PaymetMethodId = paymetMethodId;
+            PaymentTimingId = paymentTimingId;
+            ReservationId = reservationId;
+            HotelsId = hotelsId;
+        }
 
         public string PhoneNumber { get; set; }
         public string Email { get; set; }

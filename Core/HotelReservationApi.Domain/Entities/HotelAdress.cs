@@ -11,6 +11,21 @@ namespace HotelReservationApi.Domain.Entities
 {
     public class HotelAdress : BaseEntity
     {
+        public HotelAdress()
+        {
+        }
+
+        public HotelAdress(int hotelsId, int cityId, int districtId, string street, int neighborhoodId, double enlem, double boylam)
+        {
+            HotelsId = hotelsId;
+            CityId = cityId;
+            DistrictId = districtId;
+            Street = street;
+            NeighborhoodId = neighborhoodId;
+            Enlem = enlem;
+            Boylam = boylam;
+        }
+
         public int HotelsId { get; set; }
         public Hotels Hotels { get; set; }  
         public int CityId { get; set; }

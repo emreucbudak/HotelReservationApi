@@ -9,6 +9,19 @@ namespace HotelReservationApi.Domain.Entities
 {
     public class Rooms : BaseEntity
     {
+        public Rooms()
+        {
+        }
+
+        public Rooms(int roomNumber, bool ısAvailable, int priceListId, int roomTypesId, int hotelsId)
+        {
+            RoomNumber = roomNumber;
+            IsAvailable = ısAvailable;
+            PriceListId = priceListId;
+            RoomTypesId = roomTypesId;
+            HotelsId = hotelsId;
+        }
+
         public int RoomTypesId { get; set; }
         public RoomTypes RoomTypes { get; set; }
         public int RoomNumber { get; set; }

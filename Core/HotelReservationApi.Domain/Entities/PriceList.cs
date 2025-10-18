@@ -9,6 +9,17 @@ namespace HotelReservationApi.Domain.Entities
 {
     public class PriceList : BaseEntity
     {
+        public PriceList()
+        {
+        }
+
+        public PriceList(int price, int discountListId)
+        {
+            Price = price;
+            DiscountListId = discountListId;
+        }
+
+
         public int Price { get; set; }
         public int DiscountListId { get; set; }
         public DiscountList? DiscountList { get; set; }
