@@ -19,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\CQRS\HotelAdress\Command\Delete\" />
     <Folder Include="Features\CQRS\HotelAdress\Command\Update\" />
     <Folder Include="Features\CQRS\HotelAdress\Queries\" />
     <Folder Include="Features\CQRS\PriceList\Queries\" />

@@ -1,4 +1,5 @@
-﻿using HotelReservationApi.Application.UnitOfWork;
+﻿using HotelReservationApi.Application.Features.CQRS.Hotels.Exceptions;
+using HotelReservationApi.Application.UnitOfWork;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,10 @@ namespace HotelReservationApi.Application.Features.CQRS.Hotels.Command.Update
         public async Task Handle(UpdateHotelsCommandRequest request, CancellationToken cancellationToken)
         {
             var hotels = await _unitOfWork.readRepository<Domain.Entities.Hotels>().GetByExpression(enableTracking:true,predicate:x=> x.Id == request.HotelsId);
+            if (hotels is null)
+            {
+                throw new HotelsNotFoundExceptions(request.HotelsId);
+            }
             hotels.HotelName = request.HotelsName;
             await _unitOfWork.writeRepository<Domain.Entities.Hotels>().UpdateAsync(hotels);
             await _unitOfWork.SaveAsync();
