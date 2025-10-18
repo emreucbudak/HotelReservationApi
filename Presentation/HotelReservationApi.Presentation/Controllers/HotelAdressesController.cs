@@ -11,6 +11,7 @@ using MediatR;
 using HotelReservationApi.Application.Features.CQRS.HotelAdress.Queries.GetById;
 using HotelReservationApi.Application.Features.CQRS.HotelAdress.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.HotelAdress.Command.Delete;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -32,14 +33,14 @@ namespace HotelReservationApi.Presentation.Controllers
             return Ok(await _context.Send(new GetHotelAdressByIdQueriesRequest(id)));
 
         }
-        // POST: api/HotelAdresses
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles ="HotelManager")]
         [HttpPost]
         public async Task<ActionResult<HotelAdress>> PostHotelAdress(CreateHotelAdressCommandRequest hotelAdress)
         {
             await _context.Send(hotelAdress);
             return NoContent();
         }
+        [Authorize(Roles = "HotelManager")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHotelAdress(int id)
         {
