@@ -9,6 +9,17 @@ namespace HotelReservationApi.Domain.Entities
 {
     public class Hotels : BaseEntity
     {
+        public Hotels()
+        {
+        }
+
+        public Hotels(string hotelName, int hotelCategoryId, int hotelAdressId)
+        {
+            HotelName = hotelName;
+            HotelCategoryId = hotelCategoryId;
+            HotelAdressId = hotelAdressId;
+        }
+
         public string HotelName { get; set; }
         public ICollection<Rooms>? Rooms { get; set; }
         public int HotelCategoryId { get; set; }    

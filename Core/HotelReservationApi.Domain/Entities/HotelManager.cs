@@ -9,6 +9,16 @@ namespace HotelReservationApi.Domain.Entities
 {
     public class HotelManager : BaseEntity
     {
+        public HotelManager()
+        {
+        }
+
+        public HotelManager(int hotelsId, Guid userId)
+        {
+            HotelsId = hotelsId;
+            UserId = userId;
+        }
+
         public  int HotelsId { get; set; }
         public Hotels Hotels { get; set; }
         public Guid UserId { get; set; }

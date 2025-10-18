@@ -9,6 +9,16 @@ namespace HotelReservationApi.Domain.Entities
 {
     public class RoomTypes  : BaseEntity
     {
+        public RoomTypes()
+        {
+        }
+
+        public RoomTypes(string typeName, int howManyPeople, ICollection<TypesFeatures> typesFeatures)
+        {
+            TypeName = typeName;
+            HowManyPeople = howManyPeople;
+            TypesFeatures = typesFeatures;
+        }
 
         public string TypeName { get; set; }
         public int HowManyPeople { get; set; }
