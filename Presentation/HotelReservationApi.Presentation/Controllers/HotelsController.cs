@@ -13,6 +13,7 @@ using HotelReservationApi.Application.Features.CQRS.Hotels.Queries.GetById;
 using HotelReservationApi.Application.Features.CQRS.Hotels.Command.Update;
 using HotelReservationApi.Application.Features.CQRS.Hotels.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Hotels.Command.Delete;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -27,21 +28,18 @@ namespace HotelReservationApi.Presentation.Controllers
             _context = context;
         }
 
-        // GET: api/Hotels
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Hotels>>> GetHotels([FromBody]int? pageSize, int? pageNumber)
         {
             return Ok(await _context.Send(new GetAllHotelsQueriesRequest(pageNumber,pageSize)));
         }
-
-        // GET: api/Hotels/5
+        [Authorize(Roles ="Member,Admin,Reception,HotelManager")]
         [HttpGet("{id}")]
         public async Task<ActionResult<Hotels>> GetHotels(int id)
         {
             return Ok(await _context.Send(new GetHotelByIdQueriesRequest(id)));
         }
-
-
+        [Authorize(Roles ="Admin")]
         [HttpPut]
         public async Task<IActionResult> PutHotels(UpdateHotelsCommandRequest req)
         {
@@ -50,17 +48,14 @@ namespace HotelReservationApi.Presentation.Controllers
 
             return NoContent();
         }
-
-        // POST: api/Hotels
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles ="Admin")]
         [HttpPost]
         public async Task<ActionResult<Hotels>> PostHotels(CreateHotelsCommandRequest hotels)
         {
             await _context.Send(hotels);
             return NoContent();
         }
-
-        // DELETE: api/Hotels/5
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHotels(int id)
         {
