@@ -12,6 +12,7 @@ using HotelReservationApi.Application.Features.CQRS.NewsPopUp.Queries.GetAll;
 using HotelReservationApi.Application.Features.CQRS.NewsPopUp.Command.Update;
 using HotelReservationApi.Application.Features.CQRS.NewsPopUp.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.NewsPopUp.Command.Delete;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -25,18 +26,12 @@ namespace HotelReservationApi.Presentation.Controllers
         {
             _context = context;
         }
-
-        // GET: api/NewsPopUps
         [HttpGet]
         public async Task<ActionResult<IEnumerable<NewsPopUp>>> GetnewsPopUps()
         {
             return Ok(await _context.Send(new GetAllNewsPopUpQueriesRequest()));
         }
-
-
-
-        // PUT: api/NewsPopUps/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles ="Admin")]
         [HttpPut]
         public async Task<IActionResult> PutNewsPopUp([FromBody] UpdateNewsPopUpCommandRequest req)
         {
@@ -45,17 +40,14 @@ namespace HotelReservationApi.Presentation.Controllers
 
             return NoContent();
         }
-
-        // POST: api/NewsPopUps
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<NewsPopUp>> PostNewsPopUp(CreateNewsPopUpCommandRequest newsPopUp)
         {
             await _context.Send(newsPopUp);
             return NoContent();
         }
-
-        // DELETE: api/NewsPopUps/5
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteNewsPopUp(int id)
         {
