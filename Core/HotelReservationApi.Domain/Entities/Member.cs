@@ -9,6 +9,17 @@ namespace HotelReservationApi.Domain.Entities
 {
     public class Member : BaseEntity
     {
+        public Member()
+        {
+        }
+
+        public Member(Guid userId, string referansCode, int coinCount)
+        {
+            UserId = userId;
+            ReferansCode = referansCode;
+            CoinCount = coinCount;
+        }
+
         public Guid UserId { get; set; }
         public User User { get; set; }
         public string ReferansCode { get; set; }

@@ -9,6 +9,21 @@ namespace HotelReservationApi.Domain.Entities
 {
     public class DiscountList : BaseEntity
     {
+        public DiscountList()
+        {
+        }
+
+        public DiscountList(bool ısDiscountActive, int discountPercentage, bool ısDiscountForReservationDate, DateTime? discountStartTime, DateTime? discountEndTime, DateTime? bookingStartDate, DateTime? bookingEndDate)
+        {
+            IsDiscountActive = ısDiscountActive;
+            DiscountPercentage = discountPercentage;
+            IsDiscountForReservationDate = ısDiscountForReservationDate;
+            DiscountStartTime = discountStartTime;
+            DiscountEndTime = discountEndTime;
+            BookingStartDate = bookingStartDate;
+            BookingEndDate = bookingEndDate;
+        }
+
         public bool IsDiscountActive { get; set; }
         public int DiscountPercentage { get; set; }
         public bool IsDiscountForReservationDate { get; set; }
