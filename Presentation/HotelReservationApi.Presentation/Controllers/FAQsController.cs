@@ -12,6 +12,7 @@ using HotelReservationApi.Application.Features.CQRS.FAQ.Queries.GetAll;
 using HotelReservationApi.Application.Features.CQRS.FAQ.Command.Update;
 using HotelReservationApi.Application.Features.CQRS.FAQ.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.FAQ.Command.Delete;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -26,12 +27,13 @@ namespace HotelReservationApi.Presentation.Controllers
             _context = context;
         }
 
-        // GET: api/FAQs
+
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<FAQ>>> GetfAQs(int id)
         {
             return Ok(await _context.Send(new GetAllFAQQueriesRequest(id)));
         }
+        [Authorize(Roles = "HotelManager,Reception")]
         [HttpPut]
         public async Task<IActionResult> PutFAQ([FromBody]UpdateFAQCommandRequest req)
         {
@@ -39,17 +41,14 @@ namespace HotelReservationApi.Presentation.Controllers
 
             return NoContent();
         }
-
-        // POST: api/FAQs
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = "HotelManager,Reception")]
         [HttpPost]
         public async Task<ActionResult<FAQ>> PostFAQ(CreateFAQCommandRequest fAQ)
         {
             await _context.Send(fAQ);
             return NoContent();
         }
-
-        // DELETE: api/FAQs/5
+        [Authorize(Roles = "HotelManager,Reception")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFAQ(int id)
         {

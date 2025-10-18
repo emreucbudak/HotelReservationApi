@@ -25,18 +25,12 @@ namespace HotelReservationApi.Presentation.Controllers
             _context = context;
         }
 
-
-        // GET: api/Reservations/5
         [HttpGet("{id}")]
         public async Task<ActionResult<List<Reservation>>> GetReservation(int id)
         {
             return Ok(await _context.Send(new GetAllReservationByHotelIdQueriesRequest(id)));
         }
 
-   
-
-        // POST: api/Reservations
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Reservation>> PostReservation(CreateReservationCommandRequest reservation)
         {
@@ -45,7 +39,6 @@ namespace HotelReservationApi.Presentation.Controllers
             return NoContent();
         }
 
-        // DELETE: api/Reservations/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReservation(int id)
         {
