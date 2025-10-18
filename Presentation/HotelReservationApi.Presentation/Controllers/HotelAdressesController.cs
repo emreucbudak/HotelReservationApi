@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HotelReservationApi.Domain.Entities;
 using HotelReservationApi.Persistence.ApplicationContext;
+using MediatR;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -14,9 +15,9 @@ namespace HotelReservationApi.Presentation.Controllers
     [ApiController]
     public class HotelAdressesController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IMediator _context;
 
-        public HotelAdressesController(ApplicationDbContext context)
+        public HotelAdressesController(IMediator context)
         {
             _context = context;
         }
