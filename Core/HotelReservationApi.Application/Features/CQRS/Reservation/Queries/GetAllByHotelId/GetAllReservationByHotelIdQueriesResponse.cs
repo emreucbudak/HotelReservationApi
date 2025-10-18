@@ -13,5 +13,6 @@ namespace HotelReservationApi.Application.Features.CQRS.Reservation.Queries.GetA
         public DateOnly EndDate { get; set; }
         public ICollection<Domain.Entities.Customer> Customer { get; set; }
         public int TotalPrice { get; set; }
+        public DateOnly ReservationDate { get; set; }
     }
 }
