@@ -5,6 +5,7 @@ using HotelReservationApi.Application.Features.CQRS.Coupon.Queries.GetByName;
 using HotelReservationApi.Domain.Entities;
 using HotelReservationApi.Persistence.ApplicationContext;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -26,24 +27,20 @@ namespace HotelReservationApi.Presentation.Controllers
             _context = context;
         }
 
-        // GET: api/Coupons
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Coupon>>> GetCoupons()
         {
             return Ok(await _context.Send(new GetAllCouponQueriesRequest()));
         }
-
-        // GET: api/Coupons/5
+        [Authorize(Roles = "Member")]
         [HttpGet("{name}")]
         public async Task<ActionResult<Coupon>> GetCoupon(string name)
         {
             return Ok(await _context.Send(new GetCouponByNameQueriesRequest(name)));
             
         }
-
-
-        // POST: api/Coupons
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<Coupon>> PostCoupon(CreateCouponCommandRequest coupon)
         {
@@ -51,8 +48,7 @@ namespace HotelReservationApi.Presentation.Controllers
 
             return NoContent();
         }
-
-        // DELETE: api/Coupons/5
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCoupon(int id)
         {
