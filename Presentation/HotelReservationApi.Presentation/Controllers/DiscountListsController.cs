@@ -12,6 +12,8 @@ using HotelReservationApi.Application.Features.CQRS.DiscountList.Queries.GetAll;
 using HotelReservationApi.Application.Features.CQRS.DiscountList.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.DiscountList.Command.Delete;
 using Microsoft.AspNetCore.Authorization;
+using HotelReservationApi.Application.Features.CQRS.DiscountList.Queries.GetByHotelsId;
+using HotelReservationApi.Application.Features.CQRS.DiscountList.Queries.GetByRoomTypeId;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -30,6 +32,18 @@ namespace HotelReservationApi.Presentation.Controllers
         public async Task<ActionResult<IEnumerable<DiscountList>>> GetdiscountLists()
         {
             return Ok(await _context.Send(new GetAllDiscountListQueriesRequest()));
+        }
+        [Authorize(Roles = "HotelManager")]
+        [HttpGet("/hotel/{id}")]
+        public async Task<ActionResult<IEnumerable<DiscountList>>> Getdiscountlistid(int hotelId)
+        {
+            return Ok(await _context.Send(new GetDiscountListByHotelsIdQueriesRequest(hotelId)));
+        }
+        [Authorize(Roles = "HotelManager")]
+        [HttpGet("/roomtypes/{id}")]
+        public async Task<ActionResult<IEnumerable<DiscountList>>> Getdiscountlistroomid(int roomTypesId)
+        {
+            return Ok(await _context.Send(new GetDiscountByRoomTypeIdQueriesRequest(roomTypesId)));
         }
         [Authorize(Roles ="HotelManager,Admin")]
         [HttpPost]
