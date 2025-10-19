@@ -5,6 +5,7 @@ using HotelReservationApi.Application.Features.CQRS.Bills.Queries.GetAll;
 using HotelReservationApi.Application.Features.CQRS.Bills.Queries.GetAllByHotelId;
 using HotelReservationApi.Application.Features.CQRS.Coupon.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Customer.Command.Create;
+using HotelReservationApi.Application.Features.CQRS.DiscountList.Queries.GetAll;
 using HotelReservationApi.Application.Features.CQRS.FAQ.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.HotelImages.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.HotelImages.Queries.GetAllByHotelId;
@@ -60,6 +61,7 @@ namespace HotelReservationApi.Application.AutoMapper
             CreateMap<GetAllHotelImagesByIdQueriesResponse, HotelImages>().ReverseMap();
             CreateMap<Hotels,GetAllHotelsQueriesResponse>().ForMember(destinationMember: x=> x.HotelCategoryName,memberOptions: opt => opt.MapFrom(x=> x.HotelCategory)).ReverseMap();
             CreateMap<Reservation, GetAllReservationByMemberIdQueriesResponse>().ReverseMap();
+            CreateMap<DiscountList,GetAllDiscountListQueriesResponse>().ReverseMap();
         }
     }
 }
