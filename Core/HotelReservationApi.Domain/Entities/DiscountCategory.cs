@@ -1,0 +1,14 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace HotelReservationApi.Domain.Entities
+{
+    public class DiscountCategory
+    {
+        public int Id { get; set; }
+        public int DiscountCategoryName { get; set; }
+    }
+}
