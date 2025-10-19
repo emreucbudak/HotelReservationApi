@@ -9,6 +9,11 @@ namespace HotelReservationApi.Application.Features.CQRS.DiscountList.Command.Del
 {
     public class DeleteDiscountListCommandRequest : IRequest
     {
-        public int DiscountListId { get; set; } 
+        public int DiscountListId { get; set; }
+
+        public DeleteDiscountListCommandRequest(int discountListId)
+        {
+            DiscountListId = discountListId;
+        }
     }
 }

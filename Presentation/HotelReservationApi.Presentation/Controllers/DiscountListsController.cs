@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HotelReservationApi.Domain.Entities;
 using HotelReservationApi.Persistence.ApplicationContext;
+using MediatR;
+using HotelReservationApi.Application.Features.CQRS.DiscountList.Queries.GetAll;
+using HotelReservationApi.Application.Features.CQRS.DiscountList.Command.Create;
+using HotelReservationApi.Application.Features.CQRS.DiscountList.Command.Delete;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -14,9 +18,9 @@ namespace HotelReservationApi.Presentation.Controllers
     [ApiController]
     public class DiscountListsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IMediator _context;
 
-        public DiscountListsController(ApplicationDbContext context)
+        public DiscountListsController(IMediator context)
         {
             _context = context;
         }
@@ -25,84 +29,22 @@ namespace HotelReservationApi.Presentation.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DiscountList>>> GetdiscountLists()
         {
-            return await _context.discountLists.ToListAsync();
+            return Ok(await _context.Send(new GetAllDiscountListQueriesRequest()));
         }
-
-        // GET: api/DiscountLists/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<DiscountList>> GetDiscountList(int id)
-        {
-            var discountList = await _context.discountLists.FindAsync(id);
-
-            if (discountList == null)
-            {
-                return NotFound();
-            }
-
-            return discountList;
-        }
-
-        // PUT: api/DiscountLists/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutDiscountList(int id, DiscountList discountList)
-        {
-            if (id != discountList.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(discountList).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!DiscountListExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/DiscountLists
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<DiscountList>> PostDiscountList(DiscountList discountList)
+        public async Task<ActionResult<DiscountList>> PostDiscountList(CreateDiscountListCommandRequest discountList)
         {
-            _context.discountLists.Add(discountList);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetDiscountList", new { id = discountList.Id }, discountList);
+            await _context.Send(discountList);
+            return NoContent();
         }
 
         // DELETE: api/DiscountLists/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDiscountList(int id)
         {
-            var discountList = await _context.discountLists.FindAsync(id);
-            if (discountList == null)
-            {
-                return NotFound();
-            }
-
-            _context.discountLists.Remove(discountList);
-            await _context.SaveChangesAsync();
+            await _context.Send(new DeleteDiscountListCommandRequest(id));
 
             return NoContent();
-        }
-
-        private bool DiscountListExists(int id)
-        {
-            return _context.discountLists.Any(e => e.Id == id);
         }
     }
 }
