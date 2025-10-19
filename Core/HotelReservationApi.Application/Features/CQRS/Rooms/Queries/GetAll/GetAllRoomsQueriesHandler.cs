@@ -22,7 +22,7 @@ namespace HotelReservationApi.Application.Features.CQRS.Rooms.Queries.GetAll
 
         public async Task<List<GetAllRoomsQueriesResponse>> Handle(GetAllRoomsQueriesRequest request, CancellationToken cancellationToken)
         {
-            var rooms = await _unitOfWork.readRepository<HotelReservationApi.Domain.Entities.Rooms>().GetAllWithPaging(enableTracking: false, predicate: x => x.HotelsId == request.HotelId, page:request.Page,size:request.Size,includable:x=> x.Include(y=> y.RoomTypes).ThenInclude(x=> x.TypesFeatures).Include(x=> x.PriceList).ThenInclude(z=> z.DiscountList));
+            var rooms = await _unitOfWork.readRepository<HotelReservationApi.Domain.Entities.Rooms>().GetAllWithPaging(enableTracking: false, predicate: x => x.HotelsId == request.HotelId, page:request.Page,size:request.Size,includable:x=> x.Include(y=> y.RoomTypes).ThenInclude(x=> x.TypesFeatures));
             if (rooms is null)
             {
                 throw new RoomsGetByIdNotFoundExceptions(request.HotelId);
@@ -33,7 +33,7 @@ namespace HotelReservationApi.Application.Features.CQRS.Rooms.Queries.GetAll
                 IsAvailable = x.IsAvailable,
                 TypeName = x.RoomTypes.TypeName,
                 HowManyPeople = x.RoomTypes.HowManyPeople,
-                Price = x.PriceList.DiscountList.IsDiscountActive ? x.PriceList.Price-x.PriceList.Price*x.PriceList.DiscountList.DiscountPercentage/100:x.PriceList.Price,
+                Price = x.RoomTypes.PriceList.DiscountList.IsDiscountActive ? x.RoomTypes.PriceList.Price-x.RoomTypes.PriceList.Price*x.RoomTypes.PriceList.DiscountList.DiscountPercentage/100:x.RoomTypes.PriceList.Price,
                 FeatureName = x.RoomTypes.TypesFeatures.Select(z => z.FeatureName).ToList()
             }).ToList();
         }

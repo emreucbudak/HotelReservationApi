@@ -25,7 +25,6 @@ namespace HotelReservationApi.Application.Features.CQRS.Rooms.Command.Update
             {
                 throw new RoomsNotFoundExceptions(request.RoomId);
             }
-            room.PriceListId = request.PriceListId;
             room.RoomNumber = request.RoomNumber;
             room.IsAvailable = request.IsAvailable;
             await _unitOfWork.writeRepository<HotelReservationApi.Domain.Entities.Rooms>().UpdateAsync(room);
