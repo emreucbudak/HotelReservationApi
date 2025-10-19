@@ -12,8 +12,7 @@ namespace HotelReservationApi.Application.Validate
                 .GreaterThan(0).WithMessage("İndirim yüzdesi 0'dan büyük olmalıdır!")
                 .NotNull().WithMessage("İndirim oranı boş olamaz");
 
-            When(x => x.IsDiscountForReservationDate, () =>
-            {
+      
                 RuleFor(x => x.DiscountStartTime)
                     .NotNull().WithMessage("İndirim başlangıç zamanı null olamaz!")
                     .LessThan(x => x.DiscountEndTime ?? DateTime.MaxValue)
@@ -33,7 +32,7 @@ namespace HotelReservationApi.Application.Validate
                     .NotNull().WithMessage("Rezervasyon bitiş tarihi null olamaz!")
                     .GreaterThan(x => x.BookingStartDate ?? DateTime.MinValue)
                     .WithMessage("Rezervasyon bitiş tarihi, rezervasyon başlangıç tarihinden sonra olmalıdır!");
-            });
+    
         }
     }
 }
