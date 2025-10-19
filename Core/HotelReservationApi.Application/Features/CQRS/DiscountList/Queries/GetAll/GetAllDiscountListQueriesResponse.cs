@@ -8,6 +8,7 @@ namespace HotelReservationApi.Application.Features.CQRS.DiscountList.Queries.Get
 {
     public class GetAllDiscountListQueriesResponse
     {
+        public int Id { get; set; }
         public bool IsDiscountActive { get; set; }
         public int DiscountPercentage { get; set; }
         public bool IsDiscountForReservationDate { get; set; }
