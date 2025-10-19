@@ -11,9 +11,10 @@ namespace HotelReservationApi.Domain.Entities
     {
         public DiscountList()
         {
+            
         }
 
-        public DiscountList(int discountPercentage, DateTime? discountStartTime, DateTime? discountEndTime, DateTime? bookingStartDate, DateTime? bookingEndDate, bool ısGlobal, int? stayDays, int? payDays)
+        public DiscountList(int discountPercentage, DateTime? discountStartTime, DateTime? discountEndTime, DateTime? bookingStartDate, DateTime? bookingEndDate, bool ısGlobal, int? stayDays, int? payDays, int? hotelsId, int? roomTypeId)
         {
 
             DiscountPercentage = discountPercentage;
@@ -25,6 +26,8 @@ namespace HotelReservationApi.Domain.Entities
             IsGlobal = ısGlobal;
             StayDays = stayDays;
             PayDays = payDays;
+            HotelsId = hotelsId;
+            RoomTypeId = roomTypeId;
         }
         public int DiscountCategoryId { get; set; }
         public DiscountCategory DiscountCategory { get; set; }
@@ -37,5 +40,11 @@ namespace HotelReservationApi.Domain.Entities
         public DateTime? BookingEndDate { get; set; }
         public int? StayDays { get; set; } 
         public int? PayDays { get; set; }
+        public int? HotelsId {  get; set; }
+        public Hotels Hotels { get; set; }
+
+        public int? RoomTypeId { get; set; }
+        public RoomTypes RoomType { get; set; }
+
     }
 }
