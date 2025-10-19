@@ -25,7 +25,8 @@ namespace HotelReservationApi.Application.Features.CQRS.DiscountList.Command.Del
             {
                 throw new DiscountListNotFoundExceptions(request.DiscountListId);
             }
-            await unitOfWork.writeRepository<Domain.Entities.DiscountList>().DeleteAsync(discountList);
+            discountList.IsDeleted = true;
+            await unitOfWork.writeRepository<Domain.Entities.DiscountList>().UpdateAsync(discountList);
             await unitOfWork.SaveAsync();
         }
     }

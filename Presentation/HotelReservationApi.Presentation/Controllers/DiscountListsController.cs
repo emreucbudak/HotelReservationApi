@@ -25,7 +25,6 @@ namespace HotelReservationApi.Presentation.Controllers
             _context = context;
         }
 
-        // GET: api/DiscountLists
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DiscountList>>> GetdiscountLists()
         {
@@ -38,7 +37,6 @@ namespace HotelReservationApi.Presentation.Controllers
             return NoContent();
         }
 
-        // DELETE: api/DiscountLists/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDiscountList(int id)
         {
