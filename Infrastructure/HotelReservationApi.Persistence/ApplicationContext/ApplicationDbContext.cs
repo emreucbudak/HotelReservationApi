@@ -36,7 +36,6 @@ namespace HotelReservationApi.Persistence.ApplicationContext
         public DbSet<SpecialPlaceCategory> SpecialPlaceCategories { get; set; }
         public DbSet<AdsBanner> AdsBanner { get; set; }
         public DbSet<DiscountList> discountLists { get; set; }
-        public DbSet<PriceList> priceList { get; set; }
         public DbSet<NewsPopUp> newsPopUps { get; set; }
         public DbSet<Bills> bills { get; set; }
         public DbSet<PaymentMethod> paymentMethods { get; set; }

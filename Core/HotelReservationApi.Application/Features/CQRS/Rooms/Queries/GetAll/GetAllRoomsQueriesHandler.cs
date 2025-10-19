@@ -33,7 +33,7 @@ namespace HotelReservationApi.Application.Features.CQRS.Rooms.Queries.GetAll
                 IsAvailable = x.IsAvailable,
                 TypeName = x.RoomTypes.TypeName,
                 HowManyPeople = x.RoomTypes.HowManyPeople,
-                Price = x.RoomTypes.PriceList.DiscountList.IsDeleted ? x.RoomTypes.PriceList.Price-x.RoomTypes.PriceList.Price*x.RoomTypes.PriceList.DiscountList.DiscountPercentage/100:x.RoomTypes.PriceList.Price,
+                Price = x.RoomTypes.DailyPrice,
                 FeatureName = x.RoomTypes.TypesFeatures.Select(z => z.FeatureName).ToList()
             }).ToList();
         }

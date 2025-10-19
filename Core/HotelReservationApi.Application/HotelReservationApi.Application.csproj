@@ -18,8 +18,4 @@
     <ProjectReference Include="..\HotelReservationApi.Domain\HotelReservationApi.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\CQRS\PriceList\Queries\" />
-  </ItemGroup>
-
 </Project>
