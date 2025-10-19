@@ -11,6 +11,7 @@ using MediatR;
 using HotelReservationApi.Application.Features.CQRS.DiscountList.Queries.GetAll;
 using HotelReservationApi.Application.Features.CQRS.DiscountList.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.DiscountList.Command.Delete;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -24,19 +25,20 @@ namespace HotelReservationApi.Presentation.Controllers
         {
             _context = context;
         }
-
+        [Authorize(Roles ="Admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DiscountList>>> GetdiscountLists()
         {
             return Ok(await _context.Send(new GetAllDiscountListQueriesRequest()));
         }
+        [Authorize(Roles ="HotelManager,Admin")]
         [HttpPost]
         public async Task<ActionResult<DiscountList>> PostDiscountList(CreateDiscountListCommandRequest discountList)
         {
             await _context.Send(discountList);
             return NoContent();
         }
-
+        [Authorize(Roles = "HotelManager,Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDiscountList(int id)
         {
