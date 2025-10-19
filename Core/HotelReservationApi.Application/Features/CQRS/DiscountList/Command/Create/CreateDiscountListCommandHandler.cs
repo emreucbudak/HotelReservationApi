@@ -22,7 +22,50 @@ namespace HotelReservationApi.Application.Features.CQRS.DiscountList.Command.Cre
 
         public async Task Handle(CreateDiscountListCommandRequest request, CancellationToken cancellationToken)
         {
-            var newDiscountList = mapper.Map<Domain.Entities.DiscountList>(request);
+            if (request.IsDiscountForOnlyRoomTypes && (request.DiscountCategoryId == 1 || request.DiscountCategoryId == 2))
+            {
+                var roomType = await unitOfWork
+                    .readRepository<Domain.Entities.RoomTypes>()
+                    .GetByExpression(enableTracking: true, predicate: x => x.Id == request.RoomTypeId);
+
+               roomType.DiscountedPrice = roomType.DailyPrice - roomType.DailyPrice * request.DiscountPercentage / 100;
+                await unitOfWork.SaveAsync();
+            }
+            else if (!request.IsDiscountForOnlyRoomTypes && (request.DiscountCategoryId == 1 || request.DiscountCategoryId == 2))
+            {
+                var hotelRooms = await unitOfWork
+                    .readRepository<Domain.Entities.Rooms>()
+                    .GetAllAsync(enableTracking: true, predicate: x => x.HotelsId == request.HotelsId);
+
+                foreach (var room in hotelRooms)
+                {
+
+                    var roomType = room.RoomTypes;
+
+                    if (roomType != null)
+                    {
+
+                       roomType.DiscountedPrice = roomType.DailyPrice - roomType.DailyPrice * request.DiscountPercentage / 100;
+                    }
+                }
+
+
+                await unitOfWork.SaveAsync();
+            }
+            else if (request.IsGlobal)
+            {
+                var roomTypes = await unitOfWork.readRepository<Domain.Entities.RoomTypes>().GetAllAsync(enableTracking: true);
+                foreach (var roomType in roomTypes)
+                {
+                    if (roomType != null)
+                    {
+
+                       roomType.DiscountedPrice =  roomType.DailyPrice - roomType.DailyPrice * request.DiscountPercentage / 100;
+                    }
+                }
+                await unitOfWork.SaveAsync();
+            }
+                var newDiscountList = mapper.Map<Domain.Entities.DiscountList>(request);
             await unitOfWork.writeRepository<Domain.Entities.DiscountList>().AddAsync(newDiscountList);
             await unitOfWork.SaveAsync();
         }
