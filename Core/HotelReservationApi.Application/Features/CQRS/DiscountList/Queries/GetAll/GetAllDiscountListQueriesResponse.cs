@@ -16,5 +16,9 @@ namespace HotelReservationApi.Application.Features.CQRS.DiscountList.Queries.Get
         public DateTime? DiscountEndTime { get; set; }
         public DateTime? BookingStartDate { get; set; }
         public DateTime? BookingEndDate { get; set; }
+        public int? StayDays { get; set; }
+        public int? PayDays { get; set; }
+        public string? HotelName { get; set; }
+        public string? TypeName { get; set; }
     }
 }
