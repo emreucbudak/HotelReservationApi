@@ -10,5 +10,10 @@ namespace HotelReservationApi.Application.Features.CQRS.DiscountList.Queries.Get
     public class GetDiscountByRoomTypeIdQueriesRequest : IRequest<List<GetDiscountByRoomTypeIdQueriesResponse>>
     {
         public int RoomTypeId { get; set; }
+
+        public GetDiscountByRoomTypeIdQueriesRequest(int roomTypeId)
+        {
+            RoomTypeId = roomTypeId;
+        }
     }
 }
