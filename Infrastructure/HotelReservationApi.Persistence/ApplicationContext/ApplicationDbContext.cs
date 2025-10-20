@@ -46,6 +46,9 @@ namespace HotelReservationApi.Persistence.ApplicationContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Coupon>()
+            .Property(p => p.ConcurrencyToken)
+            .IsRowVersion();
             modelBuilder.Entity<User>()
                 .HasOne(u => u.HotelManager)
                 .WithOne(h => h.User)
