@@ -13,10 +13,10 @@ namespace HotelReservationApi.Domain.Entities
         {
         }
 
-        public HotelManager(int hotelsId, Guid userId)
+        public HotelManager(int hotelsId, User user)
         {
             HotelsId = hotelsId;
-            UserId = userId;
+            this.User = user;
         }
 
         public  int HotelsId { get; set; }

@@ -13,9 +13,9 @@ namespace HotelReservationApi.Domain.Entities
         {
         }
 
-        public Member(Guid userId, string referansCode, int coinCount)
+        public Member(User userId, string referansCode, int coinCount)
         {
-            UserId = userId;
+            this.User = userId;
             ReferansCode = referansCode;
             CoinCount = coinCount;
         }

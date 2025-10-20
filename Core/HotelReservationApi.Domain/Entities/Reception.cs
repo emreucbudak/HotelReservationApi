@@ -13,9 +13,9 @@ namespace HotelReservationApi.Domain.Entities
         {
         }
 
-        public Reception(Guid userId, int hotelsId)
+        public Reception(User userId, int hotelsId)
         {
-            UserId = userId;
+            this.User = userId;
             HotelsId = hotelsId;
         }
 
