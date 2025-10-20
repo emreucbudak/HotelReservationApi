@@ -22,12 +22,15 @@ namespace HotelReservationApi.Application.Features.CQRS.Coupon.Command.Update
         {
             var coupon = await _unitOfWork.readRepository<Domain.Entities.Coupon>().GetByExpression(enableTracking:false,predicate:x=> x.CouponCode == request.CouponCode);
             if (coupon is null)
-            {
                 throw new CouponNotFoundExceptions(request.CouponCode);
-            }
 
-            coupon.CurrentUsageCount += coupon.CurrentUsageCount;
-            coupon.IsDeleted = coupon.CurrentUsageCount == coupon.MaxUsageCount ? true : false;
+            if (coupon.IsDeleted)
+                throw new CouponUsageReachLimitExceptions(request.CouponCode);
+
+            if (coupon.ExpireDate < DateOnly.FromDateTime(DateTime.Now))
+                throw new CouponExpiryTimeExceptions(request.CouponCode);
+            coupon.CurrentUsageCount += 1;
+            coupon.IsDeleted = coupon.CurrentUsageCount == coupon.MaxUsageCount;
             await _unitOfWork.writeRepository<Domain.Entities.Coupon>().UpdateAsync(coupon);
             await _unitOfWork.SaveAsync();
 

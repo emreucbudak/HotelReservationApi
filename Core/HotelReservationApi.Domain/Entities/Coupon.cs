@@ -25,6 +25,7 @@ namespace HotelReservationApi.Domain.Entities
 
         public string CouponCode { get; set; }
         public int DiscountPercentage { get; set; }
+        public DateOnly ExpireDate { get; set; }
         public int MaxUsageCount { get; set; }
         public int CurrentUsageCount { get; set; } = 0;
         [Timestamp]
