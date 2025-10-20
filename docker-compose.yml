@@ -1,0 +1,26 @@
+services:
+  hotelreservationapi.presentation:
+    image: ${DOCKER_REGISTRY-}hotelreservationapipresentation
+    build:
+      context: .
+      dockerfile: Presentation/HotelReservationApi.Presentation/Dockerfile
+
+
+  hotelreservationapi.database:
+    image: postgres:latest
+    container_name: hotelreservationapi.database
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: emreraftongame63
+      POSTGRES_DB: hotelreservationdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - hotelreservation-data:/var/lib/postgresql/data
+
+volumes:
+  hotelreservation-data:
+
+
+
+
