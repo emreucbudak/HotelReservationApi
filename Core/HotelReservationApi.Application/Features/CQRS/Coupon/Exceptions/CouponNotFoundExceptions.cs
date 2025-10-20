@@ -12,5 +12,8 @@ namespace HotelReservationApi.Application.Features.CQRS.Coupon.Exceptions
         public CouponNotFoundExceptions(int id) : base($"{id}'e sahip kupon bulunamadı!")
         {
         }
+        public CouponNotFoundExceptions(string name) : base($"{name} kupon koduna ait kupon  bulunamadı!")
+        {
+        }
     }
 }
