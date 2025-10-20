@@ -9,7 +9,7 @@ namespace HotelReservationApi.Application.Features.CQRS.DiscountList.Command.Cre
 {
     public class CreateDiscountListCommandRequest : IRequest
     {
-        public bool IsDiscountActive { get; set; }
+
         public int DiscountPercentage { get; set; }
         public bool IsGlobal { get; set; }
         public DateTime? DiscountStartTime { get; set; }
