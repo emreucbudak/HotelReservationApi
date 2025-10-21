@@ -1,6 +1,7 @@
 ﻿using HotelReservationApi.Application.Features.CQRS.Coupon.Exceptions;
 using HotelReservationApi.Application.UnitOfWork;
 using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,12 @@ namespace HotelReservationApi.Application.Features.CQRS.Coupon.Command.Update
     public class UpdateCouponCommandHandler : IRequestHandler<UpdateCouponCommandRequest>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IDistributedCache cache;
 
-        public UpdateCouponCommandHandler(IUnitOfWork unitOfWork )
+        public UpdateCouponCommandHandler(IUnitOfWork unitOfWork, IDistributedCache cache)
         {
             _unitOfWork = unitOfWork;
+            this.cache = cache;
         }
 
         public async Task Handle(UpdateCouponCommandRequest request, CancellationToken cancellationToken)
@@ -29,6 +32,11 @@ namespace HotelReservationApi.Application.Features.CQRS.Coupon.Command.Update
 
             if (coupon.ExpireDate < DateOnly.FromDateTime(DateTime.Now))
                 throw new CouponExpiryTimeExceptions(request.CouponCode);
+            var cacheKey = $"coupon_{coupon.CouponCode}";
+            if (await cache.GetAsync(cacheKey) is not null)
+            {
+                await cache.RemoveAsync(cacheKey);
+            }
             coupon.CurrentUsageCount += 1;
             coupon.IsDeleted = coupon.CurrentUsageCount == coupon.MaxUsageCount;
             await _unitOfWork.writeRepository<Domain.Entities.Coupon>().UpdateAsync(coupon);
