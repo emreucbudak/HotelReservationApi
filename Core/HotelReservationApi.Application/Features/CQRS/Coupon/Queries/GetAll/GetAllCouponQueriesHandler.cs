@@ -34,7 +34,12 @@ namespace HotelReservationApi.Application.Features.CQRS.Coupon.Queries.GetAll
             var coupons = await unitOfWork.readRepository<Domain.Entities.Coupon>().GetAllAsync(enableTracking: false);
 
             var mapped = mp.Map<List<GetAllCouponQueriesResponse>>(coupons);
-            await cache.SetStringAsync(cacheKey,JsonSerializer.Serialize(mapped));
+            var options = new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10), 
+                SlidingExpiration = TimeSpan.FromMinutes(2) 
+            }; 
+            await cache.SetStringAsync(cacheKey,JsonSerializer.Serialize(mapped),options);
             return mapped;
         }
     }
