@@ -35,7 +35,12 @@ namespace HotelReservationApi.Application.Features.CQRS.Bills.Queries.GetAll
             }
             var bills = await unitOfWork.readRepository<HotelReservationApi.Domain.Entities.Bills>().GetAllWithPaging(enableTracking:false,page:request.PageCount,size:request.PageSize);
             var mappedBills=  mp.Map<List<GetAllBillsQueriesResponse>>(bills);
-            await cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(mappedBills));
+            var options = new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30),
+                SlidingExpiration = TimeSpan.FromMinutes(10),
+            };
+            await cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(mappedBills),options);
             return mappedBills;
         }
     }

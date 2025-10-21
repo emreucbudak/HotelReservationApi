@@ -40,7 +40,7 @@ namespace HotelReservationApi.Application.Features.CQRS.Bills.Queries.GetAllByHo
             var mappedBills =  mp.Map<List<GetAllBillsByHotelIdQueriesResponse>>(bills);
             var options = new DistributedCacheEntryOptions
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20)
             };
             await cache.SetStringAsync(cacheKey,JsonSerializer.Serialize(mappedBills),options);
             return mappedBills;
