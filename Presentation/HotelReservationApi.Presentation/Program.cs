@@ -33,6 +33,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Cache");
+});
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggerBehavior<,>));
 builder.Services.AddAutoMapper(cfg => { },typeof(Profiles).Assembly);
@@ -96,6 +100,11 @@ if(app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwagger();
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        db.Database.Migrate(); 
+    }
 }
 app.UseHttpsRedirection();
 app.UseCors();
