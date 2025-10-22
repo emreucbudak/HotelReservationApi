@@ -1,6 +1,7 @@
 ﻿using HotelReservationApi.Application.Features.CQRS.Reviews.Exceptions;
 using HotelReservationApi.Application.UnitOfWork;
 using MediatR;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace HotelReservationApi.Application.Features.CQRS.Reviews.Command.Update
     public class UpdateReviewsCommandHandler : IRequestHandler<UpdateReviewsCommandRequest>
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly ConnectionMultiplexer connectionMultiplexer;
 
         public UpdateReviewsCommandHandler(IUnitOfWork unitOfWork)
         {
@@ -31,6 +33,13 @@ namespace HotelReservationApi.Application.Features.CQRS.Reviews.Command.Update
             review.UpdatedDate = DateOnly.FromDateTime(DateTime.Now);
             await unitOfWork.writeRepository<Domain.Entities.Reviews>().UpdateAsync(review);
             await unitOfWork.SaveAsync();
+            var pattern = $"reviews_hotel_{review.HotelsId}_page_*";
+            var database = connectionMultiplexer.GetDatabase();
+            var server = connectionMultiplexer.GetServer(connectionMultiplexer.GetEndPoints()[0]);
+            await foreach (var keys in server.KeysAsync(pattern: pattern, pageSize: 250))
+            {
+                await database.KeyDeleteAsync(keys);
+            }
 
         }
     }
