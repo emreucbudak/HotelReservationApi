@@ -15,6 +15,7 @@ Bu proje, kullanıcıların otel araması, rezervasyon yapması ve yönetim pane
 - MediatR
 - FluentValidation
 - Firebase (SMS Doğrulaması)
+- Docker
 
 ### 💻 Frontend
 - React.js
