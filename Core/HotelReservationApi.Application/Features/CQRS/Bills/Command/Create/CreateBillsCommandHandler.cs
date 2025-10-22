@@ -15,14 +15,13 @@ namespace HotelReservationApi.Application.Features.CQRS.Bills.Command.Create
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
-        private readonly IDistributedCache cache;
         private readonly ConnectionMultiplexer redis;
 
-        public CreateBillsCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IDistributedCache cache, ConnectionMultiplexer redis)
+        public CreateBillsCommandHandler(IUnitOfWork unitOfWork, IMapper mapper,  ConnectionMultiplexer redis)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
-            this.cache = cache;
+    
             this.redis = redis;
         }
 
