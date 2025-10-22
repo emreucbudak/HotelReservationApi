@@ -1,4 +1,5 @@
-﻿using HotelReservationApi.Application.UnitOfWork;
+﻿using AutoMapper;
+using HotelReservationApi.Application.UnitOfWork;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,25 +14,20 @@ namespace HotelReservationApi.Application.Features.CQRS.Reviews.Queries.GetAll
     public class GetAllReviewsQueriesHandler : IRequestHandler<GetAllReviewsQueriesRequest, List<GetAllReviewsQueriesResponse>>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper mapper;
 
-        public GetAllReviewsQueriesHandler(IUnitOfWork unitOfWork)
+        public GetAllReviewsQueriesHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            this.mapper = mapper;
         }
 
         public async Task<List<GetAllReviewsQueriesResponse>> Handle(GetAllReviewsQueriesRequest request, CancellationToken cancellationToken)
         {
             var reviews = await _unitOfWork.readRepository<HotelReservationApi.Domain.Entities.Reviews>().GetAllAsync(enableTracking:false,includable:x=> x.Include(y=> y.Hotels));
-            return reviews.Select(x => new GetAllReviewsQueriesResponse
-            {
-                Title = x.Title,
-                Comment = x.Comment,
-                Rating = x.Rating,
-                ReviewDate = x.ReviewDate,
-                IsUpdated = x.IsUpdated,
-                UpdatedDate = x.UpdatedDate,
-                HotelName = x.Hotels.HotelName
-            }).ToList();
+            var allReviews = mapper.Map<List<GetAllReviewsQueriesResponse>>(reviews);
+            return allReviews;
+            
         }
     }
 }
