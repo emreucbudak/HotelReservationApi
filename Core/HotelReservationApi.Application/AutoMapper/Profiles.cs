@@ -20,6 +20,7 @@ using HotelReservationApi.Application.Features.CQRS.NewsPopUp.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Reservation.Queries.GetAllByHotelId;
 using HotelReservationApi.Application.Features.CQRS.Reservation.Queries.GetAllByMemberId;
 using HotelReservationApi.Application.Features.CQRS.Reviews.Command.Create;
+using HotelReservationApi.Application.Features.CQRS.Reviews.Queries.GetAll;
 using HotelReservationApi.Application.Features.CQRS.Service.Command.Create;
 using HotelReservationApi.Domain.Entities;
 using System;
@@ -67,6 +68,7 @@ namespace HotelReservationApi.Application.AutoMapper
             CreateMap<DiscountList,GetAllDiscountListQueriesResponse>().ForMember(destinationMember:dest => dest.HotelName,memberOptions:opt => opt.MapFrom(x=> x.Hotels)).ForMember(destinationMember:x=> x.TypeName,memberOptions:opt=> opt.MapFrom(x=> x.RoomType)).ReverseMap();
             CreateMap<DiscountList, GetDiscountListByHotelsIdQueriesResponse>().ForMember(destinationMember:x=> x.DiscountCategoryName,memberOptions:opt=> opt.MapFrom(x=> x.DiscountCategory)).ForMember(destinationMember:x=> x.TypeName,memberOptions:opt=> opt.MapFrom(x=> x.RoomType)).ReverseMap();
             CreateMap<DiscountList, GetDiscountByRoomTypeIdQueriesResponse>().ForMember(destinationMember:x=> x.DiscountCategoryName,memberOptions:x=> x.MapFrom(x=> x.DiscountCategory)).ReverseMap();
+            CreateMap<Reviews,GetAllReviewsQueriesResponse>().ForMember(destinationMember:x=> x.HotelName, memberOptions: x=> x.MapFrom(x=> x.Hotels)).ReverseMap();
            
         }
     }
