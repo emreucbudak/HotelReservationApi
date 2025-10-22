@@ -11,10 +11,14 @@ namespace HotelReservationApi.Application.Features.CQRS.Reviews.Queries.GetByHot
     {
 
         public int HotelsId { get; set; }
+        public int pageNumber { get; set; }
+        public int pageSize { get; set; }
 
-        public GetReviewsByHotelIdQueriesRequest(int hotelsId)
+        public GetReviewsByHotelIdQueriesRequest(int hotelsId, int? number, int? size)
         {
             HotelsId = hotelsId;
+            pageNumber = number ?? 1;
+            pageSize = size ?? 10;
         }
     }
 }
