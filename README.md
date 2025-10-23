@@ -16,6 +16,7 @@ Bu proje, kullanıcıların otel araması, rezervasyon yapması ve yönetim pane
 - FluentValidation
 - Firebase (SMS Doğrulaması)
 - Docker
+- Sql Index
 
 ### 💻 Frontend
 - React.js
