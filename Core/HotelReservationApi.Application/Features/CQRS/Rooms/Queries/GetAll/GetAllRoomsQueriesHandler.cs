@@ -40,7 +40,6 @@ namespace HotelReservationApi.Application.Features.CQRS.Rooms.Queries.GetAll
             var allRoom =  rooms.Select(x => new GetAllRoomsQueriesResponse
             {
                 RoomNumber = x.RoomNumber,
-                IsAvailable = x.IsAvailable,
                 TypeName = x.RoomTypes.TypeName,
                 HowManyPeople = x.RoomTypes.HowManyPeople,
                 Price = x.RoomTypes.DailyPrice,
