@@ -36,9 +36,9 @@ namespace HotelReservationApi.Presentation.Controllers
         }
         [Authorize(Roles ="Member,Admin,HotelManager,Reception")]
         [HttpGet("{id}")]
-        public async Task<ActionResult<Reviews>> GetReviews(int id)
+        public async Task<ActionResult<Reviews>> GetReviews([FromBody]int id,int? number, int? size)
         {
-            return Ok(new GetReviewsByHotelIdQueriesRequest(id));
+            return Ok(new GetReviewsByHotelIdQueriesRequest(id,number,size));
         }
         [Authorize(Roles ="Member")]
         [HttpPut]
