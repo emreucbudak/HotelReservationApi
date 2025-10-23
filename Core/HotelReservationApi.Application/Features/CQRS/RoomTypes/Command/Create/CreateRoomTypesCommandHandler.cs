@@ -37,7 +37,9 @@ namespace HotelReservationApi.Application.Features.CQRS.RoomTypes.Command.Create
             {
                 TypeName = request.TypeName,
                 HowManyPeople = request.HowManyPeople,
-                TypesFeatures = typesFeatures
+                TypesFeatures = typesFeatures,
+                DailyPrice = request.DailyPrice,
+                DiscountedPrice = request.DiscountedPrice,
             };
             await _unitOfWork.writeRepository<Domain.Entities.RoomTypes>().AddAsync(roomTypes);
             await _unitOfWork.SaveAsync();
