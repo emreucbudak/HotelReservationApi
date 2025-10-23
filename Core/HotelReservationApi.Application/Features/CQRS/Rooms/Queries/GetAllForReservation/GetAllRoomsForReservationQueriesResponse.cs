@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HotelReservationApi.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,14 @@ namespace HotelReservationApi.Application.Features.CQRS.Rooms.Queries.GetAllForR
 {
     public class GetAllRoomsForReservationQueriesResponse
     {
+        public ICollection<Domain.Entities.TypesFeatures> typesFeatures {  get; set; }
+
+        public string TypeName { get; set; }
+        public int HowManyPeople { get; set; }
+        public int DailyPrice { get; set; }
+        public int? DiscountedPrice { get; set; }
+        public int HotelId { get; set; }
+
+
     }
 }

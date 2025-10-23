@@ -28,7 +28,7 @@ namespace HotelReservationApi.Application.Features.CQRS.Rooms.Command.Update
                 throw new RoomsNotFoundExceptions(request.RoomId);
             }
             room.RoomNumber = request.RoomNumber;
-            room.IsAvailable = request.IsAvailable;
+   
             await _unitOfWork.writeRepository<HotelReservationApi.Domain.Entities.Rooms>().UpdateAsync(room);
             await _unitOfWork.SaveAsync();
             var cacheKey = $"rooms_{room.RoomTypes.HotelsId}_page_*";
