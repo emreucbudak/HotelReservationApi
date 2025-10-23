@@ -13,13 +13,14 @@ namespace HotelReservationApi.Domain.Entities
         {
         }
 
-        public RoomTypes(string typeName, int howManyPeople, ICollection<TypesFeatures> typesFeatures, int dailyPrice, int? discountedPrice)
+        public RoomTypes(string typeName, int howManyPeople, ICollection<TypesFeatures> typesFeatures, int dailyPrice, int? discountedPrice, int hotelsId)
         {
             TypeName = typeName;
             HowManyPeople = howManyPeople;
             TypesFeatures = typesFeatures;
             DailyPrice = dailyPrice;
             DiscountedPrice = discountedPrice;
+            HotelsId = hotelsId;
         }
 
         public string TypeName { get; set; }
@@ -27,6 +28,9 @@ namespace HotelReservationApi.Domain.Entities
         public ICollection<TypesFeatures> TypesFeatures { get; set; }
         public int DailyPrice {  get; set; }
         public int? DiscountedPrice { get; set; }
+
+        public int HotelsId { get; set; }
+        public Hotels Hotels { get; set; }
 
     }
 }

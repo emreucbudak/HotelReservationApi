@@ -29,7 +29,7 @@ namespace HotelReservationApi.Application.Features.CQRS.Rooms.Command.Create
             var newRoom = mp.Map<Domain.Entities.Rooms>(request);
             await unitOfWork.writeRepository<Domain.Entities.Rooms>().AddAsync(newRoom);
             await unitOfWork.SaveAsync();
-            var cacheKey = $"rooms_{newRoom.HotelsId}_page_*";
+            var cacheKey = $"rooms_{newRoom.RoomTypes.HotelsId}_page_*";
             var server = connectionMultiplexer.GetServer(connectionMultiplexer.GetEndPoints()[0]);
             var database = connectionMultiplexer.GetDatabase();
              await foreach (var key in server.KeysAsync(pattern:cacheKey,pageSize:250))

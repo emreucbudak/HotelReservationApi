@@ -35,6 +35,7 @@ namespace HotelReservationApi.Domain.Entities
         public DateOnly ReservationDate { get; set; }
         public int MemberId { get; set; }
         public Member Member { get; set; }
+        public ICollection<ReservationRoom> reservationRooms { get; set; }
 
 
 

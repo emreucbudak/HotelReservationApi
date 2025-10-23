@@ -13,22 +13,22 @@ namespace HotelReservationApi.Domain.Entities
         {
         }
 
-        public Rooms(int roomNumber, bool ısAvailable, int roomTypesId, int hotelsId)
+        public Rooms(int roomNumber, int roomTypesId)
         {
             RoomNumber = roomNumber;
-            IsAvailable = ısAvailable;
+            
            
             RoomTypesId = roomTypesId;
-            HotelsId = hotelsId;
+            reservationRooms = new List<ReservationRoom>();
+
+           
         }
 
         public int RoomTypesId { get; set; }
         public RoomTypes RoomTypes { get; set; }
         public int RoomNumber { get; set; }
-        public bool IsAvailable { get; set; } = true;
+        public ICollection<ReservationRoom> reservationRooms {  get; set; }
 
-        public int HotelsId { get; set; }
-        public Hotels Hotels { get; set; }
 
     }
 }
