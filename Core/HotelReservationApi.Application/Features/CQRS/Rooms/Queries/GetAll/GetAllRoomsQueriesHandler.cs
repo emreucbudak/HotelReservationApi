@@ -32,7 +32,7 @@ namespace HotelReservationApi.Application.Features.CQRS.Rooms.Queries.GetAll
             {
                 return JsonSerializer.Deserialize<List<GetAllRoomsQueriesResponse>>(getRooms);
             }
-            var rooms = await _unitOfWork.readRepository<HotelReservationApi.Domain.Entities.Rooms>().GetAllWithPaging(enableTracking: false, predicate: x => x.HotelsId == request.HotelId, page:request.Page,size:request.Size,includable:x=> x.Include(y=> y.RoomTypes).ThenInclude(x=> x.TypesFeatures));
+            var rooms = await _unitOfWork.readRepository<HotelReservationApi.Domain.Entities.Rooms>().GetAllWithPaging(enableTracking: false, predicate: x => x.RoomTypes.HotelsId == request.HotelId, page:request.Page,size:request.Size,includable:x=> x.Include(y=> y.RoomTypes).ThenInclude(x=> x.TypesFeatures));
             if (rooms is null)
             {
                 throw new RoomsGetByIdNotFoundExceptions(request.HotelId);

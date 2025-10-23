@@ -27,15 +27,16 @@ namespace HotelReservationApi.Application.Features.CQRS.Rooms.Command.Delete
             {
                 throw new RoomsNotFoundExceptions(request.Id);
             }
-            await _unitOfWork.writeRepository<HotelReservationApi.Domain.Entities.Rooms>().DeleteAsync(room);
-            await _unitOfWork.SaveAsync();
-            var cacheKey = $"rooms_{room.HotelsId}_page_*";
+            var cacheKey = $"rooms_{room.RoomTypes.HotelsId}_page_*";
             var server = connectionMultiplexer.GetServer(connectionMultiplexer.GetEndPoints()[0]);
             var database = connectionMultiplexer.GetDatabase();
             await foreach (var key in server.KeysAsync(pattern: cacheKey, pageSize: 250))
             {
                 await database.KeyDeleteAsync(key);
             }
+            await _unitOfWork.writeRepository<HotelReservationApi.Domain.Entities.Rooms>().DeleteAsync(room);
+            await _unitOfWork.SaveAsync();
+
         }
     }
 }

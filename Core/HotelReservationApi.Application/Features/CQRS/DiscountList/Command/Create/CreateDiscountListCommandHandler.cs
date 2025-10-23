@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HotelReservationApi.Application.UnitOfWork;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,7 @@ namespace HotelReservationApi.Application.Features.CQRS.DiscountList.Command.Cre
             {
                 var hotelRooms = await unitOfWork
                     .readRepository<Domain.Entities.Rooms>()
-                    .GetAllAsync(enableTracking: true, predicate: x => x.HotelsId == request.HotelsId);
+                    .GetAllAsync(enableTracking: true, predicate: x => x.RoomTypes.HotelsId == request.HotelsId,includable:x=> x.Include(x=> x.RoomTypes));
 
                 foreach (var room in hotelRooms)
                 {
