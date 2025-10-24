@@ -15,7 +15,7 @@ namespace HotelReservationApi.Application.Features.CQRS.Rooms.Queries.GetAllForR
             PageSize = pageSize ?? 10;
             this.entryDate = entryDate;
             this.leftDate = leftDate;
-            HowManyDayStay = (leftDate.ToDateTime(TimeOnly.MinValue) - entryDate.ToDateTime(TimeOnly.MinValue)).Days;
+
             HowManyPeopleStay = howManyPeopleStay;
             City = city;
             District = district;
@@ -25,7 +25,7 @@ namespace HotelReservationApi.Application.Features.CQRS.Rooms.Queries.GetAllForR
         public int PageSize { get; set; }
         public DateOnly entryDate {  get; set; }
         public DateOnly leftDate { get; set; }
-        public int HowManyDayStay { get; set; }
+
         public int HowManyPeopleStay { get; set; }
         public string City { get; set; }
         public string District { get; set; }
