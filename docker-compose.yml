@@ -4,7 +4,10 @@ services:
     build:
       context: .
       dockerfile: Presentation/HotelReservationApi.Presentation/Dockerfile
-
+    secrets:
+      - jwt_secret
+      - stripe_secret_key
+      - db_password
 
   hotelreservationapi.database:
     image: postgres:latest
@@ -17,6 +20,7 @@ services:
       - "5432:5432"
     volumes:
       - hotelreservation-data:/var/lib/postgresql/data
+
   redis:
     image: redis:latest 
     restart: always
@@ -27,6 +31,10 @@ services:
 volumes:
   hotelreservation-data:
 
-
-
-
+secrets:
+  jwt_secret:
+    file: ./secrets/jwt_secret.txt
+  stripe_secret_key:
+    file: ./secrets/stripe_secret_key.txt
+  db_password:
+    file: ./secrets/db_password.txt
