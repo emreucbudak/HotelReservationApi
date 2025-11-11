@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\HotelReservationApi.Application\HotelReservationApi.Application.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\HotelReservationApi.Infrastructure\HotelReservationApi.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Infrastructure\HotelReservationApi.Persistence\HotelReservationApi.Persistence.csproj" />
   </ItemGroup>
 
