@@ -31,6 +31,12 @@ var logger = new LoggerConfiguration()
 builder.Host.UseSerilog(logger);
 // Add services to the container.
 var secretPath = "/run/secrets/db_password";
+var secretStripe = "/run/secrets/stripe_secret_key";
+string stripeSecretKey = File.Exists(secretStripe)
+    ? File.ReadAllText(secretStripe).Trim()
+    : throw new Exception("Stripe secret not found!");
+Stripe.StripeConfiguration.ApiKey = stripeSecretKey;
+
 string dbPassword = File.Exists(secretPath)
     ? File.ReadAllText(secretPath).Trim()
     : throw new Exception("DB secret not found!");
