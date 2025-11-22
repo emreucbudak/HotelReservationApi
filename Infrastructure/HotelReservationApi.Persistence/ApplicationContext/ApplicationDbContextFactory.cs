@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,20 @@ namespace HotelReservationApi.Persistence.ApplicationContext
         public ApplicationDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            optionsBuilder.UseNpgsql("Host=localhost;Database=HotelReservationDb;Username=postgres;Password=emreraftongame63");
+
+            
+            var config = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())  
+                .AddJsonFile("appsettings.Development.json", optional: false)
+                .Build();
+
+            var conn = config.GetConnectionString("DefaultConnection");
+
+            optionsBuilder.UseNpgsql(conn);
+
             return new ApplicationDbContext(optionsBuilder.Options);
         }
     }
+
 }
+
