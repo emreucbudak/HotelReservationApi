@@ -17,16 +17,9 @@ Bu proje, kullanıcıların otel araması, rezervasyon yapması ve yönetim pane
 - Firebase (SMS Doğrulaması)
 - Docker
 - Sql Index
-
-### 💻 Frontend
-- React.js
-- Tailwind CSS
-- Axios
-- React Router DOM
-
 ### 🗄️ Diğer Araçlar ve Teknolojiler
-- Swagger (API Dokümantasyonu)
-- Postman (API testleri)
+- Swagger 
+- Postman 
 - Git & GitHub (Versiyon kontrolü)
 
 ## ⚙️ Proje Özellikleri
