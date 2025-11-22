@@ -33,8 +33,8 @@ volumes:
 
 secrets:
   jwt_secret:
-    file: ./secrets/jwt_secret.txt
+    external: true
   stripe_secret_key:
-    file: ./secrets/stripe_secret_key.txt
+    external: true
   db_password:
-    file: ./secrets/db_password.txt
+    external: true

@@ -30,7 +30,12 @@ var logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog(logger);
 // Add services to the container.
-
+var secretPath = "/run/secrets/db_password";
+string dbPassword = File.Exists(secretPath)
+    ? File.ReadAllText(secretPath).Trim()
+    : throw new Exception("DB secret not found!");
+var conn = builder.Configuration.GetConnectionString("DefaultConnection")
+    .Replace("__GIZLI__", dbPassword);
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
