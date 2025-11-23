@@ -34,12 +34,12 @@ var secretPath = "/run/secrets/db_password";
 var secretStripe = "/run/secrets/stripe_secret_key";
 string stripeSecretKey = File.Exists(secretStripe)
     ? File.ReadAllText(secretStripe).Trim()
-    : throw new Exception("Stripe secret not found!");
+    : throw new Exception("Stripe secret bulunamadý!");
 Stripe.StripeConfiguration.ApiKey = stripeSecretKey;
 
 string dbPassword = File.Exists(secretPath)
     ? File.ReadAllText(secretPath).Trim()
-    : throw new Exception("DB secret not found!");
+    : throw new Exception("DB secret bulunamadý!");
 var conn = builder.Configuration.GetConnectionString("DefaultConnection")
     .Replace("__GIZLI__", dbPassword);
 builder.Services.AddControllers();
