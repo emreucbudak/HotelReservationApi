@@ -29,19 +29,14 @@ var logger = new LoggerConfiguration()
     .CreateLogger();
 
 builder.Host.UseSerilog(logger);
-// Add services to the container.
-var secretPath = "/run/secrets/db_password";
+
 var secretStripe = "/run/secrets/stripe_secret_key";
 string stripeSecretKey = File.Exists(secretStripe)
     ? File.ReadAllText(secretStripe).Trim()
     : throw new Exception("Stripe secret bulunamadý!");
 Stripe.StripeConfiguration.ApiKey = stripeSecretKey;
 
-string dbPassword = File.Exists(secretPath)
-    ? File.ReadAllText(secretPath).Trim()
-    : throw new Exception("DB secret bulunamadý!");
-var conn = builder.Configuration.GetConnectionString("DefaultConnection")
-    .Replace("__GIZLI__", dbPassword);
+
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -69,16 +64,16 @@ builder.Services.AddAuthentication(opt =>
     opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(ops =>
 {
-    ops.Audience = builder.Configuration["Jwt:Audience"];
+    ops.Audience = builder.Configuration["JwtSettings:Audience"];
     ops.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
     {
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"])),
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"])),
         ClockSkew = TimeSpan.Zero,
 
 
@@ -104,12 +99,12 @@ var app = builder.Build();
 if(app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwagger();
-    using (var scope = app.Services.CreateScope())
-    {
-        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        db.Database.Migrate(); 
-    }
+
+}
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
 }
 app.UseHttpsRedirection();
 app.UseAuthentication();
