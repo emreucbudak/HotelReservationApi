@@ -15,9 +15,11 @@ namespace HotelReservationApi.Persistence.ApplicationContext
         {
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
 
-            
+
+            var projectPath = Path.Combine(Directory.GetCurrentDirectory(), "../../Presentation/HotelReservationApi.Presentation");
+
             var config = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())  
+                .SetBasePath(projectPath)
                 .AddJsonFile("appsettings.Development.json", optional: false)
                 .Build();
 
