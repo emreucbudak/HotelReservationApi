@@ -2,8 +2,15 @@
   hotelreservationapi-presentation:
     image: hotelreservationapi-presentation:latest
     container_name: hotelreservationapi-presentation
+    build:
+      context: ./Presentation/HotelReservationAPI.Presentation
+      dockerfile: Dockerfile
+    secrets:
+      - stripe_secret_key
+
     ports:
       - "8080:80"
+    restart: "unless-stopped"
 
   postgresql:
     image: postgres:16
@@ -16,11 +23,17 @@
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    restart: "unless-stopped"
 
   redis:
     image: redis:7
     container_name: redis
     restart: always
+    command: [
+        "redis-server",
+        "--maxmemory", "512mb",
+        "--maxmemory-policy", "allkeys-lru"
+    ]
     ports:
       - "6379:6379"
 
@@ -39,3 +52,6 @@
 volumes:
   rabbitmq_data:
   pgdata:
+secrets:
+    stripe_secret_key:
+        external: true
