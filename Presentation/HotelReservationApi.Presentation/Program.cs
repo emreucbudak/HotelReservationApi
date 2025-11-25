@@ -35,12 +35,15 @@ string stripeSecretKey = File.Exists(secretStripe)
     ? File.ReadAllText(secretStripe).Trim()
     : throw new Exception("Stripe secret bulunamadý!");
 Stripe.StripeConfiguration.ApiKey = stripeSecretKey;
-
-
+var jwtSecret = "/run/secrets/jwt_secret";
+string jwtSecretKey = File.ReadAllText(jwtSecret).Trim();
+var dbSecret = "/run/secrets/db_password";
+string dbPassword = File.ReadAllText(dbSecret).Trim();
+string connectionString = $"Host=postgres;Port=5432;Database=HotelReservationDb;Username=postgres;Password={dbPassword}";
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+    options.UseNpgsql(connectionString)
 );
 builder.Services.AddStackExchangeRedisCache(options =>
 {
@@ -73,7 +76,7 @@ builder.Services.AddAuthentication(opt =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
         ValidAudience = builder.Configuration["JwtSettings:Audience"],
-        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"])),
+        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtSecretKey)),
         ClockSkew = TimeSpan.Zero,
 
 
