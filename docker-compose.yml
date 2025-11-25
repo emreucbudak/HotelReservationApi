@@ -13,11 +13,13 @@
     restart: "unless-stopped"
 
   postgresql:
-    image: postgres:16
+    image: postgres:18.1
     container_name: postgresql
+    secrets:
+        - db_password
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: emreraftongame63
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
       POSTGRES_DB: HotelReservationDB
     ports:
       - "5432:5432"
@@ -54,4 +56,8 @@ volumes:
   pgdata:
 secrets:
     stripe_secret_key:
+        external: true
+    db_password:
+        external: true
+    jwt_secret:
         external: true

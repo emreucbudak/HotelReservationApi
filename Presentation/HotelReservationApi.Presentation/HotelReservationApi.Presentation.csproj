@@ -39,4 +39,8 @@
     <ProjectReference Include="..\..\Infrastructure\HotelReservationApi.Persistence\HotelReservationApi.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Compose\" />
+  </ItemGroup>
+
 </Project>
