@@ -8,6 +8,6 @@ namespace HotelReservationApi.Application.Emails
 {
     public interface IEmailService
     {
-        Task SendEmail(string to, string subject, string body,int verificationCode = 0);
+        Task SendEmail(string to, string subject, string body,int? verificationCode);
     }
 }
