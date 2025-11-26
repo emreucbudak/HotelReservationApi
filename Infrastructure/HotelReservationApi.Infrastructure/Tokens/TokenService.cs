@@ -17,22 +17,51 @@ namespace HotelReservationApi.Infrastructure.Tokens
 {
     public class TokenService : ITokenService
     {
-        private readonly UserManager<User> _userManager;
         private readonly TokenSettings _tokenService;
+        private readonly TwoFactorAuthSettings _twoFactorAuthSettings;
 
-        public TokenService(UserManager<User> userManager, IOptions<TokenSettings> tokenService)
+        public TokenService(UserManager<User> userManager, IOptions<TokenSettings> tokenService, IOptions<TwoFactorAuthSettings> twoFactorAuthSettings)
         {
-            _userManager = userManager;
             _tokenService = tokenService.Value;
+            _twoFactorAuthSettings = twoFactorAuthSettings.Value;
         }
 
-        public async Task<JwtSecurityToken> CreateToken(User user, IList<string> roles)
+        public JwtSecurityToken CreateTempToken(User user, IList<string> claim)
         {
             var claims = new List<Claim>()
             {
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Name , user.Name),
                 new Claim(JwtRegisteredClaimNames.Email ,user.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim("2fa_statu", "bekliyor")
+
+            };
+            foreach (var role in claim)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenService.SecretKey));
+            var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var token = new JwtSecurityToken(
+                issuer: _twoFactorAuthSettings.Issuer,
+                audience: _twoFactorAuthSettings.Audience,
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(_twoFactorAuthSettings.TempTokenExpirationMinutes),
+                signingCredentials: signIn
+                                );
+            return token;
+        }
+
+        public JwtSecurityToken CreateToken(User user, IList<string> roles)
+        {
+            var claims = new List<Claim>()
+            {
+                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Name , user.Name),
+                new Claim(JwtRegisteredClaimNames.Email ,user.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim("2fa_statu", "onaylandı")
 
             };
             foreach (var role in roles) {

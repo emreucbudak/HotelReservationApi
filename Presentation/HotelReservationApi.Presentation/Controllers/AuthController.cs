@@ -44,6 +44,12 @@ namespace HotelReservationApi.Presentation.Controllers
             await mediator.Send(request);
             return StatusCode(StatusCodes.Status200OK);
         }
+        [HttpPost("two-factor-authenticate")]
+        public async Task<IActionResult> TwoFactorAuthenticate(twofactor request)
+        {
+            var response = await mediator.Send(request);
+            return Ok(response);
+        }
 
 
     }
