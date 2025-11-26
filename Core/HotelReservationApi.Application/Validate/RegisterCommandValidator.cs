@@ -17,7 +17,10 @@ namespace HotelReservationApi.Application.Validate
 
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email boş olamaz.")
-                .EmailAddress().WithMessage("Geçersiz email formatı.");
+                .EmailAddress().WithMessage("Geçersiz email formatı.")
+                .Matches(@"^[^@\s]+@(gmail\.com|hotmail\.com|outlook\.com)$")
+                    .WithMessage("Sadece gmail.com, hotmail.com veya outlook.com adreslerine izin verilir.");
+
 
             RuleFor(x => x.Password)
                 .NotEmpty().WithMessage("Şifre boş olamaz.")
@@ -38,7 +41,6 @@ namespace HotelReservationApi.Application.Validate
                 .GreaterThan(0).WithMessage("Otel ID'si 0 dan büyük olmalı");
 
             RuleFor(x => x.ReferansCode)
-                .NotEmpty().WithMessage("Referans kodu boş olamaz.")
                 .Matches(@"^HC-[A-F0-9]{16}$").WithMessage("Referans kodu 'HC-' ile başlamalı ve 16 karakterlik özel key bulunmalı!");
 
         }
