@@ -2,11 +2,13 @@ using FluentValidation;
 using HotelReservationApi.Application.AutoMapper;
 using HotelReservationApi.Application.Behaviors;
 using HotelReservationApi.Application.Payment;
+using HotelReservationApi.Application.RabbitMq;
 using HotelReservationApi.Application.Repositories;
 using HotelReservationApi.Application.UnitOfWork;
 using HotelReservationApi.Application.Validate;
 using HotelReservationApi.Domain.Entities;
 using HotelReservationApi.Infrastructure.Payment;
+using HotelReservationApi.Infrastructure.Tokens;
 using HotelReservationApi.Persistence.ApplicationContext;
 using HotelReservationApi.Persistence.Repositories;
 using HotelReservationApi.Persistence.UnitOf;
@@ -17,6 +19,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Serilog;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -29,7 +32,24 @@ var logger = new LoggerConfiguration()
     .CreateLogger();
 
 builder.Host.UseSerilog(logger);
+var rabbitMqSettings = builder.Configuration.GetSection("RabbitMqSettings").Get<RabbitMqSettings>();
 
+if (!string.IsNullOrEmpty(rabbitMqSettings.UsernameFile) && File.Exists(rabbitMqSettings.UsernameFile))
+{
+    // Dosya içeriðini okuyup gerçek Username'i set et
+    rabbitMqSettings.Username = File.ReadAllText(rabbitMqSettings.UsernameFile).Trim();
+}
+
+if (!string.IsNullOrEmpty(rabbitMqSettings.PasswordFile) && File.Exists(rabbitMqSettings.PasswordFile))
+{
+
+    rabbitMqSettings.Password = File.ReadAllText(rabbitMqSettings.PasswordFile).Trim();
+}
+
+builder.Services.AddSingleton(Options.Create(rabbitMqSettings));
+
+builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("JwtSettings"));
+builder.Services.Configure<TwoFactorAuthSettings>(builder.Configuration.GetSection("TwoFactorAuthSettings"));
 var secretStripe = "/run/secrets/stripe_secret_key";
 string stripeSecretKey = File.Exists(secretStripe)
     ? File.ReadAllText(secretStripe).Trim()
