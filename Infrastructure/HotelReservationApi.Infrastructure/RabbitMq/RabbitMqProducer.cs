@@ -1,36 +1,93 @@
 ﻿using HotelReservationApi.Application.RabbitMq;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
 using RabbitMQ.Client;
+using Stripe.Tax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace HotelReservationApi.Infrastructure.RabbitMq
 {
-    public class RabbitMqProducer : IMessageQueueService
+    public class RabbitMqProducer : IMessageQueueService, IHostedService, IAsyncDisposable
     {
-        private readonly ConnectionFactory connectionFactory;
-        private readonly IModel _channel;
-        private readonly IConnection connection;
-        public RabbitMqProducer(IOptions<RabbitMqSettings> rabbit)
+        private readonly ConnectionFactory factory;
+        private IChannel _channel;
+        private IConnection connection;
+        private readonly ILogger<RabbitMqProducer> logger;
+        public RabbitMqProducer(IOptions<RabbitMqSettings> rabbit, ILogger<RabbitMqProducer> logger)
         {
-            connectionFactory = new()
+            var settings = rabbit.Value;
+            this.factory = new()
             {
-                HostName = rabbit.Value.HostName,
-                UserName = rabbit.Value.Username,
-                Password = rabbit.Value.Password,
-                Port = rabbit.Value.Port,
+                HostName = settings.HostName,
+                Port = settings.Port,
+                UserName = settings.Username,
+                Password = settings.Password,
+                AutomaticRecoveryEnabled = true
             };
-            connection = await connectionFactory.CreateConnectionAsync();
-
+            this.logger = logger;
         }
+
+
 
         public Task PublishAsync<T>(string queueName, T message) where T : class
         {
             throw new NotImplementedException();
+        }
+
+        public async Task StartAsync(CancellationToken cancellationToken)
+        {
+            logger.LogInformation("RabbitMQ bağlantısı  başlatılıyor...");
+
+            try
+            {
+                connection = await factory.CreateConnectionAsync(cancellationToken);
+                _channel = await connection.CreateChannelAsync();
+                logger.LogInformation("RabbitMQ bağlantısı ve kanal başarıyla kuruldu.");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "RabbitMQ bağlantısı kurulamadı!");
+            }
+        }
+
+
+        public async Task StopAsync(CancellationToken cancellationToken)
+        {
+            logger.LogInformation("RabbitMQ bağlantısı durduruluyor ve kaynaklar serbest bırakılıyor...");
+            await DisposeAsync(); 
+
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            try
+            {
+                if (_channel != null && _channel.IsOpen)
+                {
+                    await _channel.CloseAsync();
+                    await _channel.DisposeAsync();
+                    _channel = null;
+                }
+                if (connection != null && connection.IsOpen)
+                {
+                    await connection.CloseAsync();
+                    await connection.DisposeAsync();
+                    connection = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "RabbitMQ bağlantısı kapatılamadı!");
+                throw new Exception("RabbitMQ bağlantısı kapatılamadı!", ex);
+            }
         }
     }
 }
