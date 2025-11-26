@@ -34,7 +34,7 @@ namespace HotelReservationApi.Infrastructure.Tokens
                 new Claim(ClaimTypes.Name , user.Name),
                 new Claim(JwtRegisteredClaimNames.Email ,user.Email),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim("2fa_statu", "bekliyor")
+                new Claim("2fa_status", "pending")
 
             };
             foreach (var role in claim)
@@ -61,7 +61,7 @@ namespace HotelReservationApi.Infrastructure.Tokens
                 new Claim(ClaimTypes.Name , user.Name),
                 new Claim(JwtRegisteredClaimNames.Email ,user.Email),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim("2fa_statu", "onaylandı")
+                new Claim("2fa_status", "verified")
 
             };
             foreach (var role in roles) {

@@ -40,7 +40,7 @@ namespace HotelReservationApi.Application.Features.CQRS.Auth.Login
             bool checkPassword = await userManager.CheckPasswordAsync(user, request.Password);
             await authRules.EmailOrPasswordShouldNotBeInvalid(user,checkPassword);
             IList<string> roles = await userManager.GetRolesAsync(user);
-            JwtSecurityToken token = await tokenService.CreateToken(user, roles);
+            JwtSecurityToken token = tokenService.CreateToken(user, roles);
             _ = int.TryParse(configuration["JWT:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);
             string refreshToken = tokenService.GenerateRefreshToken();
             user.RefreshToken = refreshToken;
