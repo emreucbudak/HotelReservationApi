@@ -8,6 +8,7 @@ using HotelReservationApi.Application.UnitOfWork;
 using HotelReservationApi.Application.Validate;
 using HotelReservationApi.Domain.Entities;
 using HotelReservationApi.Infrastructure.Payment;
+using HotelReservationApi.Infrastructure.RabbitMq;
 using HotelReservationApi.Infrastructure.Tokens;
 using HotelReservationApi.Persistence.ApplicationContext;
 using HotelReservationApi.Persistence.Repositories;
@@ -47,7 +48,8 @@ if (!string.IsNullOrEmpty(rabbitMqSettings.PasswordFile) && File.Exists(rabbitMq
 }
 
 builder.Services.AddSingleton(Options.Create(rabbitMqSettings));
-
+builder.Services.AddSingleton<IMessageQueueService, RabbitMqProducer>(); 
+builder.Services.AddHostedService<RabbitMqProducer>();
 builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.Configure<TwoFactorAuthSettings>(builder.Configuration.GetSection("TwoFactorAuthSettings"));
 var secretStripe = "/run/secrets/stripe_secret_key";
