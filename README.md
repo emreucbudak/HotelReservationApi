@@ -25,7 +25,7 @@ Bu proje, kullanıcıların otel araması, rezervasyon yapması ve yönetim pane
 - Kullanıcı kayıt ve giriş sistemi (JWT Authentication)
 - Kayıtta referans olarak belirtilen kişiye hediye puan sistemi 
 - Otel listeleme ve filtreleme
-- Rezervasyon oluşturma, görüntüleme ve iptal etme
+- Rezervasyon sistemi
 - Ödeme sonrası kullanıcı puan sistemi
 - Kupon kodları ile indirim yönetimi
 - Admin paneli ile otel ve rezervasyon yönetimi
