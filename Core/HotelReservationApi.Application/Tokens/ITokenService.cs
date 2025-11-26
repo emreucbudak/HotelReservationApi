@@ -11,8 +11,9 @@ namespace HotelReservationApi.Application.Tokens
 {
     public interface ITokenService
     {
-        Task<JwtSecurityToken> CreateToken(User user, IList<string> claim);
+        JwtSecurityToken CreateToken(User user, IList<string> claim);
         string GenerateRefreshToken();
         ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token);
+        JwtSecurityToken CreateTempToken (User user, IList<string> claim);
     }
 }

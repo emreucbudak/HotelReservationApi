@@ -16,7 +16,6 @@ namespace HotelReservationApi.Domain.Entities
         public HotelManager HotelManager { get; set; }
         public Member Member { get; set; }
         public Reception Reception { get; set; }
-        public string? verificationCode { get; set; }
-        public DateTime? verificationCodeExpiration { get; set; }
+
     }
 }
