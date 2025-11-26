@@ -14,7 +14,6 @@ Bu proje, kullanıcıların otel araması, rezervasyon yapması ve yönetim pane
 - AutoMapper
 - MediatR
 - FluentValidation
-- Firebase (SMS Doğrulaması)
 - Docker
 - Sql Index
 ### 🗄️ Diğer Araçlar ve Teknolojiler
