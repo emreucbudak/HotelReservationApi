@@ -37,7 +37,7 @@ namespace HotelReservationApi.Application.Features.CQRS.Auth.RefreshToken
 
             await authRules.RefreshTokenShouldNotBeExpired(user.RefreshTokenExpirationTime);
 
-            JwtSecurityToken newAccessToken = await tokenService.CreateToken(user, roles);
+            JwtSecurityToken newAccessToken =  tokenService.CreateToken(user, roles);
             string newRefreshToken = tokenService.GenerateRefreshToken();
 
             user.RefreshToken = newRefreshToken;
