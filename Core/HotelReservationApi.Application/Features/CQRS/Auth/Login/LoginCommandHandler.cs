@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HotelReservationApi.Application.Emails;
 using HotelReservationApi.Application.Features.CQRS.Auth.Rules;
 using HotelReservationApi.Application.Tokens;
 using HotelReservationApi.Application.UnitOfWork;
@@ -22,14 +23,16 @@ namespace HotelReservationApi.Application.Features.CQRS.Auth.Login
         private readonly ITokenService tokenService;
         private readonly AuthRules authRules;
         private readonly IUnitOfWork unitOfWork;
+        private readonly IEmailService emailService;
 
-        public LoginCommandHandler(UserManager<User> userManager, IConfiguration configuration, ITokenService tokenService, AuthRules authRules, IMapper mapper, IUnitOfWork uunitOfWork)
+        public LoginCommandHandler(UserManager<User> userManager, IConfiguration configuration, ITokenService tokenService, AuthRules authRules, IMapper mapper, IUnitOfWork uunitOfWork, IEmailService emailService)
         {
             this.userManager = userManager;
             this.configuration = configuration;
             this.tokenService = tokenService;
             this.authRules = authRules;
             unitOfWork = uunitOfWork;
+            this.emailService = emailService;
         }
         public async Task<LoginCommandResponse> Handle(LoginCommandRequest request, CancellationToken cancellationToken)
         {
