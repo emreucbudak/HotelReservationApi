@@ -20,9 +20,9 @@ namespace HotelReservationApi.Infrastructure.Emails
             return this;
         }
 
-        public IEmailService Body(bool isVerificationCode, string body, int? verificationCode)
+        public IEmailService Body(string? body, string? verificationCode)
         {
-            emailModel.Body = isVerificationCode && verificationCode.HasValue ? $"İşte Doğrulama Kodunuz: {verificationCode.Value}" : body;
+            emailModel.Body = !string.IsNullOrEmpty(verificationCode) ? $"İşte Doğrulama Kodunuz: {verificationCode}" : body;
            return this;
         }
 
