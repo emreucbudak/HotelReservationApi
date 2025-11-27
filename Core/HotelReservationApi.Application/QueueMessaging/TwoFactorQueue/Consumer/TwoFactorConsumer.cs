@@ -1,5 +1,5 @@
 ﻿using HotelReservationApi.Application.Emails;
-using HotelReservationApi.Application.QueueMessaging.TwoFactorQueue.Model;
+using HotelReservationApi.Application.RabbitMq.Models;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
@@ -57,7 +57,7 @@ namespace HotelReservationApi.Application.QueueMessaging.TwoFactorQueue.Consumer
                     await _emailService
                     .To(emailMessage.Email)
                     .Subject("Dogrulama Kodu")
-                    .Body(null,emailMessage.Code)
+                    .Body(null,emailMessage.VerificationCode)
                     .SendAsync();
                 }
                 await channel.BasicAckAsync(ea.DeliveryTag, false);
