@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using HotelReservationApi.Application.Bases;
 
 namespace HotelReservationApi.Application.Exceptions
 {
-    public class ExpiryTimeExceptions : Exception
+    public class ExpiryTimeExceptions : BasesException
     {
 
         public ExpiryTimeExceptions(string message) : base(message)
