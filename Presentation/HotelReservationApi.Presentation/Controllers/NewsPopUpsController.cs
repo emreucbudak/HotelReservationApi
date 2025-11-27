@@ -31,7 +31,7 @@ namespace HotelReservationApi.Presentation.Controllers
         {
             return Ok(await _context.Send(new GetAllNewsPopUpQueriesRequest()));
         }
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin", Policy = "Verified2FA")]
         [HttpPut]
         public async Task<IActionResult> PutNewsPopUp([FromBody] UpdateNewsPopUpCommandRequest req)
         {
@@ -40,14 +40,14 @@ namespace HotelReservationApi.Presentation.Controllers
 
             return NoContent();
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin", Policy = "Verified2FA")]
         [HttpPost]
         public async Task<ActionResult<NewsPopUp>> PostNewsPopUp(CreateNewsPopUpCommandRequest newsPopUp)
         {
             await _context.Send(newsPopUp);
             return NoContent();
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin", Policy = "Verified2FA")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteNewsPopUp(int id)
         {

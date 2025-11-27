@@ -28,14 +28,14 @@ namespace HotelReservationApi.Presentation.Controllers
             await _context.Send(new GetAllHotelImagesByIdQueriesRequest(id));
             return NoContent();
         }
-        [Authorize(Roles ="HotelManager")]
+        [Authorize(Roles ="HotelManager",Policy = "Verified2FA")]
         [HttpPost]
         public async Task<ActionResult<HotelImages>> PostHotelImages(CreateHotelImagesCommandRequest hotelImages)
         {
             await _context.Send(hotelImages);
             return NoContent();
         }
-        [Authorize(Roles = "HotelManager")]
+        [Authorize(Roles = "HotelManager", Policy = "Verified2FA")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHotelImages(int id)
         {

@@ -20,20 +20,20 @@ namespace HotelReservationApi.Presentation.Controllers
             _context = context;
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin", Policy = "Verified2FA")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Coupon>>> GetCoupons()
         {
             return Ok(await _context.Send(new GetAllCouponQueriesRequest()));
         }
-        [Authorize(Roles = "Member")]
+        [Authorize(Roles = "Member", Policy = "Verified2FA")]
         [HttpGet("{name}")]
         public async Task<ActionResult<Coupon>> GetCoupon(string name)
         {
             return Ok(await _context.Send(new GetCouponByNameQueriesRequest(name)));
             
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin", Policy = "Verified2FA")]
         [HttpPost]
         public async Task<ActionResult<Coupon>> PostCoupon(CreateCouponCommandRequest coupon)
         {
@@ -41,7 +41,7 @@ namespace HotelReservationApi.Presentation.Controllers
 
             return NoContent();
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin", Policy = "Verified2FA")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCoupon(int id)
         {

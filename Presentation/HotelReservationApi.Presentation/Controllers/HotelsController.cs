@@ -33,13 +33,13 @@ namespace HotelReservationApi.Presentation.Controllers
         {
             return Ok(await _context.Send(new GetAllHotelsQueriesRequest(pageNumber,pageSize)));
         }
-        [Authorize(Roles ="Member,Admin,Reception,HotelManager")]
+        [Authorize(Roles ="Member,Admin,Reception,HotelManager",Policy = "Verified2FA")]
         [HttpGet("{id}")]
         public async Task<ActionResult<Hotels>> GetHotels(int id)
         {
             return Ok(await _context.Send(new GetHotelByIdQueriesRequest(id)));
         }
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin",Policy = "Verified2FA")]
         [HttpPut]
         public async Task<IActionResult> PutHotels(UpdateHotelsCommandRequest req)
         {
@@ -48,14 +48,14 @@ namespace HotelReservationApi.Presentation.Controllers
 
             return NoContent();
         }
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin",Policy = "Verified2FA")]
         [HttpPost]
         public async Task<ActionResult<Hotels>> PostHotels(CreateHotelsCommandRequest hotels)
         {
             await _context.Send(hotels);
             return NoContent();
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin",Policy = "Verified2FA")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHotels(int id)
         {

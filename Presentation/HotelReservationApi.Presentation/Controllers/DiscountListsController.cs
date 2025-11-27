@@ -20,32 +20,32 @@ namespace HotelReservationApi.Presentation.Controllers
         {
             _context = context;
         }
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin", Policy = "Verified2FA")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DiscountList>>> GetdiscountLists()
         {
             return Ok(await _context.Send(new GetAllDiscountListQueriesRequest()));
         }
-        [Authorize(Roles = "HotelManager")]
+        [Authorize(Roles = "HotelManager", Policy = "Verified2FA")]
         [HttpGet("/hotel/{id}")]
         public async Task<ActionResult<IEnumerable<DiscountList>>> Getdiscountlistid(int hotelId)
         {
             return Ok(await _context.Send(new GetDiscountListByHotelsIdQueriesRequest(hotelId)));
         }
-        [Authorize(Roles = "HotelManager")]
+        [Authorize(Roles = "HotelManager", Policy = "Verified2FA")]
         [HttpGet("/roomtypes/{id}")]
         public async Task<ActionResult<IEnumerable<DiscountList>>> Getdiscountlistroomid(int roomTypesId)
         {
             return Ok(await _context.Send(new GetDiscountByRoomTypeIdQueriesRequest(roomTypesId)));
         }
-        [Authorize(Roles ="HotelManager,Admin")]
+        [Authorize(Roles = "HotelManager,Admin", Policy = "Verified2FA")]
         [HttpPost]
         public async Task<ActionResult<DiscountList>> PostDiscountList(CreateDiscountListCommandRequest discountList)
         {
             await _context.Send(discountList);
             return NoContent();
         }
-        [Authorize(Roles = "HotelManager,Admin")]
+        [Authorize(Roles = "HotelManager,Admin", Policy = "Verified2FA")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDiscountList(int id)
         {

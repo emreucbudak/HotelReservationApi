@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
-    [Authorize(Roles ="HotelManager,Reception")]
+    [Authorize(Roles ="HotelManager,Reception",Policy = "Verified2FA")]
     [Route("api/[controller]")]
     [ApiController]
     public class RoomsController : ControllerBase

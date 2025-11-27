@@ -25,16 +25,14 @@ namespace HotelReservationApi.Presentation.Controllers
             var result = await _context.Send(new GetAllAdsBannerQueriesRequest());
             return Ok(result);
         }
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin",Policy = "Verified2FA")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAdsBanner(UpdateAdsBannerCommandRequest req)
         {
              await _context.Send(req);
-            
-
             return NoContent();
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin",Policy = "Verified2FA")]
         [HttpPost]
         public async Task<ActionResult<AdsBanner>> PostAdsBanner(CreateAdsBannerCommandRequest adsBanner)
         {
@@ -42,7 +40,7 @@ namespace HotelReservationApi.Presentation.Controllers
 
             return NoContent();
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin", Policy = "Verified2FA")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAdsBanner(int id)
         {

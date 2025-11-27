@@ -19,14 +19,10 @@ using HotelReservationApi.Persistence.UnitOf;
 using HotelReservationApi.Presentation.ExceptionHandler;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
-using System;
-using System.IdentityModel.Tokens.Jwt;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -121,6 +117,13 @@ builder.Services.AddIdentity<User, Role>(opt =>
     opt.Password.RequiredLength = 8;
 
 }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+builder.Services.AddAuthorization(opt =>
+{
+    opt.AddPolicy("Verified2FA", policy =>
+    {
+        policy.RequireClaim("2fa_status", "verified");
+    });
+});
 
 
 var app = builder.Build();

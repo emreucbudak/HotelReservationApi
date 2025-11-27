@@ -30,14 +30,14 @@ namespace HotelReservationApi.Presentation.Controllers
         {
             return Ok(new GetAllHowFarSpecialPlaceQueriesRequest(id));
         }
-        [Authorize(Roles ="Reception,HotelMember")]
+        [Authorize(Roles = "Reception,HotelMember", Policy = "Verified2FA")]
         [HttpPost]
         public async Task<ActionResult<HowFarSpecialPlace>> PostHowFarSpecialPlace(CreateHowFarSpecialPlaceCommandRequest howFarSpecialPlace)
         {
             await _context.Send(howFarSpecialPlace);
             return Ok();
         }
-        [Authorize(Roles = "Reception,HotelMember")]
+        [Authorize(Roles = "Reception,HotelMember", Policy = "Verified2FA")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHowFarSpecialPlace(int id)
         {

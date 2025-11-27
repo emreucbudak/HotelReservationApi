@@ -26,19 +26,19 @@ namespace HotelReservationApi.Presentation.Controllers
         {
             _context = context;
         }
-        [Authorize(Roles ="Member")]
+        [Authorize(Roles ="Member",Policy = "Verified2FA")]
         [HttpGet("reservation/{memberId}")]
         public async Task<ActionResult<List<Reservation>>> GetReservationByMemberId(int memberId)
         {
             return Ok(await _context.Send(new GetAllReservationByMemberIdQueriesRequest(memberId)));
         }
-        [Authorize(Roles ="HotelManager,Reception")]
+        [Authorize(Roles = "HotelManager,Reception", Policy = "Verified2FA")]
         [HttpGet("{id}")]
         public async Task<ActionResult<List<Reservation>>> GetReservation(int id)
         {
             return Ok(await _context.Send(new GetAllReservationByHotelIdQueriesRequest(id)));
         }
-        [Authorize(Roles ="Member")]
+        [Authorize(Roles = "Member", Policy = "Verified2FA")]
         [HttpPost]
         public async Task<ActionResult<Reservation>> PostReservation(CreateReservationCommandRequest reservation)
         {
@@ -46,7 +46,7 @@ namespace HotelReservationApi.Presentation.Controllers
 
             return NoContent();
         }
-        [Authorize(Roles ="Member,HotelManager,Reception")]
+        [Authorize(Roles = "Member,HotelManager,Reception", Policy = "Verified2FA")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReservation(int id)
         {

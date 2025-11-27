@@ -25,14 +25,14 @@ namespace HotelReservationApi.Presentation.Controllers
         {
             return Ok(await _context.Send(new GetAllHotelCategoryQueriesRequest()));
         }
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin", Policy = "Verified2FA")]
         [HttpPost]
         public async Task<ActionResult<HotelCategory>> PostHotelCategory(CreateHotelCategoryCommandRequest hotelCategory)
         {
             await _context.Send(hotelCategory);
             return NoContent();
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin", Policy = "Verified2FA")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHotelCategory(int id)
         {

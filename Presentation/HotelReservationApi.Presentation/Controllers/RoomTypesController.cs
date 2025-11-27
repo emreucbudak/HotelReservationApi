@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace HotelReservationApi.Presentation.Controllers
 {
-    [Authorize(Roles ="HotelManager")]
+    [Authorize(Roles = "HotelManager", Policy = "Verified2FA")]
     [Route("api/[controller]")]
     [ApiController]
     public class RoomTypesController : ControllerBase

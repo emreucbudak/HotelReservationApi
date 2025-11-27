@@ -41,14 +41,14 @@ namespace HotelReservationApi.Presentation.Controllers
 
             return NoContent();
         }
-        [Authorize(Roles = "HotelManager,Reception")]
+        [Authorize(Roles = "HotelManager,Reception",Policy = "Verified2FA")]
         [HttpPost]
         public async Task<ActionResult<FAQ>> PostFAQ(CreateFAQCommandRequest fAQ)
         {
             await _context.Send(fAQ);
             return NoContent();
         }
-        [Authorize(Roles = "HotelManager,Reception")]
+        [Authorize(Roles = "HotelManager,Reception", Policy = "Verified2FA")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFAQ(int id)
         {
