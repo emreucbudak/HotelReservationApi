@@ -1,19 +1,11 @@
 ﻿using HotelReservationApi.Application.RabbitMq.Interfaces;
 using HotelReservationApi.Application.RabbitMq.Settings;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Primitives;
 using RabbitMQ.Client;
-using Stripe.Tax;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace HotelReservationApi.Infrastructure.RabbitMq
 {

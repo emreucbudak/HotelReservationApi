@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using HotelReservationApi.Domain.Entities;
-using HotelReservationApi.Persistence.ApplicationContext;
 using MediatR;
 using HotelReservationApi.Application.Features.CQRS.DiscountList.Queries.GetAll;
 using HotelReservationApi.Application.Features.CQRS.DiscountList.Command.Create;

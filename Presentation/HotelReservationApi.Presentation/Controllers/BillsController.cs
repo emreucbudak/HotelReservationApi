@@ -3,16 +3,9 @@ using HotelReservationApi.Application.Features.CQRS.Bills.Command.Delete;
 using HotelReservationApi.Application.Features.CQRS.Bills.Queries.GetAll;
 using HotelReservationApi.Application.Features.CQRS.Bills.Queries.GetAllByHotelId;
 using HotelReservationApi.Domain.Entities;
-using HotelReservationApi.Persistence.ApplicationContext;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace HotelReservationApi.Presentation.Controllers
 {

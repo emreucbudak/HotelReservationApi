@@ -5,7 +5,6 @@ using HotelReservationApi.Application.Features.CQRS.Bills.Queries.GetAll;
 using HotelReservationApi.Application.Features.CQRS.Bills.Queries.GetAllByHotelId;
 using HotelReservationApi.Application.Features.CQRS.Coupon.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Customer.Command.Create;
-using HotelReservationApi.Application.Features.CQRS.DiscountList.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.DiscountList.Queries.GetAll;
 using HotelReservationApi.Application.Features.CQRS.DiscountList.Queries.GetByHotelsId;
 using HotelReservationApi.Application.Features.CQRS.DiscountList.Queries.GetByRoomTypeId;
@@ -23,11 +22,6 @@ using HotelReservationApi.Application.Features.CQRS.Reviews.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Reviews.Queries.GetAll;
 using HotelReservationApi.Application.Features.CQRS.Service.Command.Create;
 using HotelReservationApi.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HotelReservationApi.Application.AutoMapper
 {
