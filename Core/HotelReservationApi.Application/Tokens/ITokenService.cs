@@ -15,5 +15,6 @@ namespace HotelReservationApi.Application.Tokens
         string GenerateRefreshToken();
         ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token);
         JwtSecurityToken CreateTempToken (User user, IList<string> claim);
+        ClaimsPrincipal? GetPrincipalFromTempToken(string? token);
     }
 }
