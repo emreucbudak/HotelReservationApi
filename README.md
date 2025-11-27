@@ -30,7 +30,8 @@ Bu proje, kullanıcıların otel araması, rezervasyon yapması ve yönetim pane
 - Kupon kodları ile indirim yönetimi
 - Admin paneli ile otel ve rezervasyon yönetimi
 - Redis ile performans artırımı
-- RabbitMQ ile asenkron işlem yönetimi 
+- RabbitMQ ile asenkron işlem yönetimi
+- Email İle 2 Faktörlü Giriş Sistemi 
 
 ## ✨ Geliştirici
 👨‍💻 **Emre Üçbudak**  
