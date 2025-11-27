@@ -11,14 +11,23 @@ namespace HotelReservationApi.Application.QueueMessaging.TwoFactorQueue.HostedSe
     public class TwoFactorHostedService : IHostedService
     {
         private readonly TwoFactorConsumer _twoFactorConsumer;
-        public Task StartAsync(CancellationToken cancellationToken)
+
+        public TwoFactorHostedService(TwoFactorConsumer twoFactorConsumer)
         {
-            throw new NotImplementedException();
+            _twoFactorConsumer = twoFactorConsumer;
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await _twoFactorConsumer.StartConsume();
+        }
+
+        public async Task StopAsync(CancellationToken cancellationToken)
+        {
+            if(_twoFactorConsumer is IAsyncDisposable asyncDisposable)
+            {
+                await asyncDisposable.DisposeAsync();
+            }
         }
     }
 }

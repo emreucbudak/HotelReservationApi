@@ -6,11 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace HotelReservationApi.Application.QueueMessaging.TwoFactorQueue.Consumer
 {
-    public class TwoFactorConsumer
+    public class TwoFactorConsumer : IAsyncDisposable
     {
         private readonly IEmailService _emailService;
         private  IConnection connection;
@@ -19,6 +20,22 @@ namespace HotelReservationApi.Application.QueueMessaging.TwoFactorQueue.Consumer
         {
             _emailService = emailService;
         }
+
+        public async ValueTask DisposeAsync()
+        {
+            if (channel != null)
+            {
+                await channel.CloseAsync();
+                await channel.DisposeAsync();
+            }
+
+            if (connection != null)
+            {
+                await connection.CloseAsync();
+                await connection.DisposeAsync();
+            }
+        }
+
         public async Task StartConsume()
         {
             var factory = new ConnectionFactory() { HostName = "localhost" };
