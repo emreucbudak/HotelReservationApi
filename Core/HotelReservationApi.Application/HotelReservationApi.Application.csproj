@@ -21,8 +21,4 @@
     <ProjectReference Include="..\HotelReservationApi.Domain\HotelReservationApi.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="2FactorAuth\" />
-  </ItemGroup>
-
 </Project>

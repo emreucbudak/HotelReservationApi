@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HotelReservationApi.Application.RabbitMq
+namespace HotelReservationApi.Application.RabbitMq.Settings
 {
     public class RabbitMqSettings
     {

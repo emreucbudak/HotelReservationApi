@@ -1,4 +1,5 @@
-﻿using HotelReservationApi.Application.RabbitMq;
+﻿using HotelReservationApi.Application.RabbitMq.Interfaces;
+using HotelReservationApi.Application.RabbitMq.Settings;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
