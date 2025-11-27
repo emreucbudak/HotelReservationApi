@@ -1,6 +1,7 @@
 ﻿using HotelReservationApi.Application.Features.CQRS.Auth.Login;
 using HotelReservationApi.Application.Features.CQRS.Auth.RefreshToken;
 using HotelReservationApi.Application.Features.CQRS.Auth.Register;
+using HotelReservationApi.Application.Features.CQRS.Auth.ReSendVerificationCode;
 using HotelReservationApi.Application.Features.CQRS.Auth.Revoke;
 using HotelReservationApi.Application.Features.CQRS.Auth.TwoFactors;
 using MediatR;
@@ -59,7 +60,20 @@ namespace HotelReservationApi.Presentation.Controllers
             var response = await mediator.Send(request);
             return Ok(response);
         }
+        [HttpPost("resend-two-factor-code")]
+        public async Task<IActionResult> ResendTwoFactorCode(ResendTwoFactorVerificationCodeCommandRequest request)
+        {
+            string authorizationHeader = Request.Headers["Authorization"].ToString();
+            if (!string.IsNullOrEmpty(authorizationHeader) &&
+                authorizationHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+            {
+                request.TempToken = authorizationHeader.Substring("Bearer ".Length).Trim();
+            }
+            await mediator.Send(request);
+            return Ok();
 
 
+        }
     }
 }
+

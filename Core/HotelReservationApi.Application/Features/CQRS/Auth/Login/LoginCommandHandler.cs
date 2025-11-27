@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Distributed;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Cryptography;
 
 namespace HotelReservationApi.Application.Features.CQRS.Auth.Login
 {
@@ -34,10 +35,14 @@ namespace HotelReservationApi.Application.Features.CQRS.Auth.Login
             await authRules.EmailOrPasswordShouldNotBeInvalid(user,checkPassword);
             IList<string> roles = await userManager.GetRolesAsync(user);
             JwtSecurityToken token = tokenService.CreateTempToken(user, roles);
-            int verificationCode = new Random().Next(100000, 999999);
+            int verificationCode = RandomNumberGenerator.GetInt32(100000, 1000000);
             await distributedCache.SetStringAsync($"2fa-{user.Email}", verificationCode.ToString(), new DistributedCacheEntryOptions
             {
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+            });
+            await distributedCache.SetStringAsync($"2fa-cooldown-{user.Email}","1", new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1)
             });
             await queue.PublishAsync("TwoFactorQueue", new TwoFactorMessage()
             {

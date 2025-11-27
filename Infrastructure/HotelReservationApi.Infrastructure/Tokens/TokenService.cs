@@ -113,7 +113,7 @@ namespace HotelReservationApi.Infrastructure.Tokens
             {
                 ValidateIssuer = false,
                 ValidateAudience = false,
-                ValidateLifetime = false,
+                ValidateLifetime = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenService.SecretKey)),
                 ValidateIssuerSigningKey = true
             };
