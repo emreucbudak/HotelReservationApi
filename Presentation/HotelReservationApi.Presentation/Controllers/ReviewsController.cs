@@ -28,19 +28,19 @@ namespace HotelReservationApi.Presentation.Controllers
             _context = context;
         }
 
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin",Policy = "Verified2FA")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Reviews>>> GetReviews()
         {
             return Ok(await _context.Send(new GetAllReviewsQueriesRequest()));
         }
-        [Authorize(Roles ="Member,Admin,HotelManager,Reception")]
+        [Authorize(Roles = "Member,Admin,HotelManager,Reception", Policy = "Verified2FA")]
         [HttpGet("{id}")]
         public async Task<ActionResult<Reviews>> GetReviews([FromBody]int id,int? number, int? size)
         {
             return Ok(new GetReviewsByHotelIdQueriesRequest(id,number,size));
         }
-        [Authorize(Roles ="Member")]
+        [Authorize(Roles = "Member", Policy = "Verified2FA")]
         [HttpPut]
         public async Task<IActionResult> PutReviews([FromBody]UpdateReviewsCommandRequest req)
         {
@@ -49,14 +49,14 @@ namespace HotelReservationApi.Presentation.Controllers
 
             return NoContent();
         }
-        [Authorize(Roles ="Member")]
+        [Authorize(Roles = "Member", Policy = "Verified2FA")]
         [HttpPost]
         public async Task<ActionResult<Reviews>> PostReviews(CreateReviewsCommandRequest reviews)
         {
             await _context.Send(reviews);
             return NoContent();
         }
-        [Authorize(Roles ="Member")]
+        [Authorize(Roles = "Member", Policy = "Verified2FA")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReviews(int id)
         {

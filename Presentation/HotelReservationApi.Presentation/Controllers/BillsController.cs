@@ -19,13 +19,13 @@ namespace HotelReservationApi.Presentation.Controllers
         {
             _context = context;
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin", Policy = "Verified2FA")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Bills>>> Getbills()
         {
             return Ok(await _context.Send(new GetAllBillsQueriesRequest()));
         }
-        [Authorize(Roles = "HotelManager,Reception")]
+        [Authorize(Roles = "HotelManager,Reception",Policy = "Verified2FA")]
         [HttpGet("{id}")]
         public async Task<ActionResult<List<Bills>>> GetBills(
     int id,
@@ -42,7 +42,7 @@ namespace HotelReservationApi.Presentation.Controllers
             await _context.Send(bills);
             return NoContent();
         }
-        [Authorize(Roles = "HotelManager,Reception")]
+        [Authorize(Roles = "HotelManager,Reception", Policy = "Verified2FA")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBills(int id)
         {

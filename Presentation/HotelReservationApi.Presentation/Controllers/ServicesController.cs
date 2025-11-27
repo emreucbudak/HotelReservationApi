@@ -30,14 +30,14 @@ namespace HotelReservationApi.Presentation.Controllers
         {
             return Ok(await _context.Send(new GetAllServiceQueriesRequest()));
         }
-        [Authorize(Roles ="HotelManager")]
+        [Authorize(Roles ="HotelManager",Policy = "Verified2FA")]
         [HttpPost]
         public async Task<ActionResult<Service>> PostService(CreateServiceCommandRequest service)
         {
             await _context.Send(service);
             return Ok();
         }
-        [Authorize(Roles = "HotelManager")]
+        [Authorize(Roles = "HotelManager", Policy = "Verified2FA")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteService(int id)
         {
