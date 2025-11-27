@@ -1,11 +1,15 @@
 ﻿using AutoMapper;
 using HotelReservationApi.Application.Emails;
 using HotelReservationApi.Application.Features.CQRS.Auth.Rules;
+using HotelReservationApi.Application.QueueMessaging.TwoFactorQueue.Model;
+using HotelReservationApi.Application.RabbitMq.Interfaces;
+using HotelReservationApi.Application.RabbitMq.Models;
 using HotelReservationApi.Application.Tokens;
 using HotelReservationApi.Application.UnitOfWork;
 using HotelReservationApi.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -21,12 +25,16 @@ namespace HotelReservationApi.Application.Features.CQRS.Auth.Login
         private readonly UserManager<User> userManager;
         private readonly ITokenService tokenService;
         private readonly AuthRules authRules;
+        private readonly IDistributedCache distributedCache;
+        private readonly IMessageQueueService queue;
 
-        public LoginCommandHandler(UserManager<User> userManager, ITokenService tokenService, AuthRules authRules, IMapper mapper)
+        public LoginCommandHandler(UserManager<User> userManager, ITokenService tokenService, AuthRules authRules, IMapper mapper, IDistributedCache distributedCache, IMessageQueueService queue)
         {
             this.userManager = userManager;
             this.tokenService = tokenService;
             this.authRules = authRules;
+            this.distributedCache = distributedCache;
+            this.queue = queue;
         }
         public async Task<LoginCommandResponse> Handle(LoginCommandRequest request, CancellationToken cancellationToken)
         {
@@ -35,6 +43,16 @@ namespace HotelReservationApi.Application.Features.CQRS.Auth.Login
             await authRules.EmailOrPasswordShouldNotBeInvalid(user,checkPassword);
             IList<string> roles = await userManager.GetRolesAsync(user);
             JwtSecurityToken token = tokenService.CreateTempToken(user, roles);
+            int verificationCode = new Random().Next(100000, 999999);
+            await distributedCache.SetStringAsync($"2fa-{user.Email}", verificationCode.ToString(), new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+            });
+            await queue.PublishAsync("TwoFactorQueue", new TwoFactorMessage()
+            {
+                Email = user.Email,
+                VerificationCode = verificationCode.ToString()
+            });
             string tempToken = new JwtSecurityTokenHandler().WriteToken(token);
             return new()
             {
