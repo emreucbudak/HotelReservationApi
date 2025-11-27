@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using HotelReservationApi.Domain.Entities;
-using System;
 
 namespace HotelReservationApi.Application.Validate
 {
