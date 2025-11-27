@@ -1,22 +1,13 @@
 ﻿using AutoMapper;
-using HotelReservationApi.Application.Emails;
 using HotelReservationApi.Application.Features.CQRS.Auth.Rules;
-using HotelReservationApi.Application.QueueMessaging.TwoFactorQueue.Model;
 using HotelReservationApi.Application.RabbitMq.Interfaces;
 using HotelReservationApi.Application.RabbitMq.Models;
 using HotelReservationApi.Application.Tokens;
-using HotelReservationApi.Application.UnitOfWork;
 using HotelReservationApi.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HotelReservationApi.Application.Features.CQRS.Auth.Login
 {
