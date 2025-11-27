@@ -19,20 +19,14 @@ namespace HotelReservationApi.Application.Features.CQRS.Auth.Login
     public class LoginCommandHandler : IRequestHandler<LoginCommandRequest, LoginCommandResponse>
     {
         private readonly UserManager<User> userManager;
-        private readonly IConfiguration configuration;
         private readonly ITokenService tokenService;
         private readonly AuthRules authRules;
-        private readonly IUnitOfWork unitOfWork;
-        private readonly IEmailService emailService;
 
-        public LoginCommandHandler(UserManager<User> userManager, IConfiguration configuration, ITokenService tokenService, AuthRules authRules, IMapper mapper, IUnitOfWork uunitOfWork, IEmailService emailService)
+        public LoginCommandHandler(UserManager<User> userManager, ITokenService tokenService, AuthRules authRules, IMapper mapper)
         {
             this.userManager = userManager;
-            this.configuration = configuration;
             this.tokenService = tokenService;
             this.authRules = authRules;
-            unitOfWork = uunitOfWork;
-            this.emailService = emailService;
         }
         public async Task<LoginCommandResponse> Handle(LoginCommandRequest request, CancellationToken cancellationToken)
         {
