@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace HotelReservationApi.Infrastructure.RabbitMq
@@ -37,9 +38,29 @@ namespace HotelReservationApi.Infrastructure.RabbitMq
 
 
 
-        public Task PublishAsync<T>(string queueName, T message) where T : class
+        public async Task PublishAsync<T>(string queueName, T message) where T : class
         {
-            throw new NotImplementedException();
+            if (_channel == null || !_channel.IsOpen)
+            {
+                logger.LogError("RabbitMQ kanalı kullanıma hazır değil (Başlatılmadı veya Koptu). Mesaj gönderilemedi: {QueueName}", queueName);
+                throw new InvalidOperationException("RabbitMQ kanalı kullanıma hazır değil. Lütfen servisin başlatıldığından emin olun.");
+            }
+            var json = JsonSerializer.Serialize(message);
+            var body = Encoding.UTF8.GetBytes(json);
+
+                 await _channel.QueueDeclareAsync(queue: queueName,
+                                     durable: true,
+                                     exclusive: false,
+                                     autoDelete: false,
+                                     arguments: null);
+
+              await   _channel.BasicPublishAsync(exchange: "",
+                                     routingKey: queueName,
+                                     basicProperties: new BasicProperties() { Persistent = true},
+                                     body: body,
+                                     mandatory:true);
+            
+
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
