@@ -107,7 +107,6 @@ namespace HotelReservationApi.Infrastructure.RabbitMq
             catch (Exception ex)
             {
                 logger.LogError(ex, "RabbitMQ bağlantısı kapatılamadı!");
-                throw new Exception("RabbitMQ bağlantısı kapatılamadı!", ex);
             }
         }
     }
