@@ -13,6 +13,8 @@ namespace HotelReservationApi.Application.QueueMessaging.TwoFactorQueue.Consumer
     public class TwoFactorConsumer
     {
         private readonly IEmailService _emailService;
+        private  IConnection connection;
+        private  IChannel channel;
         public TwoFactorConsumer(IEmailService emailService)
         {
             _emailService = emailService;
@@ -20,8 +22,8 @@ namespace HotelReservationApi.Application.QueueMessaging.TwoFactorQueue.Consumer
         public async Task StartConsume()
         {
             var factory = new ConnectionFactory() { HostName = "localhost" };
-            using var connection = await factory.CreateConnectionAsync();
-            using var channel = await connection.CreateChannelAsync();
+              connection = await factory.CreateConnectionAsync();
+              channel = await connection.CreateChannelAsync();
             await channel.QueueDeclareAsync(queue: "TwoFactorQueue",
                                  durable: true,
                                  exclusive: false,
@@ -41,11 +43,11 @@ namespace HotelReservationApi.Application.QueueMessaging.TwoFactorQueue.Consumer
                     .Body(null,emailMessage.Code)
                     .SendAsync();
                 }
-                await channel.BasicConsumeAsync(queue:"TwoFactorQueue"
-                    ,autoAck:false,
-                    consumer:consumer);
                 await channel.BasicAckAsync(ea.DeliveryTag, false);
             };
+            await channel.BasicConsumeAsync(queue: "TwoFactorQueue"
+    , autoAck: false,
+    consumer: consumer);
         }
     }
 }
