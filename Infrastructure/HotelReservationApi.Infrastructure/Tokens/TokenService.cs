@@ -32,7 +32,7 @@ namespace HotelReservationApi.Infrastructure.Tokens
             {
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Name , user.Name),
-                new Claim(JwtRegisteredClaimNames.Email ,user.Email),
+                new Claim(ClaimTypes.Email ,user.Email),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim("2fa_status", "pending")
 
@@ -59,7 +59,7 @@ namespace HotelReservationApi.Infrastructure.Tokens
             {
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Name , user.Name),
-                new Claim(JwtRegisteredClaimNames.Email ,user.Email),
+                new Claim(ClaimTypes.Email ,user.Email),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim("2fa_status", "verified")
 
@@ -95,11 +95,11 @@ namespace HotelReservationApi.Infrastructure.Tokens
         {
             TokenValidationParameters validationParameters = new TokenValidationParameters()
             {
-                ValidateIssuer = true,
+                ValidateIssuer = false,
 
-                ValidateAudience = true,
+                ValidateAudience = false,
 
-                ValidateLifetime = true,
+                ValidateLifetime = false,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenService.SecretKey)),
                 ValidateIssuerSigningKey = true
             };
@@ -110,6 +110,25 @@ namespace HotelReservationApi.Infrastructure.Tokens
             }
             return validateToken;
 
+        }
+
+        public ClaimsPrincipal? GetPrincipalFromTempToken(string? token)
+        {
+            TokenValidationParameters validationParameters = new TokenValidationParameters()
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = false,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenService.SecretKey)),
+                ValidateIssuerSigningKey = true
+            };
+            var security = new JwtSecurityTokenHandler();
+            var validateToken = security.ValidateToken(token, validationParameters, out SecurityToken sct);
+            if (sct is not JwtSecurityToken jwt || !jwt.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new SecurityTokenInvalidAlgorithmException("Bilinmeyen token");
+            }
+            return validateToken;
         }
     }
 }
