@@ -2,6 +2,7 @@
 using HotelReservationApi.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -17,22 +18,29 @@ namespace HotelReservationApi.Application.Features.CQRS.Auth.TwoFactors
         private readonly UserManager<User> userManager;
         private readonly ITokenService tokenService;
         private readonly IConfiguration configuration;
+        private readonly IDistributedCache cache;
 
-        public TwoFactorsAuthCommandHandler(UserManager<User> userManager, ITokenService tokenService, IConfiguration configuration)
+        public TwoFactorsAuthCommandHandler(UserManager<User> userManager, ITokenService tokenService, IConfiguration configuration, IDistributedCache cache)
         {
             this.userManager = userManager;
             this.tokenService = tokenService;
             this.configuration = configuration;
+            this.cache = cache;
         }
 
         public async Task<TwoFactorsAuthCommandResponse> Handle(TwoFactorsAuthCommandRequest request, CancellationToken cancellationToken)
         {
             var claimsPrincipal =  tokenService.GetPrincipalFromTempToken(request.TempToken);
             var email = claimsPrincipal.FindFirst(JwtRegisteredClaimNames.Email)?.Value;
+            string verificationCode = await cache.GetStringAsync($"2fa-{email}");
+            if (verificationCode is null || verificationCode != request.Code)
+            {
+                throw new InvalidOperationException("Geçersiz veya yanlış onay kodu");
+            }
             var user = await userManager.FindByEmailAsync(email);
             IList<string> roles = await userManager.GetRolesAsync(user);
             JwtSecurityToken token = tokenService.CreateToken(user, roles);
-            _ = int.TryParse(configuration["JWT:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);
+            _ = int.TryParse(configuration["JwtSettings:RefreshTokenExpirationDays"], out int refreshTokenValidityInDays);
             string refreshToken = tokenService.GenerateRefreshToken();
             user.RefreshToken = refreshToken;
             user.RefreshTokenExpirationTime = DateTime.UtcNow.AddDays(refreshTokenValidityInDays);
