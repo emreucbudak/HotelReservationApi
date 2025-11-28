@@ -123,6 +123,10 @@ builder.Services.AddAuthorization(opt =>
     {
         policy.RequireClaim("2fa_status", "verified");
     });
+    opt.AddPolicy("OnlyPending2FA", policy =>
+    {
+        policy.RequireClaim("2fa_status", "pending");
+    });
 });
 
 
