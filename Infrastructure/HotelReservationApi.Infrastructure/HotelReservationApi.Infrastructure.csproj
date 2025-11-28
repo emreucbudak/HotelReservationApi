@@ -16,4 +16,8 @@
     <ProjectReference Include="..\..\Core\HotelReservationApi.Application\HotelReservationApi.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="NewFolder\" />
+  </ItemGroup>
+
 </Project>
