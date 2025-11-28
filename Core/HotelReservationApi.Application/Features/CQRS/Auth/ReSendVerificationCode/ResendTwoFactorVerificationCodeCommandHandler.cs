@@ -1,16 +1,9 @@
 ﻿using HotelReservationApi.Application.RabbitMq.Interfaces;
 using HotelReservationApi.Application.Tokens;
-using HotelReservationApi.Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Distributed;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HotelReservationApi.Application.Features.CQRS.Auth.ReSendVerificationCode
 {
