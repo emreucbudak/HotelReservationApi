@@ -4,8 +4,11 @@ using HotelReservationApi.Application.Features.CQRS.Auth.Register;
 using HotelReservationApi.Application.Features.CQRS.Auth.ReSendVerificationCode;
 using HotelReservationApi.Application.Features.CQRS.Auth.Revoke;
 using HotelReservationApi.Application.Features.CQRS.Auth.TwoFactors;
+using HotelReservationApi.Presentation.ActionFilter;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace HotelReservationApi.Presentation.Controllers
 {
@@ -46,33 +49,21 @@ namespace HotelReservationApi.Presentation.Controllers
             await mediator.Send(request);
             return StatusCode(StatusCodes.Status200OK);
         }
+        [Authorize(Policy = "OnlyPending2FA")]
+        [ServiceFilter(typeof(TwoFactorAuthenticationFilter))]
         [HttpPost("two-factor-authenticate")]
         public async Task<IActionResult> TwoFactorAuthenticate(TwoFactorsAuthCommandRequest request)
         {
-            string authorizationHeader = Request.Headers["Authorization"].ToString();
-            if (!string.IsNullOrEmpty(authorizationHeader) &&
-                authorizationHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
-            {
-
-                request.TempToken = authorizationHeader.Substring("Bearer ".Length).Trim();
-            }
-
             var response = await mediator.Send(request);
             return Ok(response);
         }
+        [Authorize(Policy = "OnlyPending2FA")]
+        [ServiceFilter(typeof(TwoFactorAuthenticationFilter))]
         [HttpPost("resend-two-factor-code")]
         public async Task<IActionResult> ResendTwoFactorCode(ResendTwoFactorVerificationCodeCommandRequest request)
         {
-            string authorizationHeader = Request.Headers["Authorization"].ToString();
-            if (!string.IsNullOrEmpty(authorizationHeader) &&
-                authorizationHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
-            {
-                request.TempToken = authorizationHeader.Substring("Bearer ".Length).Trim();
-            }
             await mediator.Send(request);
             return Ok();
-
-
         }
     }
 }
