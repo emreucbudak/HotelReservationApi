@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace HotelReservationApi.Infrastructure.PdfWriter
 {
-    public class BillPdfDocument : IDocument,IAsyncDisposable
+    public class BillPdfDocument : IDocument, IDisposable
     {
         private readonly BillPdfModel billPdfModel;
         private readonly string TotalAmountString;
@@ -105,7 +105,6 @@ namespace HotelReservationApi.Infrastructure.PdfWriter
                 table.Header(header =>
                 {
                     header.Cell().Element(BlockHeaderStyle).Text("Hizmet/Oda Açıklaması").SemiBold();
-                    header.Cell().Element(BlockHeaderStyle).Text("Kişi Sayısı").SemiBold();
                     header.Cell().Element(BlockHeaderStyle).Text("Gece Sayısı").SemiBold();
                     header.Cell().Element(BlockHeaderStyle).Text("Tutar").SemiBold().AlignRight();
 
@@ -123,9 +122,8 @@ namespace HotelReservationApi.Infrastructure.PdfWriter
                 foreach (var roomType in billPdfModel.RoomTypes)
                 {
                     table.Cell().Element(BlockCellStyle).Text(roomType);
-                    table.Cell().Element(BlockCellStyle).Text($"{peoplePerRoom}");
                     table.Cell().Element(BlockCellStyle).Text(billPdfModel.TotalNights.ToString());
-                    table.Cell().Element(BlockCellStyle).Text($"{billPdfModel.TotalAmount / roomCount:N2} TL").AlignRight();
+                    table.Cell().Element(BlockCellStyle).Text($"{billPdfModel.TotalAmount:N2} TL {roomCount} adet oda").AlignRight();
                 }
             });
         }
@@ -137,8 +135,8 @@ namespace HotelReservationApi.Infrastructure.PdfWriter
             {
                 column.Item().Border(1).BorderColor("#333").Padding(5).Width(200).Row(row =>
                 {
-                    row.RelativeItem(2).Text("ÖDENECEK TOPLAM TUTAR").FontSize(12).SemiBold(); // Hata düzeltildi
-                    row.RelativeItem(1).Text(TotalAmountString).FontSize(12).SemiBold().AlignRight(); // Hata düzeltildi
+                    row.RelativeItem(2).Text("ÖDENECEK TOPLAM TUTAR").FontSize(12).SemiBold(); 
+                    row.RelativeItem(1).Text(TotalAmountString).FontSize(12).SemiBold().AlignRight(); 
                 });
 
                 column.Item().PaddingTop(5).Text("Bu belge ödeme dekontu yerine geçer.").FontSize(8);
@@ -153,9 +151,9 @@ namespace HotelReservationApi.Infrastructure.PdfWriter
             });
         }
 
-        public ValueTask DisposeAsync()
+        public void Dispose()
         {
-            throw new NotImplementedException();
+            // Temizlenmesi gereken kaynak yok ondan boş bıraktım sadece usingle kullandıgım için using bu kaynagı tek basına temizler ondan idisposableyi öyle yaptım
         }
     }
 }

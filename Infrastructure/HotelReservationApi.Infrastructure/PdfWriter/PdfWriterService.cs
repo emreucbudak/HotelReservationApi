@@ -27,13 +27,13 @@ namespace HotelReservationApi.Infrastructure.PdfWriter
             await SendPdfViaEmail(
                 pdfModel.Email,
                 $"Rezervasyon Dekontu ve Onayınız: {pdfModel.BillNo}",
-                pdfStream,
+                 pdfStream,
                 $"Dekont_{pdfModel.BillNo}.pdf");
         }
         private MemoryStream GeneratePdfToStream(BillPdfModel pdfModel)
         {
             var stream = new MemoryStream();
-            using (var document = new BillPdfDocument(pdfModel))
+             using (var document = new BillPdfDocument(pdfModel))
             {
                 document.GeneratePdf(stream);
             }
