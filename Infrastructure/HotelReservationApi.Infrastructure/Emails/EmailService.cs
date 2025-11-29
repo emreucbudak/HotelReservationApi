@@ -1,5 +1,6 @@
 ﻿using HotelReservationApi.Application.Emails;
 using HotelReservationApi.Domain.Entities;
+using Microsoft.Extensions.Options;
 using System.Net.Mail;
 
 namespace HotelReservationApi.Infrastructure.Emails
@@ -7,10 +8,12 @@ namespace HotelReservationApi.Infrastructure.Emails
     public class EmailService : IEmailService
     {
         private readonly EmailModel emailModel;
+        private readonly EmailSettings emailSettings;
 
-        public EmailService()
+        public EmailService(IOptions<EmailSettings> emailSettings)
         {
             emailModel = new EmailModel();
+            this.emailSettings = emailSettings.Value;
         }
 
         public IEmailService Attachment(bool isIncludeFile, Stream fileStream, string fileName)
@@ -41,7 +44,7 @@ namespace HotelReservationApi.Infrastructure.Emails
                 using (var message = new MailMessage())
                 {
                     message.To.Add(emailModel.To);
-                    message.From = new MailAddress("hotelapideneme@gmail.com");
+                    message.From = new MailAddress(emailSettings.User);
                     message.Subject = emailModel.Subject;
                     message.Body = emailModel.Body;
                     message.IsBodyHtml = true;
@@ -55,9 +58,9 @@ namespace HotelReservationApi.Infrastructure.Emails
                         {
                             message.Attachments.Add(attachment);
 
-                            using (var smtpClient = new SmtpClient("smtp.gmail.com", 587))
+                            using (var smtpClient = new SmtpClient(emailSettings.Host, emailSettings.Port))
                             {
-                                smtpClient.Credentials = new System.Net.NetworkCredential("hotelapideneme@gmail.com", "qbzyeaooxbuufhzi");
+                                smtpClient.Credentials = new System.Net.NetworkCredential(emailSettings.User, emailSettings.Password);
                                 smtpClient.EnableSsl = true;
                                 await smtpClient.SendMailAsync(message);
                             }
@@ -65,9 +68,9 @@ namespace HotelReservationApi.Infrastructure.Emails
                     }
                     else
                     {
-                        using (var smtpClient = new SmtpClient("smtp.gmail.com", 587))
+                        using (var smtpClient = new SmtpClient(emailSettings.Host, emailSettings.Port))
                         {
-                            smtpClient.Credentials = new System.Net.NetworkCredential("hotelapideneme@gmail.com", "qbzyeaooxbuufhzi");
+                            smtpClient.Credentials = new System.Net.NetworkCredential(emailSettings.User, emailSettings.Password);
                             smtpClient.EnableSsl = true;
                             await smtpClient.SendMailAsync(message);
                         }
