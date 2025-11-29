@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HotelReservationApi.Application.DTOS;
 using HotelReservationApi.Application.Features.CQRS.AdsBanner.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Bills.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Bills.Queries.GetAll;
@@ -16,6 +17,7 @@ using HotelReservationApi.Application.Features.CQRS.Hotels.Queries.GetAll;
 using HotelReservationApi.Application.Features.CQRS.HowFarSpecialPlace.Command.Create;
 using HotelReservationApi.Application.Features.CQRS.Neighborhood.Queries.GetAll;
 using HotelReservationApi.Application.Features.CQRS.NewsPopUp.Command.Create;
+using HotelReservationApi.Application.Features.CQRS.Reservation.Command.Create.CreateAfterBill;
 using HotelReservationApi.Application.Features.CQRS.Reservation.Queries.GetAllByHotelId;
 using HotelReservationApi.Application.Features.CQRS.Reservation.Queries.GetAllByMemberId;
 using HotelReservationApi.Application.Features.CQRS.Reviews.Command.Create;
@@ -63,7 +65,10 @@ namespace HotelReservationApi.Application.AutoMapper
             CreateMap<DiscountList, GetDiscountListByHotelsIdQueriesResponse>().ForMember(destinationMember:x=> x.DiscountCategoryName,memberOptions:opt=> opt.MapFrom(x=> x.DiscountCategory)).ForMember(destinationMember:x=> x.TypeName,memberOptions:opt=> opt.MapFrom(x=> x.RoomType)).ReverseMap();
             CreateMap<DiscountList, GetDiscountByRoomTypeIdQueriesResponse>().ForMember(destinationMember:x=> x.DiscountCategoryName,memberOptions:x=> x.MapFrom(x=> x.DiscountCategory)).ReverseMap();
             CreateMap<Reviews,GetAllReviewsQueriesResponse>().ForMember(destinationMember:x=> x.HotelName, memberOptions: x=> x.MapFrom(x=> x.Hotels)).ReverseMap();
-           
+            CreateMap<CreateReservationAfterBillCommandRequest, Reservation>().ForMember(dest => dest.Customer, opt => opt.Ignore()).ForMember(dest => dest.reservationRooms, opt => opt.Ignore());
+            CreateMap<Customer, CustomerDTO>().ReverseMap();
+            CreateMap<ReservationRoom, ReservationRoomDTO>().ReverseMap();
+
         }
     }
 }
