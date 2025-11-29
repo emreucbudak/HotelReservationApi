@@ -67,6 +67,17 @@ string jwtSecretKey = File.ReadAllText(jwtSecret).Trim();
 var dbSecret = "/run/secrets/db_password";
 string dbPassword = File.ReadAllText(dbSecret).Trim();
 string connectionString = $"Host=postgres;Port=5432;Database=HotelReservationDb;Username=postgres;Password={dbPassword}";
+var smtpPasswordFile = Environment.GetEnvironmentVariable("SMTP_PASSWORD_FILE");
+var smtpPassword = File.Exists(smtpPasswordFile)
+    ? File.ReadAllText(smtpPasswordFile).Trim()
+    : throw new Exception("SMTP þifresi bulunamadý!");
+builder.Configuration["Smtp:Password"] = smtpPassword;
+builder.Configuration["Smtp:User"] = Environment.GetEnvironmentVariable("SMTP_USER");
+builder.Configuration["Smtp:Host"] = Environment.GetEnvironmentVariable("SMTP_HOST");
+builder.Configuration["Smtp:Port"] = Environment.GetEnvironmentVariable("SMTP_PORT");
+builder.Services.Configure<EmailSettings>(
+    builder.Configuration.GetSection("Smtp"));
+
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

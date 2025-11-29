@@ -9,9 +9,15 @@
       - stripe_secret_key
       - jwt_secret
       - db_password 
+      - smtp-app-pass 
     ports:
       - "8080:80"
     restart: "unless-stopped"
+    environment:
+      SMTP_USER: "hotelapideneme@gmail.com"
+      SMTP_HOST: "smtp.gmail.com"
+      SMTP_PORT: "587"
+      SMTP_PASSWORD_FILE: "/run/secrets/smtp-app-pass"
 
   postgresql:
     image: postgres:18.1
@@ -69,4 +75,6 @@ secrets:
     rabbitmq_user:
         external: true
     rabbitmq_password:
+        external: true
+    smtp-app-pass:
         external: true
