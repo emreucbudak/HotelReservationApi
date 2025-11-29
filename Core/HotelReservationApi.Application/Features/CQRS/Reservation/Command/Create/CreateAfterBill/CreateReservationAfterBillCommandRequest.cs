@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using HotelReservationApi.Application.DTOS;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,7 @@ namespace HotelReservationApi.Application.Features.CQRS.Reservation.Command.Crea
         public DateOnly ReservationDate { get; set; }
         public int MemberId { get; set; }
         public int HotelsId { get; set; }
+        public ICollection<CustomerDTO> customerDto { get; set; }
+        public ICollection<ReservationRoomDTO> ReservationRooms { get; set; }
     }
 }

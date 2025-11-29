@@ -1,4 +1,5 @@
-﻿using HotelReservationApi.Application.Emails;
+﻿using HotelReservationApi.Application.DTOS;
+using HotelReservationApi.Application.Emails;
 using HotelReservationApi.Application.UnitOfWork;
 using HotelReservationApi.Domain.Entities;
 using MediatR;
@@ -48,6 +49,34 @@ namespace HotelReservationApi.Application.QueueMessaging.CreateReservationQueue.
                 var body = ea.Body.ToArray();
                 var message = System.Text.Encoding.UTF8.GetString(body);
                 var reservationData = System.Text.Json.JsonSerializer.Deserialize<Reservation>(message);
+
+                var customerDtos = reservationData.Customer
+                    .Select(c => new CustomerDTO
+                    {
+                        Name = c.Name,
+                        Surname = c.Surname,
+                        BirthDate = c.BirthDate,
+                        GenderId = c.GenderId,
+                    })
+                    .ToList();
+                var reservationRooms = reservationData.reservationRooms
+                    .Select(rr => new ReservationRoomDTO
+                    {
+                        RoomId = rr.RoomId,
+                        ReservationId = rr.ReservationId,
+                    })
+                    .ToList();
+                await mediator.Send(new Features.CQRS.Reservation.Command.Create.CreateAfterBill.CreateReservationAfterBillCommandRequest
+                {
+                    MemberId = reservationData.Member.Id,
+                    HotelsId = reservationData.Hotels.Id,
+                    StartDate = reservationData.StartDate,
+                    EndDate = reservationData.EndDate,
+                    TotalPrice = reservationData.TotalPrice,
+                    ReservationDate = reservationData.ReservationDate,
+                    customerDto = customerDtos,
+                    ReservationRooms = reservationRooms
+                });
 
 
                 await channel.BasicAckAsync(ea.DeliveryTag, false);
