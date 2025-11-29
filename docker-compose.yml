@@ -19,7 +19,6 @@
       SMTP_PORT: "587"
       SMTP_PASSWORD_FILE: "/run/secrets/smtp-app-pass"
 
-  postgresql:
     image: postgres:18.1
     container_name: postgresql
     secrets:
