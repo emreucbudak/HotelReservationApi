@@ -6,6 +6,7 @@
         public string Subject { get; set; }
         public string Body { get; set; }
         public int? VerificationCode { get; set; }
-        public string? FilePath { get; set; }
+        public Stream? AttachmentStream { get; set; }
+        public string? AttachmentFileName { get; set; }
     }
 }

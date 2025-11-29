@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HotelReservationApi.Infrastructure.PdfWriter.Model
+namespace HotelReservationApi.Application.RabbitMq.Models
 {
     public class BillPdfModel
     {
-        public Guid BillNo  { get; set; }
+        public Guid BillNo { get; set; }
         public DateOnly BillCreateDate { get; set; }
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
@@ -22,8 +22,5 @@ namespace HotelReservationApi.Infrastructure.PdfWriter.Model
         public DateOnly EndDate { get; set; }
         public string HotelName { get; set; }
         public IList<string> RoomTypes { get; set; }
-
-
-
     }
 }

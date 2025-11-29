@@ -1,6 +1,7 @@
 using FluentValidation;
 using HotelReservationApi.Application.AutoMapper;
 using HotelReservationApi.Application.Behaviors;
+using HotelReservationApi.Application.Emails;
 using HotelReservationApi.Application.Payment;
 using HotelReservationApi.Application.QueueMessaging.TwoFactorQueue.Consumer;
 using HotelReservationApi.Application.QueueMessaging.TwoFactorQueue.HostedService;
@@ -10,6 +11,7 @@ using HotelReservationApi.Application.Repositories;
 using HotelReservationApi.Application.UnitOfWork;
 using HotelReservationApi.Application.Validate;
 using HotelReservationApi.Domain.Entities;
+using HotelReservationApi.Infrastructure.Emails;
 using HotelReservationApi.Infrastructure.Payment;
 using HotelReservationApi.Infrastructure.RabbitMq;
 using HotelReservationApi.Infrastructure.Tokens;
@@ -78,7 +80,9 @@ builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBeh
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggerBehavior<,>));
 builder.Services.AddAutoMapper(cfg => { },typeof(Profiles).Assembly);
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddTransient<IEmailService,EmailService>();
 builder.Services.AddScoped<IStripeService,StripeService>();
+builder.Services.AddScoped<HotelReservationApi.Application.Tokens.ITokenService, TokenService>();
 builder.Services.AddScoped(typeof(IReadRepository<>), typeof(ReadRepository<>));
 builder.Services.AddScoped(typeof(IWriteRepository<>), typeof(WriteRepository<>));
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
