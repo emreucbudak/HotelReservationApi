@@ -5,6 +5,7 @@ using HotelReservationApi.Application.Emails;
 using HotelReservationApi.Application.Payment;
 using HotelReservationApi.Application.QueueMessaging.CreateReservationQueue.Consumer;
 using HotelReservationApi.Application.QueueMessaging.CreateReservationQueue.HostedService;
+using HotelReservationApi.Application.QueueMessaging.SendBillsAfterReservation.HostedService;
 using HotelReservationApi.Application.QueueMessaging.TwoFactorQueue.Consumer;
 using HotelReservationApi.Application.QueueMessaging.TwoFactorQueue.HostedService;
 using HotelReservationApi.Application.RabbitMq.Interfaces;
@@ -57,6 +58,7 @@ builder.Services.AddSingleton<TwoFactorConsumer>();
 builder.Services.AddHostedService<RabbitMqProducer>();
 builder.Services.AddHostedService<TwoFactorHostedService>();
 builder.Services.AddHostedService<CreateReservationHostedService>();
+builder.Services.AddHostedService<SendBillsReservationHostedService>();
 builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.Configure<TwoFactorAuthSettings>(builder.Configuration.GetSection("TwoFactorAuthSettings"));
 var secretStripe = "/run/secrets/stripe_secret_key";
@@ -68,7 +70,7 @@ var jwtSecret = "/run/secrets/jwt_secret";
 string jwtSecretKey = File.ReadAllText(jwtSecret).Trim();
 var dbSecret = "/run/secrets/db_password";
 string dbPassword = File.ReadAllText(dbSecret).Trim();
-string connectionString = $"Host=postgres;Port=5432;Database=HotelReservationDb;Username=postgres;Password={dbPassword}";
+string connectionString = $"Host=postgresql;Port=5432;Database=HotelReservationDb;Username=postgres;Password={dbPassword}";
 var smtpPasswordFile = Environment.GetEnvironmentVariable("SMTP_PASSWORD_FILE");
 var smtpPassword = File.Exists(smtpPasswordFile)
     ? File.ReadAllText(smtpPasswordFile).Trim()

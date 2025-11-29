@@ -15,17 +15,10 @@ namespace HotelReservationApi.Persistence.ApplicationContext
         {
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
 
+            var dbPassword = "alttanustten36";
+            string connectionString = $"Host=localhost;Port=5432;Database=HotelReservationDb;Username=postgres;Password={dbPassword}";
 
-            var projectPath = Path.Combine(Directory.GetCurrentDirectory(), "../../Presentation/HotelReservationApi.Presentation");
-
-            var config = new ConfigurationBuilder()
-                .SetBasePath(projectPath)
-                .AddJsonFile("appsettings.Development.json", optional: false)
-                .Build();
-
-            var conn = config.GetConnectionString("DefaultConnection");
-
-            optionsBuilder.UseNpgsql(conn);
+            optionsBuilder.UseNpgsql(connectionString);
 
             return new ApplicationDbContext(optionsBuilder.Options);
         }

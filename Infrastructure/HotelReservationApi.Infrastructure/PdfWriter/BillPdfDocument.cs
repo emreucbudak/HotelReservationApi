@@ -76,14 +76,10 @@ namespace HotelReservationApi.Infrastructure.PdfWriter
                 {
                     column.Item().Text("MÜŞTERİ BİLGİLERİ").SemiBold().Underline();
                     column.Item().Text($"Ad Soyad: {billPdfModel.Name}");
-                    column.Item().Text($"E-posta: {billPdfModel.Email}");
-                    column.Item().Text($"Telefon: {billPdfModel.PhoneNumber}");
                 });
                 row.RelativeItem(1).Column(column => 
                 {
                     column.Item().Text("ÖDEME DETAYLARI").SemiBold().Underline();
-                    column.Item().Text($"Ödeme Yöntemi: {billPdfModel.PaymentMethod}");
-                    column.Item().Text($"Ödeme Zamanı: {billPdfModel.PaymentTiming}");
                     column.Item().Text($"Ödenen Tutar: {TotalAmountString}").SemiBold();
                 });
             });
@@ -117,7 +113,6 @@ namespace HotelReservationApi.Infrastructure.PdfWriter
 
 
                 int roomCount = billPdfModel.RoomTypes.Count > 0 ? billPdfModel.RoomTypes.Count : 1;
-                int peoplePerRoom = billPdfModel.PeopleBooked.Count / roomCount;
 
                 foreach (var roomType in billPdfModel.RoomTypes)
                 {
