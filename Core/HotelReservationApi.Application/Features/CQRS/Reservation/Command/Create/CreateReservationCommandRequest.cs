@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HotelReservationApi.Application.Features.CQRS.Reservation.Command.Create
 {
-    public class CreateReservationCommandRequest : IRequest
+    public class CreateReservationCommandRequest : IRequest<CreateReservationCommandResponse>
     {
         public ICollection<Domain.Entities.Rooms> Rooms { get; set; }
         public DateOnly StartDate { get; set; }

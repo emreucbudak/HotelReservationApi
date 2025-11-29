@@ -2,6 +2,7 @@
 using HotelReservationApi.Application.UnitOfWork;
 using HotelReservationApi.Domain.Entities;
 using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
@@ -11,31 +12,31 @@ using System.Threading.Tasks;
 
 namespace HotelReservationApi.Application.Features.CQRS.Reservation.Command.Create
 {
-    public class CreateReservationCommandHandler : IRequestHandler<CreateReservationCommandRequest>
+    public class CreateReservationCommandHandler : IRequestHandler<CreateReservationCommandRequest,CreateReservationCommandResponse>
     {
-        private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
-        private readonly ConnectionMultiplexer connectionMultiplexer;
+        private readonly IDistributedCache cache;
 
-        public CreateReservationCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ConnectionMultiplexer connectionMultiplexer)
+
+        public CreateReservationCommandHandler(IMapper mapper, IDistributedCache cache)
         {
-            this.unitOfWork = unitOfWork;
+
             this.mapper = mapper;
-            this.connectionMultiplexer = connectionMultiplexer;
+            this.cache = cache;
         }
 
-        public  async Task Handle(CreateReservationCommandRequest request, CancellationToken cancellationToken)
+        public async Task<CreateReservationCommandResponse> Handle(CreateReservationCommandRequest request, CancellationToken cancellationToken)
         {
-            var cacheKey = $"reservation_hotel_{request.HotelsId}_page_*";
-            var reservation = mapper.Map<Domain.Entities.Reservation>(request);
-            await unitOfWork.writeRepository<Domain.Entities.Reservation>().AddAsync(reservation);
-            await unitOfWork.SaveAsync();
-            var database = connectionMultiplexer.GetDatabase();
-            var server = connectionMultiplexer.GetServer(connectionMultiplexer.GetEndPoints()[0]);
-            await foreach (var keys in server.KeysAsync(pattern: cacheKey, pageSize: 250))
+            var newReservation = mapper.Map<Domain.Entities.Reservation>(request);
+            var paymentReservationToken = Guid.NewGuid().ToString();
+            await cache.SetStringAsync(paymentReservationToken, System.Text.Json.JsonSerializer.Serialize(newReservation), new DistributedCacheEntryOptions
             {
-                await database.KeyDeleteAsync(keys);
-            }
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+            });
+            return new()
+            {
+                ReservationTempCode = paymentReservationToken
+            };
         }
     }
 }

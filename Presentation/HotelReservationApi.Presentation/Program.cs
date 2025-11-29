@@ -3,6 +3,8 @@ using HotelReservationApi.Application.AutoMapper;
 using HotelReservationApi.Application.Behaviors;
 using HotelReservationApi.Application.Emails;
 using HotelReservationApi.Application.Payment;
+using HotelReservationApi.Application.QueueMessaging.CreateReservationQueue.Consumer;
+using HotelReservationApi.Application.QueueMessaging.CreateReservationQueue.HostedService;
 using HotelReservationApi.Application.QueueMessaging.TwoFactorQueue.Consumer;
 using HotelReservationApi.Application.QueueMessaging.TwoFactorQueue.HostedService;
 using HotelReservationApi.Application.RabbitMq.Interfaces;
@@ -40,7 +42,6 @@ var rabbitMqSettings = builder.Configuration.GetSection("RabbitMqSettings").Get<
 
 if (!string.IsNullOrEmpty(rabbitMqSettings.UsernameFile) && File.Exists(rabbitMqSettings.UsernameFile))
 {
-    // Dosya içeriðini okuyup gerçek Username'i set et
     rabbitMqSettings.Username = File.ReadAllText(rabbitMqSettings.UsernameFile).Trim();
 }
 
@@ -55,6 +56,7 @@ builder.Services.AddSingleton<IMessageQueueService, RabbitMqProducer>();
 builder.Services.AddSingleton<TwoFactorConsumer>();
 builder.Services.AddHostedService<RabbitMqProducer>();
 builder.Services.AddHostedService<TwoFactorHostedService>();
+builder.Services.AddHostedService<CreateReservationHostedService>();
 builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.Configure<TwoFactorAuthSettings>(builder.Configuration.GetSection("TwoFactorAuthSettings"));
 var secretStripe = "/run/secrets/stripe_secret_key";
@@ -77,7 +79,7 @@ builder.Configuration["Smtp:Host"] = Environment.GetEnvironmentVariable("SMTP_HO
 builder.Configuration["Smtp:Port"] = Environment.GetEnvironmentVariable("SMTP_PORT");
 builder.Services.Configure<EmailSettings>(
     builder.Configuration.GetSection("Smtp"));
-
+builder.Services.AddSingleton<CreateReservationConsumer>();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

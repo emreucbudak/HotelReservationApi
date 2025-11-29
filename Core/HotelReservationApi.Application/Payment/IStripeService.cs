@@ -1,7 +1,9 @@
-﻿namespace HotelReservationApi.Application.Payment
+﻿using Stripe;
+
+namespace HotelReservationApi.Application.Payment
 {
     public interface IStripeService
     {
-        Task<string> CreatePayment (int price,string currency,string paymentType);
+        Task<PaymentIntent> CreatePayment (decimal price,string currency,string paymentType,string paymentTiming);
     }
 }
