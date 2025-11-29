@@ -16,6 +16,7 @@ Bu proje, kullanıcıların otel araması, rezervasyon yapması ve yönetim pane
 - FluentValidation
 - Docker
 - Sql Index
+- QuestPdf
 ### 🗄️ Diğer Araçlar ve Teknolojiler
 - Swagger 
 - Postman 
@@ -31,7 +32,8 @@ Bu proje, kullanıcıların otel araması, rezervasyon yapması ve yönetim pane
 - Admin paneli ile otel ve rezervasyon yönetimi
 - Redis ile performans artırımı
 - RabbitMQ ile asenkron işlem yönetimi
-- Email İle 2 Faktörlü Giriş Sistemi 
+- Email İle 2 Faktörlü Giriş Sistemi
+- Ödeme sonrası pdf fatura oluşturma ve email'e gönderim sistemi
 
 ## ✨ Geliştirici
 👨‍💻 **Emre Üçbudak**  
