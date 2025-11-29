@@ -1,7 +1,6 @@
-﻿services:
+services:
   hotelreservationapi-presentation:
     image: hotelreservationapi-presentation:latest
-    container_name: hotelreservationapi-presentation
     build:
       context: ./Presentation/HotelReservationAPI.Presentation
       dockerfile: Dockerfile
@@ -19,6 +18,20 @@
       SMTP_PORT: "587"
       SMTP_PASSWORD_FILE: "/run/secrets/smtp-app-pass"
 
+
+
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: always
+    command: [
+        "redis-server",
+        "--maxmemory", "512mb",
+        "--maxmemory-policy", "allkeys-lru"
+    ]
+    ports:
+      - "6379:6379"
+  postgresql:
     image: postgres:18.1
     container_name: postgresql
     secrets:
@@ -32,22 +45,10 @@
     volumes:
       - pgdata:/var/lib/postgresql
     restart: "unless-stopped"
-
-  redis:
-    image: redis:7
-    container_name: redis
-    restart: always
-    command: [
-        "redis-server",
-        "--maxmemory", "512mb",
-        "--maxmemory-policy", "allkeys-lru"
-    ]
-    ports:
-      - "6379:6379"
-
   rabbitmq:
     image: rabbitmq:3.8
     container_name: rabbitmq
+    restart: "unless-stopped"
     ports:
       - "5672:5672"
       - "15672:15672"

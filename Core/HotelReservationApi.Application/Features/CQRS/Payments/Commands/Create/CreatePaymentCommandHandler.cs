@@ -1,7 +1,9 @@
 ﻿using HotelReservationApi.Application.Features.CQRS.Payments.Exception;
 using HotelReservationApi.Application.Payment;
 using HotelReservationApi.Application.RabbitMq.Interfaces;
+using HotelReservationApi.Application.RabbitMq.Models;
 using HotelReservationApi.Application.UnitOfWork;
+using HotelReservationApi.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
@@ -45,16 +47,21 @@ namespace HotelReservationApi.Application.Features.CQRS.Payments.Commands.Create
                 {
                     throw new PaymentFailedExceptions();
                 }
-                await queue.PublishAsync("CreateReservationQueue", new
+                await queue.PublishAsync("CreateReservationQueue", reservation);
+                await queue.PublishAsync("SendBillsAfterReservationQueue", new BillPdfModel()
                 {
-                    Reservation = reservation,
-                    PaymentId = paymentIntent.Id,
-                    Amount = paymentIntent.AmountReceived,
-                    Currency = paymentIntent.Currency,
-                    PaymentMethod = paymentMethod,
-                    PaymentTiming = paymentTiming
+                    RoomTypes = reservation.reservationRooms.Select(rt => rt.Room.RoomTypes.TypeName).ToList(),
+                    BillCreateDate = reservation.ReservationDate,
+                    StartDate = reservation.StartDate,
+                    EndDate = reservation.EndDate,
+                    TotalAmount = reservation.TotalPrice,
+                    TotalNights = (reservation.StartDate.DayNumber  - reservation.EndDate.DayNumber),
+                    Name = reservation.Member.User.Name,
+                    BillNo = Guid.NewGuid().ToString().Substring(0,16).ToUpper(),
+                    HotelName = reservation.Hotels.HotelName,
+                    Email = reservation.Member.User.Email
+
                 });
-                await queue.PublishAsync("ReservationCreateQueue", reservation);
                 await cache.RemoveAsync(request.PaymentToken);
 
             }
