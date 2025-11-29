@@ -1,5 +1,4 @@
-﻿using HotelReservationApi.Application.PdfWriter;
-using QuestPDF.Infrastructure;
+﻿using QuestPDF.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace HotelReservationApi.Infrastructure.PdfWriter
 {
-    public class PdfWriterService : IPdfWriter
+    public class BillPdfDocument : IDocument
     {
-
-        public Task WriteBillPdf(string bill, string paymentMethod, string paymentTiming, IList<string> peopleBooked)
+        public void Compose(IDocumentContainer container)
         {
             throw new NotImplementedException();
         }
