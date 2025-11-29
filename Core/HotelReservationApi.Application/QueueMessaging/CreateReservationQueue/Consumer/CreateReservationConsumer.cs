@@ -1,6 +1,7 @@
 ﻿using HotelReservationApi.Application.Emails;
 using HotelReservationApi.Application.UnitOfWork;
 using HotelReservationApi.Domain.Entities;
+using MediatR;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -8,13 +9,13 @@ namespace HotelReservationApi.Application.QueueMessaging.CreateReservationQueue.
 {
     public class CreateReservationConsumer : IAsyncDisposable
     {
-        private readonly IUnitOfWork unitOfWork;
         private IConnection connection;
         private IChannel channel;
+        private readonly IMediator mediator;
 
-        public CreateReservationConsumer(IUnitOfWork unitOfWork)
+        public CreateReservationConsumer(IMediator mediator)
         {
-            this.unitOfWork = unitOfWork;
+            this.mediator = mediator;
         }
 
         public async ValueTask DisposeAsync()
@@ -47,8 +48,7 @@ namespace HotelReservationApi.Application.QueueMessaging.CreateReservationQueue.
                 var body = ea.Body.ToArray();
                 var message = System.Text.Encoding.UTF8.GetString(body);
                 var reservationData = System.Text.Json.JsonSerializer.Deserialize<Reservation>(message);
-                await unitOfWork.writeRepository<Reservation>().AddAsync(reservationData);
-                await unitOfWork.SaveAsync();
+
 
                 await channel.BasicAckAsync(ea.DeliveryTag, false);
             };

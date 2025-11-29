@@ -8,11 +8,14 @@ services:
       - stripe_secret_key
       - jwt_secret
       - db_password 
-      - smtp-app-pass 
+      - smtp-app-pass
+      - rabbitmq_user
+      - rabbitmq_password 
     ports:
       - "8080:80"
     restart: "unless-stopped"
     environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
       SMTP_USER: "hotelapideneme@gmail.com"
       SMTP_HOST: "smtp.gmail.com"
       SMTP_PORT: "587"

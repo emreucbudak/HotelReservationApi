@@ -5,6 +5,7 @@ using HotelReservationApi.Application.Emails;
 using HotelReservationApi.Application.Payment;
 using HotelReservationApi.Application.QueueMessaging.CreateReservationQueue.Consumer;
 using HotelReservationApi.Application.QueueMessaging.CreateReservationQueue.HostedService;
+using HotelReservationApi.Application.QueueMessaging.SendBillsAfterReservation.Consumer;
 using HotelReservationApi.Application.QueueMessaging.SendBillsAfterReservation.HostedService;
 using HotelReservationApi.Application.QueueMessaging.TwoFactorQueue.Consumer;
 using HotelReservationApi.Application.QueueMessaging.TwoFactorQueue.HostedService;
@@ -41,16 +42,7 @@ var logger = new LoggerConfiguration()
 builder.Host.UseSerilog(logger);
 var rabbitMqSettings = builder.Configuration.GetSection("RabbitMqSettings").Get<RabbitMqSettings>();
 
-if (!string.IsNullOrEmpty(rabbitMqSettings.UsernameFile) && File.Exists(rabbitMqSettings.UsernameFile))
-{
-    rabbitMqSettings.Username = File.ReadAllText(rabbitMqSettings.UsernameFile).Trim();
-}
 
-if (!string.IsNullOrEmpty(rabbitMqSettings.PasswordFile) && File.Exists(rabbitMqSettings.PasswordFile))
-{
-
-    rabbitMqSettings.Password = File.ReadAllText(rabbitMqSettings.PasswordFile).Trim();
-}
 
 builder.Services.AddSingleton(Options.Create(rabbitMqSettings));
 builder.Services.AddSingleton<IMessageQueueService, RabbitMqProducer>();
@@ -59,6 +51,7 @@ builder.Services.AddHostedService<RabbitMqProducer>();
 builder.Services.AddHostedService<TwoFactorHostedService>();
 builder.Services.AddHostedService<CreateReservationHostedService>();
 builder.Services.AddHostedService<SendBillsReservationHostedService>();
+builder.Services.AddScoped<SendBillsReservationConsumer>();
 builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.Configure<TwoFactorAuthSettings>(builder.Configuration.GetSection("TwoFactorAuthSettings"));
 var secretStripe = "/run/secrets/stripe_secret_key";
