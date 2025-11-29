@@ -26,7 +26,7 @@ namespace HotelReservationApi.Domain.Entities
         public ICollection<Customer> Customer { get; set; }
         public int HotelsId { get; set; }
         public Hotels Hotels { get; set; }  
-        public int TotalPrice { get; set; } 
+        public decimal TotalPrice { get; set; } 
         public DateOnly ReservationDate { get; set; }
         public int MemberId { get; set; }
         public Member Member { get; set; }

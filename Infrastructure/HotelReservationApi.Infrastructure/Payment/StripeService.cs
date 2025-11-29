@@ -5,21 +5,22 @@ namespace HotelReservationApi.Infrastructure.Payment
 {
     public class StripeService : IStripeService
     {
-        public async Task<string> CreatePayment(int price, string currency, string paymentType)
+        public async Task<PaymentIntent> CreatePayment(decimal price, string currency, string paymentType,string paymentTiming)
         {
+            long amountInCents = (long)(price * 100m);
             var pay = new PaymentIntentCreateOptions
             {
-                Amount = price,
+                Amount = amountInCents,
                 Currency = currency,
-                PaymentMethod =  "Card",
-                Description = "Hotel reservasyon ödemesi : " + paymentType,
-                
+                PaymentMethod = "pm_card_visa",
+                PaymentMethodTypes = new List<string> { "card" },
+                Description = "Hotel reservasyon ödemesi : " + paymentTiming + " " + "Kart Türü" + paymentType,
+                Confirm = true
 
             };
             var service = new PaymentIntentService();
             var paymentIntent = await service.CreateAsync(pay);
-            var answer = await  Task.FromResult(paymentIntent.ClientSecret);
-            return answer;
+            return paymentIntent;
 
 
         }
