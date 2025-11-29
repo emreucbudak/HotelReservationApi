@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HotelReservationApi.Application.RabbitMq.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace HotelReservationApi.Application.PdfWriter
 {
     public interface IPdfWriter
     {
-        Task WriteBillPdf(string bill,string paymentMethod,string paymentTiming,IList<string> peopleBooked);
+        Task WriteBillPdf(BillPdfModel pdf);
     }
 }
