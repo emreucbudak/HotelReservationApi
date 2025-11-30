@@ -7,13 +7,16 @@ services:
     secrets:
       - stripe_secret_key
       - jwt_secret
-      - db_password 
       - smtp-app-pass
-      - rabbitmq_user
-      - rabbitmq_password 
+      - rabbitmq_user 
+      - db_password
+      - rabbitmq_password
     ports:
-      - "8080:80"
+      - "8082:80"
     restart: "unless-stopped"
+    depends_on:
+      - postgresql
+      - rabbitmq 
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
       SMTP_USER: "hotelapideneme@gmail.com"
@@ -36,13 +39,12 @@ services:
       - "6379:6379"
   postgresql:
     image: postgres:18.1
-    container_name: postgresql
     secrets:
-        - db_password
+      - db_password
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD_FILE: /run/secrets/db_password
-      POSTGRES_DB: HotelReservationDB
+      POSTGRES_DB: HotelReservationDb
     ports:
       - "5432:5432"
     volumes:
@@ -50,7 +52,6 @@ services:
     restart: "unless-stopped"
   rabbitmq:
     image: rabbitmq:3.8
-    container_name: rabbitmq
     restart: "unless-stopped"
     ports:
       - "5672:5672"
@@ -71,8 +72,6 @@ volumes:
 secrets:
     stripe_secret_key:
         external: true
-    db_password:
-        external: true
     jwt_secret:
         external: true
     rabbitmq_user:
@@ -80,4 +79,6 @@ secrets:
     rabbitmq_password:
         external: true
     smtp-app-pass:
+        external: true
+    db_password:
         external: true

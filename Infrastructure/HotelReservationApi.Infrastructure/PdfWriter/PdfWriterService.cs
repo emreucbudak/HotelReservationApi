@@ -44,6 +44,7 @@ namespace HotelReservationApi.Infrastructure.PdfWriter
         private async Task SendPdfViaEmail(string toEmail, string subject, Stream pdfStream, string fileName)
         {
             await _emailService
+                .Builder()
                 .To(toEmail)
                 .Subject("Rezervasyon Faturası Hk.")
                 .Body("Rezervasyon faturanız ekte iletilmiştir.İyi tatiller dileriz!",null)

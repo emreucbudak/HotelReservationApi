@@ -3,6 +3,7 @@ using HotelReservationApi.Application.AutoMapper;
 using HotelReservationApi.Application.Behaviors;
 using HotelReservationApi.Application.Emails;
 using HotelReservationApi.Application.Payment;
+using HotelReservationApi.Application.PdfWriter;
 using HotelReservationApi.Application.QueueMessaging.CreateReservationQueue.Consumer;
 using HotelReservationApi.Application.QueueMessaging.CreateReservationQueue.HostedService;
 using HotelReservationApi.Application.QueueMessaging.SendBillsAfterReservation.Consumer;
@@ -17,6 +18,7 @@ using HotelReservationApi.Application.Validate;
 using HotelReservationApi.Domain.Entities;
 using HotelReservationApi.Infrastructure.Emails;
 using HotelReservationApi.Infrastructure.Payment;
+using HotelReservationApi.Infrastructure.PdfWriter;
 using HotelReservationApi.Infrastructure.RabbitMq;
 using HotelReservationApi.Infrastructure.Tokens;
 using HotelReservationApi.Persistence.ApplicationContext;
@@ -28,6 +30,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Npgsql;
 using QuestPDF.Infrastructure;
 using Serilog;
 
@@ -40,18 +43,28 @@ var logger = new LoggerConfiguration()
     .CreateLogger();
 
 builder.Host.UseSerilog(logger);
-var rabbitMqSettings = builder.Configuration.GetSection("RabbitMqSettings").Get<RabbitMqSettings>();
+string rabbitMqUser = "/run/secrets/rabbitmq_user";
+string rabbitMqPassword = "/run/secrets/rabbitmq_password";
+string rabbitUser = File.Exists(rabbitMqUser)
+    ? File.ReadAllText(rabbitMqUser).Trim()
+    : throw new Exception("RabbitMQ user bulunamadý!");
+string rabbitPassword = File.Exists(rabbitMqPassword) ? File.ReadAllText(rabbitMqPassword).Trim()
+    : throw new Exception("RabbitMQ password bulunamadý!");
+builder.Configuration["RabbitMqSettings:Username"] = rabbitUser;
+builder.Configuration["RabbitMqSettings:Password"] = rabbitPassword;
+builder.Services.Configure<RabbitMqSettings>(
+    builder.Configuration.GetSection("RabbitMqSettings"));
 
 
 
-builder.Services.AddSingleton(Options.Create(rabbitMqSettings));
+
 builder.Services.AddSingleton<IMessageQueueService, RabbitMqProducer>();
 builder.Services.AddSingleton<TwoFactorConsumer>();
 builder.Services.AddHostedService<RabbitMqProducer>();
 builder.Services.AddHostedService<TwoFactorHostedService>();
 builder.Services.AddHostedService<CreateReservationHostedService>();
 builder.Services.AddHostedService<SendBillsReservationHostedService>();
-builder.Services.AddScoped<SendBillsReservationConsumer>();
+builder.Services.AddSingleton<SendBillsReservationConsumer>();
 builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.Configure<TwoFactorAuthSettings>(builder.Configuration.GetSection("TwoFactorAuthSettings"));
 var secretStripe = "/run/secrets/stripe_secret_key";
@@ -61,9 +74,19 @@ string stripeSecretKey = File.Exists(secretStripe)
 Stripe.StripeConfiguration.ApiKey = stripeSecretKey;
 var jwtSecret = "/run/secrets/jwt_secret";
 string jwtSecretKey = File.ReadAllText(jwtSecret).Trim();
-var dbSecret = "/run/secrets/db_password";
-string dbPassword = File.ReadAllText(dbSecret).Trim();
-string connectionString = $"Host=postgresql;Port=5432;Database=HotelReservationDb;Username=postgres;Password={dbPassword}";
+var dbPasswordFile = "/run/secrets/db_password";
+string dbPassword = File.Exists(dbPasswordFile)
+    ? File.ReadAllText(dbPasswordFile).Trim()
+    : throw new Exception("Database þifresi bulunamadý!");
+var npgsqlBuilder = new NpgsqlConnectionStringBuilder
+{
+    Host = "postgresql",           
+    Port = 5432,
+    Database = "HotelReservationDb", 
+    Username = "postgres",
+    Password = dbPassword
+};
+string finalConnectionString = npgsqlBuilder.ConnectionString;
 var smtpPasswordFile = Environment.GetEnvironmentVariable("SMTP_PASSWORD_FILE");
 var smtpPassword = File.Exists(smtpPasswordFile)
     ? File.ReadAllText(smtpPasswordFile).Trim()
@@ -72,13 +95,15 @@ builder.Configuration["Smtp:Password"] = smtpPassword;
 builder.Configuration["Smtp:User"] = Environment.GetEnvironmentVariable("SMTP_USER");
 builder.Configuration["Smtp:Host"] = Environment.GetEnvironmentVariable("SMTP_HOST");
 builder.Configuration["Smtp:Port"] = Environment.GetEnvironmentVariable("SMTP_PORT");
+
 builder.Services.Configure<EmailSettings>(
     builder.Configuration.GetSection("Smtp"));
 builder.Services.AddSingleton<CreateReservationConsumer>();
+builder.Services.AddSingleton<IPdfWriter, PdfWriterService>();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString)
+    options.UseNpgsql(finalConnectionString)
 );
 builder.Services.AddStackExchangeRedisCache(options =>
 {
@@ -88,7 +113,7 @@ builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBeh
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggerBehavior<,>));
 builder.Services.AddAutoMapper(cfg => { },typeof(Profiles).Assembly);
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddTransient<IEmailService,EmailService>();
+builder.Services.AddSingleton<IEmailService,EmailService>();
 builder.Services.AddScoped<IStripeService,StripeService>();
 builder.Services.AddScoped<HotelReservationApi.Application.Tokens.ITokenService, TokenService>();
 builder.Services.AddScoped(typeof(IReadRepository<>), typeof(ReadRepository<>));
@@ -150,11 +175,7 @@ var app = builder.Build();
 if(app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    using (var scope = app.Services.CreateScope())
-    {
-        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        db.Database.Migrate();
-    }
+ 
 
 }
 

@@ -1,11 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using System.IO;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HotelReservationApi.Persistence.ApplicationContext
 {
@@ -13,16 +10,22 @@ namespace HotelReservationApi.Persistence.ApplicationContext
     {
         public ApplicationDbContext CreateDbContext(string[] args)
         {
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new InvalidOperationException("Tasarım zamanı için appsettings.json'da 'DefaultConnection' bulunamadı.");
+            }
+
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-
-            var dbPassword = "alttanustten36";
-            string connectionString = $"Host=localhost;Port=5432;Database=HotelReservationDb;Username=postgres;Password={dbPassword}";
-
             optionsBuilder.UseNpgsql(connectionString);
 
             return new ApplicationDbContext(optionsBuilder.Options);
         }
     }
-
 }
-

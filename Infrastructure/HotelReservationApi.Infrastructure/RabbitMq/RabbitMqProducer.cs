@@ -20,7 +20,7 @@ namespace HotelReservationApi.Infrastructure.RabbitMq
             var settings = rabbit.Value;
             this.factory = new()
             {
-                HostName = settings.HostName,
+                HostName = "rabbitmq",
                 Port = settings.Port,
                 UserName = settings.Username,
                 Password = settings.Password,
