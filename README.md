@@ -1,6 +1,7 @@
 # 🏨 Hotel Rezervasyon Sistemi
 
 Bu proje, kullanıcıların otel araması, rezervasyon yapması ve yönetim paneli üzerinden işlemlerini gerçekleştirmesini sağlayan **tam kapsamlı bir otel rezervasyon uygulamasıdır.**
+Proje prod'a en yakın halinde yani secretlerla oluşturulmuştur windowsda localde secretler desteklenmediği için environment variables ile değiştirebilirsiniz.Linuxta ise hiçbir sıkıntı yoktur.
 
 ## 🚀 Kullanılan Teknolojiler
 
