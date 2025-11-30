@@ -1,8 +1,11 @@
 ﻿using HotelReservationApi.Application.DTOS;
 using HotelReservationApi.Application.Emails;
+using HotelReservationApi.Application.Features.CQRS.Reservation.Command.Create.CreateAfterBill;
+using HotelReservationApi.Application.RabbitMq.Settings;
 using HotelReservationApi.Application.UnitOfWork;
 using HotelReservationApi.Domain.Entities;
 using MediatR;
+using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -13,10 +16,13 @@ namespace HotelReservationApi.Application.QueueMessaging.CreateReservationQueue.
         private IConnection connection;
         private IChannel channel;
         private readonly IMediator mediator;
+        private readonly RabbitMqSettings rabbitMqSettings;
 
-        public CreateReservationConsumer(IMediator mediator)
+
+        public CreateReservationConsumer(IMediator mediator,IOptions<RabbitMqSettings> rabbitmq)
         {
             this.mediator = mediator;
+            rabbitMqSettings = rabbitmq.Value;
         }
 
         public async ValueTask DisposeAsync()
@@ -35,7 +41,7 @@ namespace HotelReservationApi.Application.QueueMessaging.CreateReservationQueue.
 
         public async Task StartConsume()
         {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
+            var factory = new ConnectionFactory() { HostName = "rabbitmq", UserName = rabbitMqSettings.Username, Password = rabbitMqSettings.Password, AutomaticRecoveryEnabled = true };
             connection = await factory.CreateConnectionAsync();
             channel = await connection.CreateChannelAsync();
             await channel.QueueDeclareAsync(queue: "CreateReservationQueue",

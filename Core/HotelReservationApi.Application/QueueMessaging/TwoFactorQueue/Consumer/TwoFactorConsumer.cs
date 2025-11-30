@@ -1,5 +1,7 @@
 ﻿using HotelReservationApi.Application.Emails;
 using HotelReservationApi.Application.RabbitMq.Models;
+using HotelReservationApi.Application.RabbitMq.Settings;
+using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
@@ -11,9 +13,11 @@ namespace HotelReservationApi.Application.QueueMessaging.TwoFactorQueue.Consumer
         private readonly IEmailService _emailService;
         private  IConnection connection;
         private  IChannel channel;
-        public TwoFactorConsumer(IEmailService emailService)
+        private readonly RabbitMqSettings rabbitMqSettings;
+        public TwoFactorConsumer(IEmailService emailService,IOptions<RabbitMqSettings> rabbit)
         {
             _emailService = emailService;
+            rabbitMqSettings = rabbit.Value;
         }
 
         public async ValueTask DisposeAsync()
@@ -33,8 +37,8 @@ namespace HotelReservationApi.Application.QueueMessaging.TwoFactorQueue.Consumer
 
         public async Task StartConsume()
         {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
-              connection = await factory.CreateConnectionAsync();
+            var factory = new ConnectionFactory() { HostName = "rabbitmq", UserName = rabbitMqSettings.Username, Password = rabbitMqSettings.Password, AutomaticRecoveryEnabled = true };
+            connection = await factory.CreateConnectionAsync();
               channel = await connection.CreateChannelAsync();
             await channel.QueueDeclareAsync(queue: "TwoFactorQueue",
                                  durable: true,
@@ -50,6 +54,7 @@ namespace HotelReservationApi.Application.QueueMessaging.TwoFactorQueue.Consumer
                 if (emailMessage != null)
                 {
                     await _emailService
+                    .Builder()
                     .To(emailMessage.Email)
                     .Subject("Dogrulama Kodu")
                     .Body(null,emailMessage.VerificationCode)

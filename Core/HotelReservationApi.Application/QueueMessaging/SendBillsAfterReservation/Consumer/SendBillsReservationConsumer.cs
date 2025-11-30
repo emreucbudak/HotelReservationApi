@@ -1,6 +1,8 @@
 ﻿using HotelReservationApi.Application.PdfWriter;
 using HotelReservationApi.Application.RabbitMq.Models;
+using HotelReservationApi.Application.RabbitMq.Settings;
 using HotelReservationApi.Domain.Entities;
+using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
@@ -16,10 +18,12 @@ namespace HotelReservationApi.Application.QueueMessaging.SendBillsAfterReservati
         private  IChannel channel;
         private  IConnection connection;
         private readonly IPdfWriter _pdfWriter;
+        private readonly RabbitMqSettings rabbitMqSettings;
 
-        public SendBillsReservationConsumer(IPdfWriter pdfWriter)
+        public SendBillsReservationConsumer(IPdfWriter pdfWriter,IOptions<RabbitMqSettings> rabbit)
         {
             _pdfWriter = pdfWriter;
+            rabbitMqSettings = rabbit.Value;
         }
 
         public async ValueTask DisposeAsync()
@@ -39,7 +43,7 @@ namespace HotelReservationApi.Application.QueueMessaging.SendBillsAfterReservati
         }
         public async Task StartConsume()
         {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
+            var factory = new ConnectionFactory() { HostName = "rabbitmq", UserName = rabbitMqSettings.Username, Password = rabbitMqSettings.Password, AutomaticRecoveryEnabled = true };
             connection = await factory.CreateConnectionAsync();
             channel = await connection.CreateChannelAsync();
             await channel.QueueDeclareAsync(queue: "SendBillsAfterReservationQueue",
