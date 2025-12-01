@@ -35,6 +35,7 @@ Proje prod'a en yakın halinde yani secretlerla oluşturulmuştur windowsda loca
 - RabbitMQ ile asenkron işlem yönetimi
 - Email İle 2 Faktörlü Giriş Sistemi
 - Ödeme sonrası pdf fatura oluşturma ve email'e gönderim sistemi
+- Docker Secrets ile önemli tüm şifrelerin gizlenmesi
 
 ## ✨ Geliştirici
 👨‍💻 **Emre Üçbudak**  
