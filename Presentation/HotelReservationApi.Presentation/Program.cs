@@ -46,8 +46,7 @@ var logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog(logger);
 
-/* -------------------- RABBITMQ (DÜZENLENDÝ) -------------------- */
-// Artýk dosya yolu ile uðraþmýyoruz, fonksiyon hallediyor
+
 builder.Configuration["RabbitMqSettings:Username"] = GetSecret("rabbitmq_user");
 builder.Configuration["RabbitMqSettings:Password"] = GetSecret("rabbitmq_password");
 
@@ -64,20 +63,18 @@ builder.Services.AddSingleton<TwoFactorConsumer>();
 builder.Services.AddSingleton<CreateReservationConsumer>();
 builder.Services.AddSingleton<SendBillsReservationConsumer>();
 
-/* -------------------- STRIPE (DÜZENLENDÝ) -------------------- */
-// Stripe için özel karakter temizliði (.TrimStart) korundu
+
 Stripe.StripeConfiguration.ApiKey =
     GetSecret("stripe_secret_key").TrimStart('\uFEFF', '\u200B');
 
-/* -------------------- JWT (DÜZENLENDÝ) -------------------- */
 var jwtSecretKey = GetSecret("jwt_secret");
 
-/* -------------------- DATABASE (DÜZENLENDÝ) -------------------- */
+
 var dbPassword = GetSecret("db_password");
 
 var connectionString = new NpgsqlConnectionStringBuilder
 {
-    Host = "postgresql", // Docker service name
+    Host = "postgresql", 
     Port = 5432,
     Database = "HotelReservationDb",
     Username = "postgres",
@@ -87,7 +84,7 @@ var connectionString = new NpgsqlConnectionStringBuilder
 builder.Services.AddDbContext<ApplicationDbContext>(opt =>
     opt.UseNpgsql(connectionString));
 
-/* -------------------- SMTP (DÜZENLENDÝ) -------------------- */
+
 builder.Configuration["Smtp:Password"] = GetSecret("smtp_app_pass");
 builder.Configuration["Smtp:User"] = Environment.GetEnvironmentVariable("SMTP_USER");
 builder.Configuration["Smtp:Host"] = Environment.GetEnvironmentVariable("SMTP_HOST");
@@ -95,7 +92,6 @@ builder.Configuration["Smtp:Port"] = Environment.GetEnvironmentVariable("SMTP_PO
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Smtp"));
 
-/* -------------------- SERVICES -------------------- */
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(cfg => { }, typeof(Profiles).Assembly);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
@@ -116,7 +112,7 @@ builder.Services.AddExceptionHandler<ValidationExceptionsHandler>();
 builder.Services.AddExceptionHandler<NotFoundExceptionsHandler>();
 builder.Services.AddProblemDetails();
 
-/* -------------------- AUTH -------------------- */
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(opt =>
 {
@@ -138,7 +134,7 @@ builder.Services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-/* -------------------- SWAGGER -------------------- */
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
@@ -148,11 +144,10 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-/* ================================================= */
+
 
 var app = builder.Build();
 
-/* -------------------- MIDDLEWARE -------------------- */
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
@@ -167,38 +162,30 @@ app.MapControllers();
 
 app.Run();
 
-/* ================================================= */
-/* HELPER METHODS (Secret Okuyucu)          */
-/* ================================================= */
 
-/// <summary>
-/// Bu fonksiyon hem Docker (/run/secrets) hem de Local (../../secrets)
-/// ortamlarýný kontrol edip secret deðerini döndürür.
-/// </summary>
 string GetSecret(string secretName)
 {
-    // 1. Önce Docker Secret yoluna bak (Prod ortamý için)
+
     string dockerSecretPath = $"/run/secrets/{secretName}";
     if (File.Exists(dockerSecretPath))
     {
         return File.ReadAllText(dockerSecretPath).Trim();
     }
 
-    // 2. Bulamazsa Local yola bak (Senin þu anki ../../ yapýn)
+
     string localSecretPath = $"../../secrets/{secretName}";
     if (File.Exists(localSecretPath))
     {
         return File.ReadAllText(localSecretPath).Trim();
     }
 
-    // 3. Hiçbiri yoksa Environment Variable kontrolü de yapýlabilir (Opsiyonel)
     var envVar = Environment.GetEnvironmentVariable(secretName);
     if (!string.IsNullOrEmpty(envVar))
     {
         return envVar;
     }
 
-    // 4. Hiçbir yerde yoksa Console'a hata basýp boþ dönelim (veya throw edebilirsin)
+    
     Console.WriteLine($"[UYARI] Secret '{secretName}' bulunamadý! (Docker: {dockerSecretPath}, Local: {localSecretPath})");
     return string.Empty;
 }
