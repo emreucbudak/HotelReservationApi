@@ -29,108 +29,98 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using Npgsql;
 using QuestPDF.Infrastructure;
 using Serilog;
-
+using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
+
 QuestPDF.Settings.License = LicenseType.Community;
+
 var logger = new LoggerConfiguration()
-    .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
     .WriteTo.Console()
+    .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
 builder.Host.UseSerilog(logger);
-string rabbitMqUser = "/run/secrets/rabbitmq_user";
-string rabbitMqPassword = "/run/secrets/rabbitmq_password";
-string rabbitUser = File.Exists(rabbitMqUser)
-    ? File.ReadAllText(rabbitMqUser).Trim()
-    : throw new Exception("RabbitMQ user bulunamadý!");
-string rabbitPassword = File.Exists(rabbitMqPassword) ? File.ReadAllText(rabbitMqPassword).Trim()
-    : throw new Exception("RabbitMQ password bulunamadý!");
-builder.Configuration["RabbitMqSettings:Username"] = rabbitUser;
-builder.Configuration["RabbitMqSettings:Password"] = rabbitPassword;
+
+/* -------------------- RABBITMQ (DÜZENLENDÝ) -------------------- */
+// Artýk dosya yolu ile uðraþmýyoruz, fonksiyon hallediyor
+builder.Configuration["RabbitMqSettings:Username"] = GetSecret("rabbitmq_user");
+builder.Configuration["RabbitMqSettings:Password"] = GetSecret("rabbitmq_password");
+
 builder.Services.Configure<RabbitMqSettings>(
     builder.Configuration.GetSection("RabbitMqSettings"));
 
-
-
-
 builder.Services.AddSingleton<IMessageQueueService, RabbitMqProducer>();
-builder.Services.AddSingleton<TwoFactorConsumer>();
 builder.Services.AddHostedService<RabbitMqProducer>();
 builder.Services.AddHostedService<TwoFactorHostedService>();
 builder.Services.AddHostedService<CreateReservationHostedService>();
 builder.Services.AddHostedService<SendBillsReservationHostedService>();
+
+builder.Services.AddSingleton<TwoFactorConsumer>();
+builder.Services.AddSingleton<CreateReservationConsumer>();
 builder.Services.AddSingleton<SendBillsReservationConsumer>();
-builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("JwtSettings"));
-builder.Services.Configure<TwoFactorAuthSettings>(builder.Configuration.GetSection("TwoFactorAuthSettings"));
-var secretStripe = "/run/secrets/stripe_secret_key";
-string stripeSecretKey = File.Exists(secretStripe)
-    ? File.ReadAllText(secretStripe).Trim()
-    : throw new Exception("Stripe secret bulunamadý!");
-Stripe.StripeConfiguration.ApiKey = stripeSecretKey;
-var jwtSecret = "/run/secrets/jwt_secret";
-string jwtSecretKey = File.ReadAllText(jwtSecret).Trim();
-var dbPasswordFile = "/run/secrets/db_password";
-string dbPassword = File.Exists(dbPasswordFile)
-    ? File.ReadAllText(dbPasswordFile).Trim()
-    : throw new Exception("Database þifresi bulunamadý!");
-var npgsqlBuilder = new NpgsqlConnectionStringBuilder
+
+/* -------------------- STRIPE (DÜZENLENDÝ) -------------------- */
+// Stripe için özel karakter temizliði (.TrimStart) korundu
+Stripe.StripeConfiguration.ApiKey =
+    GetSecret("stripe_secret_key").TrimStart('\uFEFF', '\u200B');
+
+/* -------------------- JWT (DÜZENLENDÝ) -------------------- */
+var jwtSecretKey = GetSecret("jwt_secret");
+
+/* -------------------- DATABASE (DÜZENLENDÝ) -------------------- */
+var dbPassword = GetSecret("db_password");
+
+var connectionString = new NpgsqlConnectionStringBuilder
 {
-    Host = "postgresql",           
+    Host = "postgresql", // Docker service name
     Port = 5432,
-    Database = "HotelReservationDb", 
+    Database = "HotelReservationDb",
     Username = "postgres",
     Password = dbPassword
-};
-string finalConnectionString = npgsqlBuilder.ConnectionString;
-var smtpPasswordFile = Environment.GetEnvironmentVariable("SMTP_PASSWORD_FILE");
-var smtpPassword = File.Exists(smtpPasswordFile)
-    ? File.ReadAllText(smtpPasswordFile).Trim()
-    : throw new Exception("SMTP þifresi bulunamadý!");
-builder.Configuration["Smtp:Password"] = smtpPassword;
+}.ConnectionString;
+
+builder.Services.AddDbContext<ApplicationDbContext>(opt =>
+    opt.UseNpgsql(connectionString));
+
+/* -------------------- SMTP (DÜZENLENDÝ) -------------------- */
+builder.Configuration["Smtp:Password"] = GetSecret("smtp_app_pass");
 builder.Configuration["Smtp:User"] = Environment.GetEnvironmentVariable("SMTP_USER");
 builder.Configuration["Smtp:Host"] = Environment.GetEnvironmentVariable("SMTP_HOST");
 builder.Configuration["Smtp:Port"] = Environment.GetEnvironmentVariable("SMTP_PORT");
 
-builder.Services.Configure<EmailSettings>(
-    builder.Configuration.GetSection("Smtp"));
-builder.Services.AddSingleton<CreateReservationConsumer>();
-builder.Services.AddSingleton<IPdfWriter, PdfWriterService>();
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Smtp"));
+
+/* -------------------- SERVICES -------------------- */
 builder.Services.AddControllers();
-builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(finalConnectionString)
-);
-builder.Services.AddStackExchangeRedisCache(options =>
-{
-    options.Configuration = builder.Configuration.GetConnectionString("Cache");
-});
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggerBehavior<,>));
-builder.Services.AddAutoMapper(cfg => { },typeof(Profiles).Assembly);
+builder.Services.AddAutoMapper(cfg => { }, typeof(Profiles).Assembly);
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+builder.Services.AddValidatorsFromAssemblyContaining<AdsBannerValidator>();
+
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddSingleton<IEmailService,EmailService>();
-builder.Services.AddScoped<IStripeService,StripeService>();
+builder.Services.AddScoped<IStripeService, StripeService>();
 builder.Services.AddScoped<HotelReservationApi.Application.Tokens.ITokenService, TokenService>();
 builder.Services.AddScoped(typeof(IReadRepository<>), typeof(ReadRepository<>));
 builder.Services.AddScoped(typeof(IWriteRepository<>), typeof(WriteRepository<>));
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
-builder.Services.AddValidatorsFromAssemblyContaining<AdsBannerValidator>();
+builder.Services.AddSingleton<IEmailService, EmailService>();
+builder.Services.AddSingleton<IPdfWriter, PdfWriterService>();
+
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggerBehavior<,>));
+
 builder.Services.AddExceptionHandler<ValidationExceptionsHandler>();
 builder.Services.AddExceptionHandler<NotFoundExceptionsHandler>();
 builder.Services.AddProblemDetails();
-builder.Services.AddAuthentication(opt =>
+
+/* -------------------- AUTH -------------------- */
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer(opt =>
 {
-    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(ops =>
-{
-    ops.Audience = builder.Configuration["JwtSettings:Audience"];
-    ops.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    opt.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
     {
         ValidateIssuer = true,
         ValidateAudience = true,
@@ -138,51 +128,77 @@ builder.Services.AddAuthentication(opt =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
         ValidAudience = builder.Configuration["JwtSettings:Audience"],
-        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtSecretKey)),
-        ClockSkew = TimeSpan.Zero,
-
-
-
+        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
+            System.Text.Encoding.UTF8.GetBytes(jwtSecretKey)),
+        ClockSkew = TimeSpan.Zero
     };
 });
-builder.Services.AddIdentity<User, Role>(opt =>
-{
-    opt.Password.RequireDigit = true;
-    opt.Password.RequireLowercase = true;
-    opt.Password.RequireUppercase = true;
-    opt.Password.RequireNonAlphanumeric = false;
-    opt.SignIn.RequireConfirmedEmail = false;
-    opt.User.RequireUniqueEmail = true;
-    opt.Password.RequiredLength = 8;
 
-}).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
-builder.Services.AddAuthorization(opt =>
+builder.Services.AddIdentity<User, Role>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+/* -------------------- SWAGGER -------------------- */
+builder.Services.AddSwaggerGen(c =>
 {
-    opt.AddPolicy("Verified2FA", policy =>
+    c.SwaggerDoc("v1", new OpenApiInfo
     {
-        policy.RequireClaim("2fa_status", "verified");
-    });
-    opt.AddPolicy("OnlyPending2FA", policy =>
-    {
-        policy.RequireClaim("2fa_status", "pending");
+        Title = "HotelReservation API",
+        Version = "v1"
     });
 });
 
+/* ================================================= */
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if(app.Environment.IsDevelopment())
+/* -------------------- MIDDLEWARE -------------------- */
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
- 
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "HotelReservation API v1");
+    c.RoutePrefix = "swagger";
+});
 
-}
-
-app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
+
+/* ================================================= */
+/* HELPER METHODS (Secret Okuyucu)          */
+/* ================================================= */
+
+/// <summary>
+/// Bu fonksiyon hem Docker (/run/secrets) hem de Local (../../secrets)
+/// ortamlarýný kontrol edip secret deðerini döndürür.
+/// </summary>
+string GetSecret(string secretName)
+{
+    // 1. Önce Docker Secret yoluna bak (Prod ortamý için)
+    string dockerSecretPath = $"/run/secrets/{secretName}";
+    if (File.Exists(dockerSecretPath))
+    {
+        return File.ReadAllText(dockerSecretPath).Trim();
+    }
+
+    // 2. Bulamazsa Local yola bak (Senin þu anki ../../ yapýn)
+    string localSecretPath = $"../../secrets/{secretName}";
+    if (File.Exists(localSecretPath))
+    {
+        return File.ReadAllText(localSecretPath).Trim();
+    }
+
+    // 3. Hiçbiri yoksa Environment Variable kontrolü de yapýlabilir (Opsiyonel)
+    var envVar = Environment.GetEnvironmentVariable(secretName);
+    if (!string.IsNullOrEmpty(envVar))
+    {
+        return envVar;
+    }
+
+    // 4. Hiçbir yerde yoksa Console'a hata basýp boþ dönelim (veya throw edebilirsin)
+    Console.WriteLine($"[UYARI] Secret '{secretName}' bulunamadý! (Docker: {dockerSecretPath}, Local: {localSecretPath})");
+    return string.Empty;
+}

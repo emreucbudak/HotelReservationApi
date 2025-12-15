@@ -8,6 +8,12 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include=".dockerignore" />
+    <None Include="secrets\db_password.txt" />
     <None Include="docker-compose.yml" />
+    <None Include="secrets\jwt_secret.txt" />
+    <None Include="secrets\rabbitmq_password.txt" />
+    <None Include="secrets\rabbitmq_user.txt" />
+    <None Include="secrets\smtp_app_pass.txt" />
+    <None Include="secrets\stripe_secret_key.txt" />
   </ItemGroup>
 </Project>

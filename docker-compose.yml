@@ -2,18 +2,18 @@ services:
   hotelreservationapi-presentation:
     image: hotelreservationapi-presentation:latest
     build:
-      context: ./Presentation/HotelReservationAPI.Presentation
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: Presentation/HotelReservationApi.Presentation/Dockerfile
     secrets:
       - stripe_secret_key
       - jwt_secret
-      - smtp-app-pass
+      - smtp_app_pass
       - rabbitmq_user 
       - db_password
       - rabbitmq_password
     ports:
-      - "8082:80"
-    restart: "unless-stopped"
+      - "8082:8080"
+    restart: unless-stopped
     depends_on:
       - postgresql
       - rabbitmq 
@@ -22,7 +22,7 @@ services:
       SMTP_USER: "hotelapideneme@gmail.com"
       SMTP_HOST: "smtp.gmail.com"
       SMTP_PORT: "587"
-      SMTP_PASSWORD_FILE: "/run/secrets/smtp-app-pass"
+      SMTP_PASSWORD_FILE: "/run/secrets/smtp_app_pass"
 
 
 
@@ -49,10 +49,10 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql
-    restart: "unless-stopped"
+    restart: unless-stopped
   rabbitmq:
     image: rabbitmq:3.8
-    restart: "unless-stopped"
+    restart: unless-stopped
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -71,14 +71,14 @@ volumes:
   pgdata:
 secrets:
     stripe_secret_key:
-        external: true
+        file: ./secrets/stripe_secret_key.txt
     jwt_secret:
-        external: true
+        file: ./secrets/jwt_secret.txt
     rabbitmq_user:
-        external: true
+        file: ./secrets/rabbitmq_user.txt
     rabbitmq_password:
-        external: true
-    smtp-app-pass:
-        external: true
+        file: ./secrets/rabbitmq_password.txt
+    smtp_app_pass:
+        file: ./secrets/smtp_app_pass.txt
     db_password:
-        external: true
+        file: ./secrets/db_password.txt
